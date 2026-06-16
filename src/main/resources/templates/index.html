@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('GRE & CAT Math Tutor')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="hero">
+    <h1>Master GRE &amp; CAT Quant</h1>
+    <p>
+        Learn every quantitative topic step by step, then practice with auto-graded
+        sheets and instant explanations. Track your progress with your own account.
+    </p>
+    <div class="hero-actions">
+        <a class="btn" th:href="@{/register}">Get started free</a>
+        <a class="btn btn-outline" th:href="@{/login}">I already have an account</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="grid">
+        <div class="card">
+            <h3>&#128214; Learn</h3>
+            <p class="muted">Clear lessons on arithmetic, algebra, geometry, probability and more, written for GRE and CAT aspirants.</p>
+        </div>
+        <div class="card">
+            <h3>&#9999;&#65039; Practice</h3>
+            <p class="muted">Topic-wise practice sheets with multiple-choice questions of varying difficulty.</p>
+        </div>
+        <div class="card">
+            <h3>&#9989; Evaluate</h3>
+            <p class="muted">Get instant scoring, see which answers were right or wrong, and read full explanations.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

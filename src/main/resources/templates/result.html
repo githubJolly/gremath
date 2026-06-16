@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Results: ' + ${topic.name})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <div class="page-header">
+        <a class="muted" th:href="@{/dashboard}">&larr; Back to dashboard</a>
+        <h1 th:text="'Results: ' + ${topic.name}">Results</h1>
+    </div>
+
+    <div class="score-banner"
+         th:classappend="${attempt.percentage >= 60} ? 'score-pass' : 'score-fail'">
+        <h2 th:text="${attempt.score} + ' / ' + ${attempt.totalQuestions}">0 / 0</h2>
+        <div th:text="'You scored ' + ${attempt.percentage} + '%'">You scored 0%</div>
+        <div th:if="${attempt.percentage >= 60}">Great work! &#127881;</div>
+        <div th:unless="${attempt.percentage >= 60}">Keep practising &mdash; review the explanations below.</div>
+    </div>
+
+    <div class="question" th:each="ans, aStat : ${attempt.answers}">
+        <div class="q-text">
+            <span th:text="${aStat.count} + '. '">1. </span>
+            <span th:text="${ans.question.text}">Question?</span>
+            <span class="tag" th:classappend="${ans.correct} ? 'tag-correct' : 'tag-wrong'"
+                  th:text="${ans.correct} ? 'Correct' : 'Wrong'" style="float:right;">Correct</span>
+        </div>
+
+        <div th:each="option, oStat : ${ans.question.options}">
+            <label class="option"
+                   th:classappend="${oStat.index == ans.question.correctOption} ? 'correct' :
+                                   (${oStat.index == ans.selectedOption} ? 'incorrect' : '')">
+                <span th:if="${oStat.index == ans.question.correctOption}">&#10003; </span>
+                <span th:if="${oStat.index == ans.selectedOption and oStat.index != ans.question.correctOption}">&#10007; </span>
+                <span th:text="${option}">Option</span>
+                <span class="muted" th:if="${oStat.index == ans.selectedOption}"> (your answer)</span>
+            </label>
+        </div>
+
+        <div class="explanation" th:if="${ans.question.explanation}">
+            <strong>Explanation:</strong>
+            <span th:text="${ans.question.explanation}">Explanation</span>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:24px; display:flex; gap:12px; justify-content:center;">
+        <a class="btn btn-success" th:href="@{'/practice/' + ${topic.slug}}">Try again</a>
+        <a class="btn btn-outline" th:href="@{'/topics/' + ${topic.slug}}">Review lessons</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Practice: ' + ${topic.name})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <div class="page-header">
+        <a class="muted" th:href="@{'/topics/' + ${topic.slug}}">&larr; Back to lessons</a>
+        <h1 th:text="'Practice: ' + ${topic.name}">Practice</h1>
+        <p class="muted">Choose the best answer for each question, then submit to get your score and explanations.</p>
+    </div>
+
+    <form th:action="@{'/practice/' + ${topic.slug}}" method="post">
+        <div class="question" th:each="question, qStat : ${topic.questions}">
+            <div class="q-text">
+                <span th:text="${qStat.count} + '. '">1. </span>
+                <span th:text="${question.text}">Question?</span>
+                <span class="tag" th:text="${question.difficulty}" style="float:right;">MEDIUM</span>
+            </div>
+            <label class="option" th:each="option, oStat : ${question.options}">
+                <input type="radio"
+                       th:name="'q_' + ${question.id}"
+                       th:value="${oStat.index}"
+                       required/>
+                <span th:text="${option}">Option</span>
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-block">Submit &amp; evaluate</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title th:text="${title}">GRE & CAT Math Tutor</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav class="navbar" th:fragment="navbar">
+    <a class="brand" th:href="@{/dashboard}">&#128218; GRE &amp; CAT Math Tutor</a>
+    <div class="nav-links">
+        <span sec:authorize="isAuthenticated()">
+            Hi, <strong sec:authentication="name">student</strong>
+        </span>
+        <a sec:authorize="isAuthenticated()" th:href="@{/dashboard}">Dashboard</a>
+        <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+            <button type="submit" class="btn-link-plain">Logout</button>
+        </form>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
+        <a sec:authorize="!isAuthenticated()" th:href="@{/register}">Sign up</a>
+    </div>
+</nav>
+</body>
+</html>

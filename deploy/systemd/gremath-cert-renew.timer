@@ -1,0 +1,11 @@
+[Unit]
+Description=Run GRE Math certificate renew twice daily
+
+[Timer]
+OnCalendar=*-*-* 03,15:00:00
+Persistent=true
+RandomizedDelaySec=10m
+Unit=gremath-cert-renew.service
+
+[Install]
+WantedBy=timers.target

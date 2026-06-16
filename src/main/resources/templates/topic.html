@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${topic.name})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <div class="page-header flex-between">
+        <div>
+            <a class="muted" th:href="@{/dashboard}">&larr; Back to dashboard</a>
+            <h1 th:text="${topic.name}">Topic</h1>
+            <p class="muted" th:text="${topic.description}">Description</p>
+        </div>
+        <a class="btn btn-success" th:href="@{'/practice/' + ${topic.slug}}">Start practice &rarr;</a>
+    </div>
+
+    <div class="card">
+        <h2>Learn</h2>
+        <div class="lesson" th:each="lesson : ${topic.lessons}">
+            <h3 th:text="${lesson.title}">Lesson title</h3>
+            <div th:utext="${lesson.content}">Lesson content</div>
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:28px;">
+        <a class="btn btn-success" th:href="@{'/practice/' + ${topic.slug}}">
+            Ready? Practice this topic &rarr;
+        </a>
+    </div>
+</div>
+</body>
+</html>

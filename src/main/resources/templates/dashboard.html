@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <div class="page-header">
+        <h1 th:text="'Welcome, ' + ${student.fullName} + '!'">Welcome!</h1>
+        <p class="muted">Pick a topic to learn and practice. Your scores are saved automatically.</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="value" th:text="${attemptsCount}">0</div>
+            <div class="label">Practice attempts</div>
+        </div>
+        <div class="stat">
+            <div class="value" th:text="${bestPercentage} + '%'">0%</div>
+            <div class="label">Best score</div>
+        </div>
+        <div class="stat">
+            <div class="value" th:text="${#lists.size(topics)}">0</div>
+            <div class="label">Topics available</div>
+        </div>
+    </div>
+
+    <h2>Topics</h2>
+    <div class="grid">
+        <a class="card topic-card" th:each="topic : ${topics}" th:href="@{'/topics/' + ${topic.slug}}">
+            <span class="badge"
+                  th:classappend="${topic.examType == 'GRE'} ? 'badge-gre' : (${topic.examType == 'CAT'} ? 'badge-cat' : 'badge-both')"
+                  th:text="${topic.examType}">BOTH</span>
+            <h3 th:text="${topic.name}" style="margin-top:10px;">Topic</h3>
+            <p th:text="${topic.description}">Description</p>
+            <span class="muted" th:text="${#lists.size(topic.lessons)} + ' lessons &middot; ' + ${#lists.size(topic.questions)} + ' questions'">lessons</span>
+        </a>
+    </div>
+
+    <h2 style="margin-top:36px;">Recent practice history</h2>
+    <div class="card" th:if="${#lists.isEmpty(history)}">
+        <p class="muted" style="margin:0;">No attempts yet. Start a practice sheet to see results here.</p>
+    </div>
+    <div class="card" th:unless="${#lists.isEmpty(history)}">
+        <table class="history">
+            <thead>
+            <tr>
+                <th>Topic</th>
+                <th>Score</th>
+                <th>Percentage</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${history}">
+                <td th:text="${a.topic.name}">Topic</td>
+                <td th:text="${a.score} + ' / ' + ${a.totalQuestions}">0/0</td>
+                <td th:text="${a.percentage} + '%'">0%</td>
+                <td th:text="${#temporals.format(a.takenAt, 'dd MMM yyyy, HH:mm')}">date</td>
+                <td><a th:href="@{'/result/' + ${a.id}}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
