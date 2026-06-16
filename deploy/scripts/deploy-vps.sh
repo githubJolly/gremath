@@ -7,13 +7,13 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 if [[ $# -lt 2 ]]; then
-  echo "Usage: $0 <domain> <email> [repo_url]"
-  echo "Example: $0 app.example.com admin@example.com https://github.com/you/GRE-Math.git"
+  echo "Usage: $0 <domain> <panel_public_ip> [repo_url]"
+  echo "Example: $0 app.example.com 203.0.113.10 https://github.com/you/GRE-Math.git"
   exit 1
 fi
 
 DOMAIN="$1"
-EMAIL="$2"
+PANEL_PUBLIC_IP="$2"
 REPO_URL="${3:-}"
 APP_DIR="/opt/gremath"
 
@@ -54,43 +54,26 @@ prepare_project() {
   cd "$APP_DIR"
 
   sed "s/__DOMAIN__/$DOMAIN/g" deploy/nginx/app.http.conf.template > deploy/nginx/app.conf
-  chmod +x deploy/scripts/renew-cert.sh
-}
-
-issue_initial_certificate() {
-  cd "$APP_DIR"
-
-  docker compose up -d app nginx
-  docker compose run --rm certbot certonly \
-    --webroot \
-    -w /var/www/certbot \
-    -d "$DOMAIN" \
-    --email "$EMAIL" \
-    --agree-tos \
-    --no-eff-email
-
-  sed "s/__DOMAIN__/$DOMAIN/g" deploy/nginx/app.conf.template > deploy/nginx/app.conf
-  docker compose restart nginx
 }
 
 install_systemd_units() {
   cp "$APP_DIR/deploy/systemd/gremath-stack.service" /etc/systemd/system/gremath-stack.service
-  cp "$APP_DIR/deploy/systemd/gremath-cert-renew.service" /etc/systemd/system/gremath-cert-renew.service
-  cp "$APP_DIR/deploy/systemd/gremath-cert-renew.timer" /etc/systemd/system/gremath-cert-renew.timer
 
   systemctl daemon-reload
   systemctl enable gremath-stack.service
   systemctl start gremath-stack.service
-  systemctl enable --now gremath-cert-renew.timer
 }
 
 install_prereqs
 prepare_project
-issue_initial_certificate
 install_systemd_units
 
 echo
 echo "Deployment complete."
-echo "URL: https://$DOMAIN"
+echo "HTTP URL (after panel mapping): http://$DOMAIN"
+echo
+echo "Next steps in your provider control panel:"
+echo "1) Add domain mapping: $DOMAIN -> <your VPS internal IP>:80"
+echo "2) Set DNS A record: $DOMAIN -> $PANEL_PUBLIC_IP"
+echo "3) Enable SSL in provider panel for $DOMAIN (Free SSL or custom cert)"
 echo "Stack service: systemctl status gremath-stack"
-echo "Renew timer:  systemctl status gremath-cert-renew.timer"
