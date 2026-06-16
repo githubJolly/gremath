@@ -11,7 +11,6 @@
             <h1 th:text="${topic.name}">Topic</h1>
             <p class="muted" th:text="${topic.description}">Description</p>
         </div>
-        <a class="btn btn-success" th:href="@{'/practice/' + ${topic.slug}}">Start practice &rarr;</a>
     </div>
 
     <div class="card">
@@ -27,11 +26,6 @@
         </div>
     </div>
 
-    <div style="text-align:center; margin-top:28px;">
-        <a class="btn btn-success" th:href="@{'/practice/' + ${topic.slug}}">
-            Ready? Practice this topic &rarr;
-        </a>
-    </div>
 </div>
 </body>
 </html>
