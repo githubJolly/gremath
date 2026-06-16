@@ -1,3 +1,10 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  org.springframework.security.crypto.password.PasswordEncoder
+ *  org.springframework.stereotype.Service
+ */
 package com.gremath.service;
 
 import com.gremath.dto.RegistrationForm;
@@ -8,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class StudentService {
-
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -18,23 +24,23 @@ public class StudentService {
     }
 
     public Student register(RegistrationForm form) {
-        if (studentRepository.existsByUsername(form.getUsername())) {
+        if (this.studentRepository.existsByUsername(form.getUsername())) {
             throw new IllegalArgumentException("Username already taken");
         }
-        if (form.getEmail() != null && studentRepository.existsByEmail(form.getEmail())) {
+        if (form.getEmail() != null && this.studentRepository.existsByEmail(form.getEmail())) {
             throw new IllegalArgumentException("Email already registered");
         }
         Student student = new Student();
         student.setUsername(form.getUsername());
         student.setFullName(form.getFullName());
         student.setEmail(form.getEmail());
-        student.setPassword(passwordEncoder.encode(form.getPassword()));
+        student.setPassword(this.passwordEncoder.encode((CharSequence)form.getPassword()));
         student.setRole("ROLE_STUDENT");
-        return studentRepository.save(student);
+        return (Student)this.studentRepository.save(student);
     }
 
     public Student getByUsername(String username) {
-        return studentRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalStateException("Student not found: " + username));
+        return this.studentRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("Student not found: " + username));
     }
 }
+

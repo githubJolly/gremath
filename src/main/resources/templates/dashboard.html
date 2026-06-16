@@ -25,6 +25,71 @@
         </div>
     </div>
 
+    <h2>Readiness predictor</h2>
+    <div class="card">
+        <div class="stats" style="margin-bottom:10px;">
+            <div class="stat">
+                <div class="value" th:text="${readiness.greProbability} + '%'">0%</div>
+                <div class="label">Live GRE probability</div>
+            </div>
+            <div class="stat">
+                <div class="value" th:text="${readiness.catProbability} + '%'">0%</div>
+                <div class="label">Live CAT probability</div>
+            </div>
+            <div class="stat">
+                <div class="value" th:text="${readiness.readinessScore} + '/100'">0/100</div>
+                <div class="label">Readiness score</div>
+            </div>
+            <div class="stat">
+                <div class="value" th:text="${readiness.confidence} + '%'">0%</div>
+                <div class="label">Prediction confidence</div>
+            </div>
+        </div>
+
+        <div style="margin:8px 0 12px;">
+            <strong>Current band:</strong> <span th:text="${readiness.band}">Build foundation</span>
+            <span class="muted"> &middot; based on </span>
+            <span th:text="${readiness.attemptsUsed}">0</span>
+            <span class="muted"> attempts (avg </span><span th:text="${readiness.averageScore} + '%'">0%</span>
+            <span class="muted">, recent </span><span th:text="${readiness.recentScore} + '%'">0%</span><span class="muted">)</span>
+        </div>
+
+        <div class="prob-track">
+            <div class="prob-fill prob-gre" th:style="'width:' + ${readiness.greProbability} + '%'"></div>
+        </div>
+        <div class="muted" style="font-size:0.9rem; margin-bottom:8px;">GRE readiness bar</div>
+
+        <div class="prob-track">
+            <div class="prob-fill prob-cat" th:style="'width:' + ${readiness.catProbability} + '%'"></div>
+        </div>
+        <div class="muted" style="font-size:0.9rem;">CAT readiness bar</div>
+
+        <details style="margin-top:14px;">
+            <summary style="cursor:pointer; font-weight:600;">How this score is calculated</summary>
+            <div class="muted" style="margin-top:8px;">
+                <p style="margin:0 0 8px;">
+                    This is a live estimate based on your practice history in this app. It is not an official exam guarantee,
+                    but a directional readiness signal that updates after every attempt.
+                </p>
+                <ul style="margin:0 0 8px 18px; padding:0;">
+                    <li><strong>Accuracy:</strong> weighted using average score, recent score trend, and best score.</li>
+                    <li><strong>Consistency:</strong> steadier performance gives a stronger readiness signal.</li>
+                    <li><strong>Completion:</strong> more quality attempts increase confidence in the estimate.</li>
+                </ul>
+                <p style="margin:0 0 8px;">
+                    <strong>Current breakdown:</strong>
+                    Accuracy <span th:text="${readiness.accuracyComponent}">0</span>/100,
+                    Consistency <span th:text="${readiness.consistencyComponent}">0</span>/100,
+                    Completion <span th:text="${readiness.completionComponent}">0</span>/100.
+                </p>
+                <p style="margin:0;">
+                    <strong>Confidence</strong> rises with number of attempts. Improve score + consistency over time to raise
+                    GRE/CAT readiness probabilities.
+                </p>
+            </div>
+        </details>
+    </div>
+
     <h2>Topics</h2>
     <div class="grid">
         <a class="card topic-card" th:each="topic : ${topics}" th:href="@{'/topics/' + ${topic.slug}}">
@@ -37,7 +102,36 @@
         </a>
     </div>
 
-    <h2 style="margin-top:36px;">Recent practice history</h2>
+    <h2 style="margin-top:36px;">Recent lesson sheet history</h2>
+    <div class="card" th:if="${#lists.isEmpty(sheetHistory)}">
+        <p class="muted" style="margin:0;">No lesson sheets attempted yet. Open a topic, pick a lesson, and try a practice sheet.</p>
+    </div>
+    <div class="card" th:unless="${#lists.isEmpty(sheetHistory)}">
+        <table class="history">
+            <thead>
+            <tr>
+                <th>Lesson</th>
+                <th>Sheet</th>
+                <th>Score</th>
+                <th>%</th>
+                <th>Date</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="a : ${sheetHistory}">
+                <td th:text="${a.lessonTitle}">Lesson</td>
+                <td th:text="${a.sheetLabel}">Sheet</td>
+                <td th:text="${a.score} + ' / ' + ${a.totalQuestions}">0/0</td>
+                <td th:text="${a.percentage} + '%'">0%</td>
+                <td th:text="${#temporals.format(a.takenAt, 'dd MMM, HH:mm')}">date</td>
+                <td><a th:href="@{'/practice/result/' + ${a.id}}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 style="margin-top:36px;">Recent topic-test history</h2>
     <div class="card" th:if="${#lists.isEmpty(history)}">
         <p class="muted" style="margin:0;">No attempts yet. Start a practice sheet to see results here.</p>
     </div>

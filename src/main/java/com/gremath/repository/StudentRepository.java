@@ -1,15 +1,21 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  org.springframework.data.jpa.repository.JpaRepository
+ */
 package com.gremath.repository;
 
 import com.gremath.model.Student;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+public interface StudentRepository
+extends JpaRepository<Student, Long> {
+    public Optional<Student> findByUsername(String var1);
 
-public interface StudentRepository extends JpaRepository<Student, Long> {
+    public boolean existsByUsername(String var1);
 
-    Optional<Student> findByUsername(String username);
-
-    boolean existsByUsername(String username);
-
-    boolean existsByEmail(String email);
+    public boolean existsByEmail(String var1);
 }
+

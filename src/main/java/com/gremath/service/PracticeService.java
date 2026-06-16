@@ -1,43 +1,44 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  org.springframework.stereotype.Service
+ *  org.springframework.transaction.annotation.Transactional
+ */
 package com.gremath.service;
 
-import com.gremath.model.*;
+import com.gremath.model.AttemptAnswer;
+import com.gremath.model.PracticeAttempt;
+import com.gremath.model.Question;
+import com.gremath.model.Student;
+import com.gremath.model.Topic;
 import com.gremath.repository.PracticeAttemptRepository;
+import java.util.List;
+import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Map;
-
 @Service
 public class PracticeService {
-
     private final PracticeAttemptRepository attemptRepository;
 
     public PracticeService(PracticeAttemptRepository attemptRepository) {
         this.attemptRepository = attemptRepository;
     }
 
-    /**
-     * Grades a submitted practice sheet and persists the attempt with per-question feedback.
-     *
-     * @param student   the logged in student
-     * @param topic     the topic being practised
-     * @param responses map of question id -> selected option index
-     */
     @Transactional
     public PracticeAttempt grade(Student student, Topic topic, Map<Long, Integer> responses) {
         PracticeAttempt attempt = new PracticeAttempt();
         attempt.setStudent(student);
         attempt.setTopic(topic);
-
         List<Question> questions = topic.getQuestions();
         int score = 0;
-
         for (Question question : questions) {
+            boolean correct;
             int selected = responses.getOrDefault(question.getId(), -1);
-            boolean correct = selected == question.getCorrectOption();
+            boolean bl = correct = selected == question.getCorrectOption();
             if (correct) {
-                score++;
+                ++score;
             }
             AttemptAnswer answer = new AttemptAnswer();
             answer.setQuestion(question);
@@ -45,29 +46,25 @@ public class PracticeService {
             answer.setCorrect(correct);
             attempt.addAnswer(answer);
         }
-
         attempt.setScore(score);
         attempt.setTotalQuestions(questions.size());
-
-        return attemptRepository.save(attempt);
+        return (PracticeAttempt)this.attemptRepository.save(attempt);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly=true)
     public List<PracticeAttempt> getHistory(Student student) {
-        List<PracticeAttempt> attempts = attemptRepository.findByStudentOrderByTakenAtDesc(student);
-        // Touch the lazy topic so the dashboard can show its name.
+        List<PracticeAttempt> attempts = this.attemptRepository.findByStudentOrderByTakenAtDesc(student);
         attempts.forEach(a -> a.getTopic().getName());
         return attempts;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly=true)
     public PracticeAttempt getAttempt(Long id) {
-        PracticeAttempt attempt = attemptRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Attempt not found: " + id));
+        PracticeAttempt attempt = (PracticeAttempt)this.attemptRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Attempt not found: " + id));
         attempt.getTopic().getName();
         attempt.getStudent().getId();
-        // Initialise answers and their question options for the results page.
         attempt.getAnswers().forEach(ans -> ans.getQuestion().getOptions().size());
         return attempt;
     }
 }
+

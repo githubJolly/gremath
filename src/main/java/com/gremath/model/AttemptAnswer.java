@@ -1,30 +1,46 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  jakarta.persistence.Entity
+ *  jakarta.persistence.FetchType
+ *  jakarta.persistence.GeneratedValue
+ *  jakarta.persistence.GenerationType
+ *  jakarta.persistence.Id
+ *  jakarta.persistence.JoinColumn
+ *  jakarta.persistence.ManyToOne
+ *  jakarta.persistence.Table
+ */
 package com.gremath.model;
 
-import jakarta.persistence.*;
+import com.gremath.model.PracticeAttempt;
+import com.gremath.model.Question;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "attempt_answers")
+@Table(name="attempt_answers")
 public class AttemptAnswer {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "attempt_id")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="attempt_id")
     private PracticeAttempt attempt;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "question_id")
+    @ManyToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="question_id")
     private Question question;
-
-    /** Zero-based index of the option chosen by the student; -1 if unanswered. */
     private int selectedOption;
-
     private boolean correct;
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -32,7 +48,7 @@ public class AttemptAnswer {
     }
 
     public PracticeAttempt getAttempt() {
-        return attempt;
+        return this.attempt;
     }
 
     public void setAttempt(PracticeAttempt attempt) {
@@ -40,7 +56,7 @@ public class AttemptAnswer {
     }
 
     public Question getQuestion() {
-        return question;
+        return this.question;
     }
 
     public void setQuestion(Question question) {
@@ -48,7 +64,7 @@ public class AttemptAnswer {
     }
 
     public int getSelectedOption() {
-        return selectedOption;
+        return this.selectedOption;
     }
 
     public void setSelectedOption(int selectedOption) {
@@ -56,10 +72,11 @@ public class AttemptAnswer {
     }
 
     public boolean isCorrect() {
-        return correct;
+        return this.correct;
     }
 
     public void setCorrect(boolean correct) {
         this.correct = correct;
     }
 }
+

@@ -1,38 +1,57 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  jakarta.persistence.CascadeType
+ *  jakarta.persistence.Entity
+ *  jakarta.persistence.FetchType
+ *  jakarta.persistence.GeneratedValue
+ *  jakarta.persistence.GenerationType
+ *  jakarta.persistence.Id
+ *  jakarta.persistence.JoinColumn
+ *  jakarta.persistence.ManyToOne
+ *  jakarta.persistence.OneToMany
+ *  jakarta.persistence.Table
+ */
 package com.gremath.model;
 
-import jakarta.persistence.*;
-
+import com.gremath.model.AttemptAnswer;
+import com.gremath.model.Student;
+import com.gremath.model.Topic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "practice_attempts")
+@Table(name="practice_attempts")
 public class PracticeAttempt {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "student_id")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="student_id")
     private Student student;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic_id")
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="topic_id")
     private Topic topic;
-
     private int score;
-
     private int totalQuestions;
-
     private LocalDateTime takenAt = LocalDateTime.now();
-
-    @OneToMany(mappedBy = "attempt", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AttemptAnswer> answers = new ArrayList<>();
+    @OneToMany(mappedBy="attempt", cascade={CascadeType.ALL}, orphanRemoval=true)
+    private List<AttemptAnswer> answers = new ArrayList<AttemptAnswer>();
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -40,7 +59,7 @@ public class PracticeAttempt {
     }
 
     public Student getStudent() {
-        return student;
+        return this.student;
     }
 
     public void setStudent(Student student) {
@@ -48,7 +67,7 @@ public class PracticeAttempt {
     }
 
     public Topic getTopic() {
-        return topic;
+        return this.topic;
     }
 
     public void setTopic(Topic topic) {
@@ -56,7 +75,7 @@ public class PracticeAttempt {
     }
 
     public int getScore() {
-        return score;
+        return this.score;
     }
 
     public void setScore(int score) {
@@ -64,7 +83,7 @@ public class PracticeAttempt {
     }
 
     public int getTotalQuestions() {
-        return totalQuestions;
+        return this.totalQuestions;
     }
 
     public void setTotalQuestions(int totalQuestions) {
@@ -72,7 +91,7 @@ public class PracticeAttempt {
     }
 
     public LocalDateTime getTakenAt() {
-        return takenAt;
+        return this.takenAt;
     }
 
     public void setTakenAt(LocalDateTime takenAt) {
@@ -80,7 +99,7 @@ public class PracticeAttempt {
     }
 
     public List<AttemptAnswer> getAnswers() {
-        return answers;
+        return this.answers;
     }
 
     public void setAnswers(List<AttemptAnswer> answers) {
@@ -93,9 +112,10 @@ public class PracticeAttempt {
     }
 
     public int getPercentage() {
-        if (totalQuestions == 0) {
+        if (this.totalQuestions == 0) {
             return 0;
         }
-        return Math.round((score * 100f) / totalQuestions);
+        return Math.round((float)this.score * 100.0f / (float)this.totalQuestions);
     }
 }
+

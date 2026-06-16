@@ -2,6 +2,8 @@ target/
 data/
 *.log
 deploy/nginx/app.conf
+recovery/
+tools/
 
 # IDE
 .idea/

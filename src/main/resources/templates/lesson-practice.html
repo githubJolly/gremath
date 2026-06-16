@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Practice: ' + ${lessonTitle})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <div class="page-header">
+        <a class="muted" th:href="@{'/topics/' + ${topicSlug}}">&larr; Back to lessons</a>
+        <h1 th:text="${lessonTitle}">Lesson</h1>
+        <p class="muted">Pick a sheet to practice. Each numbered sheet has fresh questions; sheets are auto-graded with full explanations.</p>
+    </div>
+
+    <div class="card" th:if="${wordStrategy}" style="margin-bottom:24px;">
+        <h2>&#129504; Strategy: solving word problems</h2>
+        <div class="lesson" th:utext="${wordStrategy}">strategy</div>
+    </div>
+
+    <h2>&#9999;&#65039; Concept practice sheets</h2>
+    <p class="muted">Drills that build speed and accuracy on the core skill.</p>
+    <div class="grid">
+        <a class="card topic-card" th:each="s : ${conceptSheets}"
+           th:href="@{'/practice/sheet/' + ${lessonKey} + '/' + ${s.typeName()} + '/' + ${s.number()}}">
+            <span class="badge" th:classappend="${s.classic()} ? 'badge-cat' : 'badge-both'"
+                  th:text="${s.classic()} ? 'CLASSIC' : 'SHEET ' + ${s.number()}">SHEET</span>
+            <h3 th:text="${s.label()}" style="margin-top:10px;">Sheet</h3>
+            <p class="muted" th:text="${s.questionCount()} + ' questions'">20 questions</p>
+        </a>
+    </div>
+
+    <h2 style="margin-top:32px;">&#128221; Word-problem practice sheets</h2>
+    <p class="muted">Real-world scenarios that test if you can translate words into the right calculation.</p>
+    <div class="grid">
+        <a class="card topic-card" th:each="s : ${wordSheets}"
+           th:href="@{'/practice/sheet/' + ${lessonKey} + '/' + ${s.typeName()} + '/' + ${s.number()}}">
+            <span class="badge" th:classappend="${s.classic()} ? 'badge-cat' : 'badge-gre'"
+                  th:text="${s.classic()} ? 'CLASSIC' : 'WP ' + ${s.number()}">WP</span>
+            <h3 th:text="${s.label()}" style="margin-top:10px;">Sheet</h3>
+            <p class="muted" th:text="${s.questionCount()} + ' questions'">20 questions</p>
+        </a>
+    </div>
+</div>
+</body>
+</html>

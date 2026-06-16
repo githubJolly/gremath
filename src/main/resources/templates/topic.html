@@ -19,6 +19,11 @@
         <div class="lesson" th:each="lesson : ${topic.lessons}">
             <h3 th:text="${lesson.title}">Lesson title</h3>
             <div th:utext="${lesson.content}">Lesson content</div>
+            <div th:if="${lesson.hasPractice()}" style="margin-top:12px;">
+                <a class="btn btn-outline" th:href="@{'/practice/lesson/' + ${lesson.practiceKey}}">
+                    &#9999;&#65039; Practice sheets for this lesson &rarr;
+                </a>
+            </div>
         </div>
     </div>
 

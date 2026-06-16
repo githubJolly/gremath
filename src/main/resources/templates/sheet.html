@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${sheetTitle})}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <div class="page-header">
+        <a class="muted" th:href="@{'/practice/lesson/' + ${lessonKey}}">&larr; Back to sheets</a>
+        <h1 th:text="${sheetTitle}">Sheet</h1>
+        <p class="muted" th:text="${lessonTitle}">Lesson</p>
+    </div>
+
+    <div class="card timer-card" id="timerCard" th:attr="data-total-seconds=${timerSeconds}">
+        <div class="timer-head">
+            <strong>Practice timer</strong>
+            <span class="timer-clock" id="timerClock" th:text="${timerDisplay}">30:00</span>
+        </div>
+        <div class="timer-bar-wrap">
+            <div class="timer-bar" id="timerBar"></div>
+        </div>
+        <p class="muted" style="margin:8px 0 0;" th:text="${timerGuidance}">Concept pace guidance.</p>
+    </div>
+
+    <form id="sheetForm" th:action="@{'/practice/sheet/' + ${lessonKey} + '/' + ${type} + '/' + ${number}}" method="post">
+        <input type="hidden" name="timedOut" id="timedOut" value="false"/>
+        <div class="question" th:each="q, qStat : ${questions}">
+            <div class="q-text">
+                <span th:text="${qStat.count} + '. '">1. </span>
+                <span th:text="${q.text}">Question?</span>
+                <span class="tag" th:text="${q.tag}" style="float:right;">tag</span>
+            </div>
+            <label class="option" th:each="option, oStat : ${q.options}">
+                <input type="radio" th:name="'q_' + ${qStat.index}" th:value="${oStat.index}"/>
+                <span th:text="${option}">Option</span>
+            </label>
+        </div>
+        <p class="muted" style="margin-top:6px;">You can submit early. Any unanswered questions will be graded as incorrect.</p>
+        <button id="submitBtn" type="submit" class="btn btn-success btn-block">Submit &amp; evaluate</button>
+    </form>
+</div>
+<script>
+    (function () {
+        const timerCard = document.getElementById('timerCard');
+        const form = document.getElementById('sheetForm');
+        const clock = document.getElementById('timerClock');
+        const bar = document.getElementById('timerBar');
+        const submitBtn = document.getElementById('submitBtn');
+        const timedOutInput = document.getElementById('timedOut');
+        if (!timerCard || !form || !clock || !bar || !submitBtn || !timedOutInput) {
+            return;
+        }
+
+        const total = parseInt(timerCard.dataset.totalSeconds || "0", 10);
+        if (!Number.isFinite(total) || total <= 0) {
+            return;
+        }
+        let left = total;
+        let done = false;
+
+        function fmt(sec) {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return String(m).padStart(2, '0') + ":" + String(s).padStart(2, '0');
+        }
+
+        function render() {
+            clock.textContent = fmt(left);
+            const pct = Math.max(0, Math.min(100, (left / total) * 100));
+            bar.style.width = pct + "%";
+            if (left <= 60) {
+                timerCard.classList.add('timer-warning');
+            }
+        }
+
+        function submitTimeout() {
+            if (done) return;
+            done = true;
+            timedOutInput.value = "true";
+            submitBtn.textContent = "Time over — submitting...";
+            submitBtn.disabled = true;
+            form.submit();
+        }
+
+        render();
+        const id = setInterval(function () {
+            left -= 1;
+            if (left <= 0) {
+                clearInterval(id);
+                left = 0;
+                render();
+                submitTimeout();
+                return;
+            }
+            render();
+        }, 1000);
+    })();
+</script>
+</body>
+</html>

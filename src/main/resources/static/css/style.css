@@ -286,6 +286,95 @@ input:focus {
     font-family: "Cascadia Code", Consolas, monospace;
 }
 
+/* Lesson callout boxes */
+.callout {
+    border-radius: 10px;
+    padding: 14px 16px 14px 18px;
+    margin: 16px 0;
+    border-left: 5px solid var(--muted);
+    background: #f8fafc;
+}
+
+.callout .callout-title {
+    display: block;
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.callout p:last-child { margin-bottom: 0; }
+
+.c-analogy { background: #f5f3ff; border-left-color: #8b5cf6; }
+.c-analogy .callout-title { color: #6d28d9; }
+
+.c-example { background: #eff6ff; border-left-color: #3b82f6; }
+.c-example .callout-title { color: #1d4ed8; }
+
+.c-tip { background: #f0fdf4; border-left-color: #22c55e; }
+.c-tip .callout-title { color: #15803d; }
+
+.c-warn { background: #fff7ed; border-left-color: #f97316; }
+.c-warn .callout-title { color: #c2410c; }
+
+.c-recap { background: #ecfeff; border-left-color: #06b6d4; }
+.c-recap .callout-title { color: #0e7490; }
+
+.c-key { background: #eef2ff; border-left-color: var(--primary); }
+.c-key .callout-title { color: var(--primary-dark); }
+
+.c-ref { background: #fdf4ff; border-left-color: #c026d3; }
+.c-ref .callout-title { color: #a21caf; }
+
+/* Step-by-step lists inside lessons */
+.lesson ol.steps {
+    counter-reset: step;
+    list-style: none;
+    padding-left: 0;
+    margin: 12px 0;
+}
+
+.lesson ol.steps > li {
+    position: relative;
+    padding: 6px 0 6px 40px;
+    margin-bottom: 6px;
+}
+
+.lesson ol.steps > li::before {
+    counter-increment: step;
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 26px;
+    height: 26px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 26px;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.lesson h4 {
+    color: var(--primary-dark);
+    margin: 18px 0 6px;
+    font-size: 1.08rem;
+}
+
+.lesson .qa {
+    font-style: italic;
+    color: var(--muted);
+}
+
+.lesson .big-num {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
 /* Practice questions */
 .question {
     background: #fff;
@@ -373,6 +462,72 @@ input:focus {
 
 .page-header h1 {
     margin: 0 0 4px;
+}
+
+.timer-card {
+    margin-bottom: 18px;
+    position: sticky;
+    top: 12px;
+    z-index: 5;
+}
+
+.timer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.timer-clock {
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+}
+
+.timer-bar-wrap {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, var(--success), #22c55e);
+    transition: width 1s linear;
+}
+
+.timer-warning .timer-clock {
+    color: var(--danger);
+}
+
+.timer-warning .timer-bar {
+    background: linear-gradient(90deg, #f59e0b, var(--danger));
+}
+
+.prob-track {
+    width: 100%;
+    height: 12px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    overflow: hidden;
+}
+
+.prob-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+.prob-gre {
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+}
+
+.prob-cat {
+    background: linear-gradient(90deg, #8b5cf6, #4f46e5);
 }
 
 .hero {
