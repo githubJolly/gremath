@@ -20,7 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,28 +48,72 @@ public class DataInitializer {
             new ProfitInterestContent());
 
     @Bean
-    @Transactional
-    CommandLineRunner seedData(TopicRepository topicRepository, LessonRepository lessonRepository) {
-        return args -> {
+    CommandLineRunner seedData(TopicRepository topicRepository, LessonRepository lessonRepository,
+                               PlatformTransactionManager transactionManager) {
+        TransactionTemplate tx = new TransactionTemplate(transactionManager);
+        return args -> tx.executeWithoutResult(status -> {
             if (topicRepository.count() == 0L) {
                 log.info("Seeding initial topic and lesson content.");
                 seedAll(topicRepository);
                 return;
             }
 
-            if (needsContentRefresh(lessonRepository)) {
+            if (needsContentRefresh(topicRepository, lessonRepository)) {
                 log.info("Refreshing topic and lesson content from latest builders.");
                 refreshAll(topicRepository);
             }
-        };
+        });
     }
 
-    private boolean needsContentRefresh(LessonRepository lessonRepository) {
+    private boolean needsContentRefresh(TopicRepository topicRepository, LessonRepository lessonRepository) {
         List<Lesson> lessons = lessonRepository.findAll();
         if (lessons.isEmpty()) {
             return true;
         }
-        return lessons.stream().anyMatch(lesson -> !lesson.hasPractice());
+        if (lessons.stream().anyMatch(lesson -> !lesson.hasPractice())) {
+            return true;
+        }
+
+        Map<String, Topic> existingBySlug = new HashMap<>();
+        for (Topic t : topicRepository.findAll()) {
+            existingBySlug.put(t.getSlug(), t);
+        }
+
+        for (TopicContent content : CONTENT) {
+            Topic fresh = content.build();
+            Topic existing = existingBySlug.get(fresh.getSlug());
+            if (existing == null) {
+                return true;
+            }
+            if (existing.getLessons().size() != fresh.getLessons().size()) {
+                return true;
+            }
+            Map<Integer, Lesson> existingByOrder = new HashMap<>();
+            for (Lesson l : existing.getLessons()) {
+                existingByOrder.put(l.getOrderIndex(), l);
+            }
+            for (Lesson fl : fresh.getLessons()) {
+                Lesson el = existingByOrder.get(fl.getOrderIndex());
+                if (el == null) {
+                    return true;
+                }
+                if (!java.util.Objects.equals(el.getTitle(), fl.getTitle())) {
+                    return true;
+                }
+                if (!java.util.Objects.equals(el.getPracticeKey(), fl.getPracticeKey())) {
+                    return true;
+                }
+                if (!java.util.Objects.equals(el.getWordStrategy(), fl.getWordStrategy())) {
+                    return true;
+                }
+                String elNorm = com.gremath.content.Enrich.normalizeLessonContent(el.getTitle(), el.getOrderIndex(), el.getContent());
+                String flNorm = com.gremath.content.Enrich.normalizeLessonContent(fl.getTitle(), fl.getOrderIndex(), fl.getContent());
+                if (!java.util.Objects.equals(elNorm, flNorm)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void seedAll(TopicRepository topicRepository) {

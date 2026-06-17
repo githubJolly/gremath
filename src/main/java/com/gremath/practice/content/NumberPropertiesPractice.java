@@ -28,6 +28,9 @@ public final class NumberPropertiesPractice {
         reg.add(NumberPropertiesPractice.hcfLcm());
         reg.add(NumberPropertiesPractice.remainders());
         reg.add(NumberPropertiesPractice.unitsDigit());
+        reg.add(NumberPropertiesPractice.factorCount());
+        reg.add(NumberPropertiesPractice.factorials());
+        reg.add(NumberPropertiesPractice.coprimes());
     }
 
     private static int gcd(int a, int b) {
@@ -83,6 +86,46 @@ public final class NumberPropertiesPractice {
             ++c;
         }
         return c;
+    }
+
+    private static int sumOfFactors(int n) {
+        int sum = 0;
+        for (int i = 1; i <= n; ++i) {
+            if (n % i != 0) continue;
+            sum += i;
+        }
+        return sum;
+    }
+
+    private static int countOddFactors(int n) {
+        int c = 0;
+        for (int i = 1; i <= n; i += 2) {
+            if (n % i != 0) continue;
+            ++c;
+        }
+        return c;
+    }
+
+    private static int trailingZeroes(int n) {
+        int count = 0;
+        for (int p = 5; p <= n; p *= 5) {
+            count += n / p;
+        }
+        return count;
+    }
+
+    private static int highestPowerOfPrime(int n, int prime) {
+        int count = 0;
+        long p = prime;
+        while (p <= (long)n) {
+            count += (int)((long)n / p);
+            p *= prime;
+        }
+        return count;
+    }
+
+    private static boolean isCoprime(int a, int b) {
+        return NumberPropertiesPractice.gcd(a, b) == 1;
     }
 
     private static int unitsDigit(int base, int exp) {
@@ -387,6 +430,98 @@ public final class NumberPropertiesPractice {
         });
         lp.classicConcept(new GeneratedQuestion("What is the units digit of 7^100?", List.of("1", "7", "9", "3"), 0, "7 cycles 7,9,3,1 (length 4). 100 is a multiple of 4, so the units digit is the 4th, which is 1.", "HARD", EX), new GeneratedQuestion("What is the units digit of 6 raised to any positive power?", List.of("6", "0", "1", "It varies"), 0, "6\u00d76 = 36, 6\u00d736 = 216 \u2026 a number ending in 6 always stays ending in 6.", "EASY", EX));
         lp.classicWord(new GeneratedQuestion("A PIN is the last digit of 3^2024. What is it?", List.of("1", "3", "9", "7"), 0, "3 cycles 3,9,7,1 (length 4). 2024 is a multiple of 4, so the units digit is 1.", "HARD", CWP), new GeneratedQuestion("The last digit of 2^7 is:", List.of("8", "4", "2", "6"), 0, "2 cycles 2,4,8,6. Position 7 \u2192 7 mod 4 = 3 \u2192 the 3rd value, 8.", "MEDIUM", WP));
+        return lp.sheets(20, 10, 20);
+    }
+
+    private static LessonPractice factorCount() {
+        LessonPractice lp = new LessonPractice("np-factor-count", TOPIC, "Counting factors and their sums");
+        lp.concept(rng -> {
+            int n = QBuilder.pick(rng, 36, 48, 60, 72, 96, 100, 120, 144, 180, 200);
+            int f = NumberPropertiesPractice.countFactors(n);
+            return QBuilder.build(rng, "How many factors does " + n + " have?", NumberPropertiesPractice.s(f), "Write " + n + " in prime powers, add 1 to each power, then multiply. " + n + " has " + f + " factors.", "MEDIUM", EX, NumberPropertiesPractice.s(f + 1), NumberPropertiesPractice.s(f - 1), NumberPropertiesPractice.s(f + 2), NumberPropertiesPractice.s(Math.max(2, f - 2)));
+        }, rng -> {
+            int n = QBuilder.pick(rng, 12, 18, 20, 28, 40, 45, 50, 60);
+            int sum = NumberPropertiesPractice.sumOfFactors(n);
+            return QBuilder.build(rng, "What is the sum of all factors of " + n + "?", NumberPropertiesPractice.s(sum), "Add every divisor of " + n + " (or multiply the power-sum brackets of its prime form). Total = " + sum + ".", "HARD", EX, NumberPropertiesPractice.s(sum + 1), NumberPropertiesPractice.s(sum - n), NumberPropertiesPractice.s(sum + n), NumberPropertiesPractice.s(sum - 1));
+        }, rng -> {
+            int n = QBuilder.pick(rng, 24, 40, 54, 72, 90, 96, 120, 144);
+            int odd = NumberPropertiesPractice.countOddFactors(n);
+            return QBuilder.build(rng, "How many odd factors does " + n + " have?", NumberPropertiesPractice.s(odd), "Ignore every power of 2 in the prime form of " + n + " and count the rest: " + odd + " odd factors.", "HARD", EX, NumberPropertiesPractice.s(odd + 1), NumberPropertiesPractice.s(odd - 1), NumberPropertiesPractice.s(NumberPropertiesPractice.countFactors(n)), NumberPropertiesPractice.s(odd + 2));
+        });
+        lp.word(rng -> {
+            int n = QBuilder.pick(rng, 12, 18, 20, 24, 30, 40, 45, 48);
+            int pairs = NumberPropertiesPractice.countFactors(n) / 2;
+            return QBuilder.build(rng, "A gardener plants " + n + " identical bushes in a full rectangular block (rows \u00d7 columns). How many differently shaped blocks are possible?", NumberPropertiesPractice.s(pairs), "Each rectangle uses a factor pair of " + n + ". With " + NumberPropertiesPractice.countFactors(n) + " factors, there are " + pairs + " distinct shapes.", "MEDIUM", WP, NumberPropertiesPractice.s(pairs + 1), NumberPropertiesPractice.s(pairs - 1), NumberPropertiesPractice.s(NumberPropertiesPractice.countFactors(n)), NumberPropertiesPractice.s(pairs + 2));
+        }, rng -> {
+            int n = QBuilder.pick(rng, 12, 18, 24, 28, 30, 36, 40);
+            int ways = NumberPropertiesPractice.countFactors(n) - 2;
+            return QBuilder.build(rng, n + " chairs are set in equal rows with more than one row and more than one chair per row. In how many ways can this be done?", NumberPropertiesPractice.s(ways), "Count factor pairs but drop the 1\u00d7" + n + " and " + n + "\u00d71 layouts: " + NumberPropertiesPractice.countFactors(n) + " \u2212 2 = " + ways + " ways.", "HARD", CWP, NumberPropertiesPractice.s(ways + 1), NumberPropertiesPractice.s(ways + 2), NumberPropertiesPractice.s(NumberPropertiesPractice.countFactors(n)), NumberPropertiesPractice.s(Math.max(1, ways - 1)));
+        });
+        lp.classicConcept(new GeneratedQuestion("Which number has an odd number of factors?", List.of("49", "50", "48", "45"), 0, "Only perfect squares have an odd number of factors. 49 = 7\u00b2 has factors 1, 7, 49.", "MEDIUM", EX), new GeneratedQuestion("How many factors does 2\u00b3 \u00d7 3\u00b2 \u00d7 5 have?", List.of("24", "18", "12", "30"), 0, "(3+1)(2+1)(1+1) = 4\u00d73\u00d72 = 24.", "MEDIUM", EX));
+        lp.classicWord(new GeneratedQuestion("A perfect-square number of tiles can always be laid out as:", List.of("a square (equal rows and columns)", "only a single line", "only a 2-row block", "never a rectangle"), 0, "A perfect square has a factor equal to its own square root, giving an equal rows\u00d7columns layout.", "MEDIUM", WP), new GeneratedQuestion("How many factors of 1200 = 2\u2074\u00d73\u00d75\u00b2 are divisible by 15?", List.of("10", "12", "8", "15"), 0, "Force 3\u00b9 and 5\u00b9: free choices are the power of 2 (5 ways) and the spare 5 (2 ways) \u2192 5\u00d72 = 10.", "HARD", CWP));
+        return lp.sheets(20, 10, 20);
+    }
+
+    private static LessonPractice factorials() {
+        LessonPractice lp = new LessonPractice("np-factorial", TOPIC, "Factorials: trailing zeroes & highest powers");
+        lp.concept(rng -> {
+            int n = QBuilder.pick(rng, 25, 30, 47, 50, 60, 72, 100, 125, 90, 80);
+            int z = NumberPropertiesPractice.trailingZeroes(n);
+            return QBuilder.build(rng, "How many trailing zeroes does " + n + "! end in?", NumberPropertiesPractice.s(z), "Count the 5s: [" + n + "/5] + [" + n + "/25] + \u2026 = " + z + " zeroes.", "HARD", EX, NumberPropertiesPractice.s(z + 1), NumberPropertiesPractice.s(z - 1), NumberPropertiesPractice.s(z + 2), NumberPropertiesPractice.s(n / 5));
+        }, rng -> {
+            int n = QBuilder.pick(rng, 30, 40, 50, 60, 80, 100);
+            int p = QBuilder.pick(rng, 3, 7);
+            int hp = NumberPropertiesPractice.highestPowerOfPrime(n, p);
+            return QBuilder.build(rng, "What is the highest power of " + p + " that divides " + n + "! exactly?", NumberPropertiesPractice.s(hp), "Add [" + n + "/" + p + "] + [" + n + "/" + p * p + "] + \u2026 = " + hp + ".", "HARD", EX, NumberPropertiesPractice.s(hp + 1), NumberPropertiesPractice.s(hp - 1), NumberPropertiesPractice.s(n / p), NumberPropertiesPractice.s(hp + 2));
+        }, rng -> {
+            int n = QBuilder.pick(rng, 20, 25, 30, 40, 50);
+            int hp = NumberPropertiesPractice.highestPowerOfPrime(n, 2);
+            return QBuilder.build(rng, "What is the highest power of 2 that divides " + n + "! exactly?", NumberPropertiesPractice.s(hp), "Add [" + n + "/2] + [" + n + "/4] + [" + n + "/8] + \u2026 = " + hp + ".", "HARD", EX, NumberPropertiesPractice.s(hp + 1), NumberPropertiesPractice.s(hp - 1), NumberPropertiesPractice.s(n / 2), NumberPropertiesPractice.s(hp + 2));
+        });
+        lp.word(rng -> {
+            int n = QBuilder.pick(rng, 30, 45, 50, 60, 75, 90);
+            int z = NumberPropertiesPractice.trailingZeroes(n);
+            return QBuilder.build(rng, "The product of all whole numbers from 1 to " + n + " is written out. How many zeroes does it end in?", NumberPropertiesPractice.s(z), "That product is " + n + "!. Trailing zeroes = number of 5s = " + z + ".", "HARD", WP, NumberPropertiesPractice.s(z + 1), NumberPropertiesPractice.s(z - 1), NumberPropertiesPractice.s(z + 2), NumberPropertiesPractice.s(n / 5));
+        }, rng -> {
+            int n = QBuilder.pick(rng, 40, 50, 60, 80, 87);
+            int fives = NumberPropertiesPractice.highestPowerOfPrime(n, 5);
+            int threes = NumberPropertiesPractice.highestPowerOfPrime(n, 3);
+            int ans = Math.min(fives, threes);
+            return QBuilder.build(rng, "What is the highest power of 15 that divides " + n + "! exactly?", NumberPropertiesPractice.s(ans), "15 = 3\u00d75. Count both: 5s = " + fives + ", 3s = " + threes + ". The scarcer one wins \u2192 " + ans + ".", "HARD", CWP, NumberPropertiesPractice.s(ans + 1), NumberPropertiesPractice.s(ans - 1), NumberPropertiesPractice.s(Math.max(fives, threes)), NumberPropertiesPractice.s(ans + 2));
+        });
+        lp.classicConcept(new GeneratedQuestion("How many trailing zeroes are there in 100!?", List.of("24", "20", "25", "10"), 0, "[100/5] + [100/25] = 20 + 4 = 24.", "HARD", EX), new GeneratedQuestion("The highest power of 5 in 50! is:", List.of("12", "10", "6", "8"), 0, "[50/5] + [50/25] = 10 + 2 = 12.", "MEDIUM", EX));
+        lp.classicWord(new GeneratedQuestion("Why do we count only the 5s for trailing zeroes in a factorial?", List.of("5s are scarcer than 2s, and each zero needs a 2\u00d75 pair", "5s are larger numbers", "2s never appear in factorials", "factorials contain no 2s"), 0, "Every trailing zero comes from a 2\u00d75 pair; 2s are plentiful, so the supply of 5s is the limit.", "MEDIUM", WP), new GeneratedQuestion("The highest power of 6 dividing 20! is governed by:", List.of("the number of 3s (the scarcer prime)", "the number of 2s", "the number of 6s directly", "the number of 5s"), 0, "6 = 2\u00d73; 3s are scarcer than 2s in any factorial, so the 3s decide it.", "HARD", CWP));
+        return lp.sheets(20, 10, 20);
+    }
+
+    private static LessonPractice coprimes() {
+        LessonPractice lp = new LessonPractice("np-coprime", TOPIC, "Co-prime numbers and how to use them");
+        lp.concept(rng -> {
+            int a = QBuilder.range(rng, 8, 40);
+            int b = QBuilder.range(rng, 8, 40);
+            int g = NumberPropertiesPractice.gcd(a, b);
+            String correct = g == 1 ? "Yes" : "No";
+            return QBuilder.build(rng, "Are " + a + " and " + b + " co-prime (HCF = 1)?", correct, "HCF(" + a + ", " + b + ") = " + g + (g == 1 ? ", so they are co-prime." : ", which is more than 1, so they are not co-prime."), "MEDIUM", EX, g == 1 ? "No" : "Yes", "Only if both are prime");
+        }, rng -> {
+            int n = QBuilder.range(rng, 12, 80);
+            return QBuilder.build(rng, "What is the HCF of the consecutive numbers " + n + " and " + (n + 1) + "?", "1", "Two consecutive numbers never share a factor other than 1, so their HCF is always 1.", "EASY", EX, NumberPropertiesPractice.s(n), NumberPropertiesPractice.s(n + 1), "2", "0");
+        }, rng -> {
+            int a = QBuilder.pick(rng, 7, 9, 11, 13, 15, 17);
+            int b = a + 2;
+            return QBuilder.build(rng, "Are the consecutive odd numbers " + a + " and " + b + " co-prime?", "Yes", "Two consecutive odd numbers are always co-prime, so the answer is Yes.", "MEDIUM", EX, "No", "Cannot tell", "Only if both are prime");
+        });
+        lp.word(rng -> {
+            int[] sp = QBuilder.pick(rng, new int[]{36, 4, 9}, new int[]{15, 3, 5}, new int[]{35, 5, 7}, new int[]{45, 9, 5}, new int[]{20, 4, 5}, new int[]{63, 9, 7}, new int[]{40, 8, 5}, new int[]{12, 4, 3});
+            int d = sp[0];
+            return QBuilder.build(rng, "To test divisibility by " + d + ", which co-prime pair can you check separately?", sp[1] + " and " + sp[2], d + " = " + sp[1] + " \u00d7 " + sp[2] + ", and these share no common factor, so testing both is enough.", "MEDIUM", WP, "2 and " + d / 2, "1 and " + d, sp[1] + " and " + d, "3 and " + d);
+        }, rng -> {
+            int a = QBuilder.pick(rng, 8, 9, 10, 12, 14, 15);
+            int b = QBuilder.pick(rng, 9, 11, 13, 7, 25, 16);
+            int l = NumberPropertiesPractice.lcm(a, b);
+            return QBuilder.build(rng, "Two gears with " + a + " and " + b + " teeth start aligned. After how many teeth of rotation do they realign?", NumberPropertiesPractice.s(l), "They realign after the LCM of " + a + " and " + b + " = " + l + (NumberPropertiesPractice.isCoprime(a, b) ? " (and since they are co-prime, this equals " + a + "\u00d7" + b + ")." : "."), "HARD", CWP, NumberPropertiesPractice.s(a + b), NumberPropertiesPractice.s(NumberPropertiesPractice.gcd(a, b)), NumberPropertiesPractice.s(l + a), NumberPropertiesPractice.s(Math.max(a, b)));
+        });
+        lp.classicConcept(new GeneratedQuestion("Which pair of numbers is co-prime?", List.of("8 and 15", "8 and 12", "9 and 15", "10 and 25"), 0, "8 = 2\u00b3 and 15 = 3\u00d75 share no prime, so HCF = 1. The other pairs share a common factor.", "MEDIUM", EX), new GeneratedQuestion("The HCF of two distinct prime numbers is:", List.of("1", "their product", "the smaller prime", "2"), 0, "Distinct primes share no factor but 1, so they are co-prime.", "EASY", EX));
+        lp.classicWord(new GeneratedQuestion("A number passes the divisibility tests for both 4 and 9. It is definitely divisible by:", List.of("36", "13", "49", "It cannot be decided"), 0, "4 and 9 are co-prime, so passing both means divisibility by 4\u00d79 = 36.", "MEDIUM", WP), new GeneratedQuestion("Why can't you test divisibility by 12 using 2 and 6 separately?", List.of("2 and 6 are not co-prime", "12 is prime", "6 is prime", "you can \u2014 it always works"), 0, "2 and 6 share the factor 2, so the co-prime split rule fails; use 3 and 4 instead.", "HARD", CWP));
         return lp.sheets(20, 10, 20);
     }
 }
