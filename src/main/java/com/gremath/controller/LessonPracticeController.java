@@ -68,13 +68,26 @@ public class LessonPracticeController {
         SheetType sheetType = SheetType.from(type);
         List<GeneratedQuestion> questions = this.sheetService.buildSheet(lessonKey, sheetType, number);
         int timerSeconds = this.recommendedTimerSeconds(sheetType, questions.size());
+        String sheetTitle = this.sheetTitle(sheetType, number);
+        Lesson lesson = this.lessonRepository.findByPracticeKey(lessonKey).orElse(null);
+        List<String> difficulties = new java.util.ArrayList<String>();
+        List<String> tags = new java.util.ArrayList<String>();
+        for (GeneratedQuestion q : questions) {
+            difficulties.add(q.getDifficulty());
+            tags.add(q.getTag());
+        }
+        String sheetStrategy = lesson != null
+                ? Enrich.sheetStrategy(lesson.getTitle(), lesson.getPracticeKey(), lesson.getWordStrategy(),
+                        sheetType == SheetType.WORD, sheetTitle, difficulties, tags)
+                : null;
         model.addAttribute("lessonKey", (Object)lessonKey);
         model.addAttribute("lessonTitle", (Object)this.sheetService.lessonTitle(lessonKey));
         model.addAttribute("topicSlug", (Object)this.sheetService.topicSlug(lessonKey));
         model.addAttribute("type", (Object)sheetType.name());
         model.addAttribute("number", (Object)number);
         model.addAttribute("questions", questions);
-        model.addAttribute("sheetTitle", (Object)this.sheetTitle(sheetType, number));
+        model.addAttribute("sheetTitle", (Object)sheetTitle);
+        model.addAttribute("sheetStrategy", (Object)sheetStrategy);
         model.addAttribute("timerSeconds", (Object)timerSeconds);
         model.addAttribute("timerDisplay", (Object)this.formatTimer(timerSeconds));
         model.addAttribute("timerGuidance", (Object)this.timerGuidance(sheetType, questions.size(), timerSeconds));

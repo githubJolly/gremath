@@ -11,6 +11,11 @@
         <p class="muted" th:text="${lessonTitle}">Lesson</p>
     </div>
 
+    <div class="card" th:if="${sheetStrategy}" style="margin-bottom:20px;">
+        <h2 style="margin-top:0;">&#129504; Strategy for this sheet</h2>
+        <div class="lesson" th:utext="${sheetStrategy}">strategy</div>
+    </div>
+
     <div class="card timer-card" id="timerCard" th:attr="data-total-seconds=${timerSeconds}">
         <div class="timer-head">
             <strong>Practice timer</strong>
@@ -34,6 +39,13 @@
                 <input type="radio" th:name="'q_' + ${qStat.index}" th:value="${oStat.index}"/>
                 <span th:text="${option}">Option</span>
             </label>
+            <div class="hint-wrap" th:if="${q.explanation}">
+                <button type="button" class="hint-btn" aria-expanded="false">&#128161; Show hint</button>
+                <div class="hint" hidden>
+                    <strong>How to solve:</strong>
+                    <span th:text="${q.explanation}">Explanation</span>
+                </div>
+            </div>
         </div>
         <p class="muted" style="margin-top:6px;">You can submit early. Any unanswered questions will be graded as incorrect.</p>
         <button id="submitBtn" type="submit" class="btn btn-success btn-block">Submit &amp; evaluate</button>
@@ -94,6 +106,25 @@
             }
             render();
         }, 1000);
+    })();
+
+    (function () {
+        document.querySelectorAll('.hint-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const hint = btn.parentElement.querySelector('.hint');
+                if (!hint) return;
+                const show = hint.hasAttribute('hidden');
+                if (show) {
+                    hint.removeAttribute('hidden');
+                    btn.innerHTML = '\u{1F4A1} Hide hint';
+                    btn.setAttribute('aria-expanded', 'true');
+                } else {
+                    hint.setAttribute('hidden', '');
+                    btn.innerHTML = '\u{1F4A1} Show hint';
+                    btn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
     })();
 </script>
 </body>

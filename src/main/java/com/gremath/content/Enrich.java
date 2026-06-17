@@ -33,6 +33,86 @@ public final class Enrich {
         return Enrich.trimDuplicateLessonFlow(merged);
     }
 
+    /**
+     * Builds a strategy block tailored to the exact questions on one sheet. It keeps the
+     * lesson-level solve flow and prepends a sheet-specific read-out (question-type mix,
+     * difficulty mix, and pacing advice) so the guidance differs from one sheet to the next.
+     */
+    public static String sheetStrategy(String lessonTitle, String practiceKey, String baseStrategy,
+                                       boolean wordSheet, String sheetLabel,
+                                       java.util.List<String> difficulties, java.util.List<String> tags) {
+        String focus = Enrich.cleanTitle(lessonTitle);
+        int easy = 0;
+        int medium = 0;
+        int hard = 0;
+        for (String d : difficulties) {
+            if (d == null) {
+                continue;
+            }
+            switch (d.trim().toUpperCase()) {
+                case "EASY": {
+                    ++easy;
+                    break;
+                }
+                case "HARD": {
+                    ++hard;
+                    break;
+                }
+                default: {
+                    ++medium;
+                }
+            }
+        }
+        java.util.LinkedHashMap<String, Integer> tagCounts = new java.util.LinkedHashMap<String, Integer>();
+        for (String t : tags) {
+            if (t == null || t.isBlank()) {
+                continue;
+            }
+            tagCounts.merge(t.trim(), 1, Integer::sum);
+        }
+        int total = difficulties.size();
+        int wordLike = tagCounts.getOrDefault("word problem", 0) + tagCounts.getOrDefault("complex word problem", 0);
+
+        StringBuilder mix = new StringBuilder();
+        boolean first = true;
+        for (java.util.Map.Entry<String, Integer> e : tagCounts.entrySet()) {
+            if (!first) {
+                mix.append(", ");
+            }
+            mix.append("<strong>").append(e.getValue()).append("</strong> ").append(e.getKey());
+            first = false;
+        }
+
+        StringBuilder diff = new StringBuilder();
+        java.util.List<String> diffParts = new java.util.ArrayList<String>();
+        if (easy > 0) {
+            diffParts.add(easy + " easy");
+        }
+        if (medium > 0) {
+            diffParts.add(medium + " medium");
+        }
+        if (hard > 0) {
+            diffParts.add(hard + " hard");
+        }
+        diff.append(String.join(", ", diffParts));
+
+        String approach = wordLike * 2 >= total && total > 0
+                ? "Most items here are scenarios \u2014 translate each story into one clean equation before you compute."
+                : "These are mostly direct drills \u2014 lead with quick pattern recognition and the core relation: <strong>" + Enrich.formulaHint(practiceKey) + "</strong>.";
+        String pacing = hard > 0
+                ? "Bank time on the easier questions so you can give the " + hard + " hard one" + (hard == 1 ? "" : "s") + " extra thought."
+                : "Keep a steady rhythm \u2014 there are no flagged-hard questions, so aim for accuracy at speed.";
+
+        String head = "On this <strong>" + (sheetLabel == null || sheetLabel.isBlank() ? "sheet" : sheetLabel)
+                + "</strong> you have <strong>" + total + "</strong> question" + (total == 1 ? "" : "s")
+                + (mix.length() > 0 ? " (" + mix + ")" : "")
+                + (diff.length() > 0 ? ". Difficulty mix: " + diff : "")
+                + ". " + approach + " " + pacing;
+        String trap = Doc.warn("Common trap for <strong>" + focus + "</strong>: " + Enrich.trapHint(practiceKey));
+
+        return Doc.tip(head) + Enrich.adaptStrategy(lessonTitle, practiceKey, baseStrategy) + trap;
+    }
+
     public static String compactLessonContent(String html) {
         if (html == null || html.isBlank()) {
             return html;

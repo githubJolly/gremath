@@ -436,6 +436,35 @@ input:focus {
     font-size: 0.95rem;
 }
 
+.hint-wrap {
+    margin-top: 12px;
+}
+
+.hint-btn {
+    background: #fff;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.hint-btn:hover {
+    background: #eef2ff;
+}
+
+.hint {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
 .score-banner {
     text-align: center;
     padding: 28px;
