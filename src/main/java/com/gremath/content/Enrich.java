@@ -34,9 +34,10 @@ public final class Enrich {
     }
 
     /**
-     * Builds a strategy block tailored to the exact questions on one sheet. It keeps the
-     * lesson-level solve flow and prepends a sheet-specific read-out (question-type mix,
-     * difficulty mix, and pacing advice) so the guidance differs from one sheet to the next.
+     * Builds a compact strategy block for one specific sheet. The text is derived from the
+     * actual questions on that sheet (count, type mix, difficulty mix) and the lesson focus,
+     * so it differs from sheet to sheet and from lesson to lesson. The full lesson-level
+     * strategy stays on the lesson landing page; it is intentionally not repeated here.
      */
     public static String sheetStrategy(String lessonTitle, String practiceKey, String baseStrategy,
                                        boolean wordSheet, String sheetLabel,
@@ -83,7 +84,6 @@ public final class Enrich {
             first = false;
         }
 
-        StringBuilder diff = new StringBuilder();
         java.util.List<String> diffParts = new java.util.ArrayList<String>();
         if (easy > 0) {
             diffParts.add(easy + " easy");
@@ -94,23 +94,24 @@ public final class Enrich {
         if (hard > 0) {
             diffParts.add(hard + " hard");
         }
-        diff.append(String.join(", ", diffParts));
+        String diff = String.join(", ", diffParts);
 
         String approach = wordLike * 2 >= total && total > 0
                 ? "Most items here are scenarios \u2014 translate each story into one clean equation before you compute."
                 : "These are mostly direct drills \u2014 lead with quick pattern recognition and the core relation: <strong>" + Enrich.formulaHint(practiceKey) + "</strong>.";
         String pacing = hard > 0
                 ? "Bank time on the easier questions so you can give the " + hard + " hard one" + (hard == 1 ? "" : "s") + " extra thought."
-                : "Keep a steady rhythm \u2014 there are no flagged-hard questions, so aim for accuracy at speed.";
+                : "Keep a steady rhythm \u2014 aim for accuracy at speed.";
 
         String head = "On this <strong>" + (sheetLabel == null || sheetLabel.isBlank() ? "sheet" : sheetLabel)
-                + "</strong> you have <strong>" + total + "</strong> question" + (total == 1 ? "" : "s")
+                + "</strong> for <strong>" + focus + "</strong> you have <strong>" + total + "</strong> question" + (total == 1 ? "" : "s")
                 + (mix.length() > 0 ? " (" + mix + ")" : "")
                 + (diff.length() > 0 ? ". Difficulty mix: " + diff : "")
                 + ". " + approach + " " + pacing;
-        String trap = Doc.warn("Common trap for <strong>" + focus + "</strong>: " + Enrich.trapHint(practiceKey));
 
-        return Doc.tip(head) + Enrich.adaptStrategy(lessonTitle, practiceKey, baseStrategy) + trap;
+        return Doc.tip(head)
+                + Doc.warn("Common trap here: " + Enrich.trapHint(practiceKey)
+                        + ". Need the method? Tap <strong>Show hint</strong> under any question.");
     }
 
     public static String compactLessonContent(String html) {
