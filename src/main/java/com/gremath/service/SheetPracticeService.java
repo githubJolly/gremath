@@ -76,5 +76,23 @@ public class SheetPracticeService {
     public List<SheetAttempt> getHistory(Student student) {
         return this.attemptRepository.findByStudentOrderByTakenAtDesc(student);
     }
+
+    /**
+     * Returns the best attempt per sheet for a lesson, keyed by "TYPE-number"
+     * (e.g. "WORD-3", "CONCEPT-0"). Used to mark attempted sheets and show marks.
+     */
+    @Transactional(readOnly=true)
+    public java.util.Map<String, SheetAttempt> bestAttemptsByLesson(Student student, String lessonKey) {
+        java.util.HashMap<String, SheetAttempt> best = new java.util.HashMap<String, SheetAttempt>();
+        for (SheetAttempt a : this.attemptRepository.findByStudentAndLessonKey(student, lessonKey)) {
+            String key = a.getSheetType() + "-" + a.getSheetNumber();
+            SheetAttempt current = best.get(key);
+            if (current == null || a.getScore() > current.getScore()
+                    || (a.getScore() == current.getScore() && a.getTakenAt().isAfter(current.getTakenAt()))) {
+                best.put(key, a);
+            }
+        }
+        return best;
+    }
 }
 

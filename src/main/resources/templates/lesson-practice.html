@@ -17,26 +17,36 @@
     </div>
 
     <h2>&#9999;&#65039; Concept practice sheets</h2>
-    <p class="muted">Drills that build speed and accuracy on the core skill.</p>
+    <p class="muted">Drills that build speed and accuracy on the core skill. Attempted sheets turn green and show your best score.</p>
     <div class="grid">
         <a class="card topic-card" th:each="s : ${conceptSheets}"
+           th:with="att=${progress != null ? progress.get(s.typeName() + '-' + s.number()) : null}"
+           th:classappend="${att != null} ? 'sheet-done' : ''"
            th:href="@{'/practice/sheet/' + ${lessonKey} + '/' + ${s.typeName()} + '/' + ${s.number()}}">
             <span class="badge" th:classappend="${s.classic()} ? 'badge-cat' : 'badge-both'"
                   th:text="${s.classic()} ? 'CLASSIC' : 'SHEET ' + ${s.number()}">SHEET</span>
+            <span class="done-check" th:if="${att != null}" title="Attempted">&#10003;</span>
             <h3 th:text="${s.label()}" style="margin-top:10px;">Sheet</h3>
             <p class="muted" th:text="${s.questionCount()} + ' questions'">20 questions</p>
+            <p class="sheet-score" th:if="${att != null}"
+               th:text="'Best: ' + ${att.score} + '/' + ${att.totalQuestions} + ' (' + ${att.percentage} + '%)'">Best: 0/0</p>
         </a>
     </div>
 
     <h2 style="margin-top:32px;">&#128221; Word-problem practice sheets</h2>
-    <p class="muted">Real-world scenarios that test if you can translate words into the right calculation.</p>
+    <p class="muted">Real-world scenarios that test if you can translate words into the right calculation. Attempted sheets turn green and show your best score.</p>
     <div class="grid">
         <a class="card topic-card" th:each="s : ${wordSheets}"
+           th:with="att=${progress != null ? progress.get(s.typeName() + '-' + s.number()) : null}"
+           th:classappend="${att != null} ? 'sheet-done' : ''"
            th:href="@{'/practice/sheet/' + ${lessonKey} + '/' + ${s.typeName()} + '/' + ${s.number()}}">
             <span class="badge" th:classappend="${s.classic()} ? 'badge-cat' : 'badge-gre'"
                   th:text="${s.classic()} ? 'CLASSIC' : 'WP ' + ${s.number()}">WP</span>
+            <span class="done-check" th:if="${att != null}" title="Attempted">&#10003;</span>
             <h3 th:text="${s.label()}" style="margin-top:10px;">Sheet</h3>
             <p class="muted" th:text="${s.questionCount()} + ' questions'">20 questions</p>
+            <p class="sheet-score" th:if="${att != null}"
+               th:text="'Best: ' + ${att.score} + '/' + ${att.totalQuestions} + ' (' + ${att.percentage} + '%)'">Best: 0/0</p>
         </a>
     </div>
 </div>

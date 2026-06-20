@@ -39,11 +39,11 @@
                 <input type="radio" th:name="'q_' + ${qStat.index}" th:value="${oStat.index}"/>
                 <span th:text="${option}">Option</span>
             </label>
-            <div class="hint-wrap" th:if="${q.explanation}">
+            <div class="hint-wrap">
                 <button type="button" class="hint-btn" aria-expanded="false">&#128161; Show hint</button>
                 <div class="hint" hidden>
-                    <strong>How to solve:</strong>
-                    <span th:text="${q.explanation}">Explanation</span>
+                    <strong>Hint:</strong>
+                    <span th:text="${hints.get(qStat.index)}">Approach tip</span>
                 </div>
             </div>
         </div>

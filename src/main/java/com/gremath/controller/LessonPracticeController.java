@@ -52,7 +52,7 @@ public class LessonPracticeController {
     }
 
     @GetMapping(value={"/lesson/{lessonKey}"})
-    public String lessonPractice(@PathVariable String lessonKey, Model model) {
+    public String lessonPractice(@PathVariable String lessonKey, Principal principal, Model model) {
         Lesson lesson = this.lessonRepository.findByPracticeKey(lessonKey).orElse(null);
         model.addAttribute("lessonKey", (Object)lessonKey);
         model.addAttribute("lessonTitle", (Object)this.sheetService.lessonTitle(lessonKey));
@@ -60,6 +60,12 @@ public class LessonPracticeController {
         model.addAttribute("wordStrategy", lesson != null ? Enrich.adaptStrategy(lesson.getTitle(), lesson.getPracticeKey(), lesson.getWordStrategy()) : null);
         model.addAttribute("conceptSheets", this.sheetService.sheetRefs(lessonKey, SheetType.CONCEPT));
         model.addAttribute("wordSheets", this.sheetService.sheetRefs(lessonKey, SheetType.WORD));
+        Map<String, SheetAttempt> progress = java.util.Collections.emptyMap();
+        if (principal != null) {
+            Student student = this.studentService.getByUsername(principal.getName());
+            progress = this.sheetPracticeService.bestAttemptsByLesson(student, lessonKey);
+        }
+        model.addAttribute("progress", progress);
         return "lesson-practice";
     }
 
@@ -70,11 +76,14 @@ public class LessonPracticeController {
         int timerSeconds = this.recommendedTimerSeconds(sheetType, questions.size());
         String sheetTitle = this.sheetTitle(sheetType, number);
         Lesson lesson = this.lessonRepository.findByPracticeKey(lessonKey).orElse(null);
+        String practiceKey = lesson != null ? lesson.getPracticeKey() : lessonKey;
         List<String> difficulties = new java.util.ArrayList<String>();
         List<String> tags = new java.util.ArrayList<String>();
+        List<String> hints = new java.util.ArrayList<String>();
         for (GeneratedQuestion q : questions) {
             difficulties.add(q.getDifficulty());
             tags.add(q.getTag());
+            hints.add(Enrich.questionHint(practiceKey, q.getTag()));
         }
         String sheetStrategy = lesson != null
                 ? Enrich.sheetStrategy(lesson.getTitle(), lesson.getPracticeKey(), lesson.getWordStrategy(),
@@ -86,6 +95,7 @@ public class LessonPracticeController {
         model.addAttribute("type", (Object)sheetType.name());
         model.addAttribute("number", (Object)number);
         model.addAttribute("questions", questions);
+        model.addAttribute("hints", hints);
         model.addAttribute("sheetTitle", (Object)sheetTitle);
         model.addAttribute("sheetStrategy", (Object)sheetStrategy);
         model.addAttribute("timerSeconds", (Object)timerSeconds);

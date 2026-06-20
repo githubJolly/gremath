@@ -14,5 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SheetAttemptRepository
 extends JpaRepository<SheetAttempt, Long> {
     public List<SheetAttempt> findByStudentOrderByTakenAtDesc(Student var1);
+
+    public List<SheetAttempt> findByStudentAndLessonKey(Student student, String lessonKey);
 }
 

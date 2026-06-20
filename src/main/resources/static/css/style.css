@@ -436,6 +436,43 @@ input:focus {
     font-size: 0.95rem;
 }
 
+/* Attempted practice-sheet cards */
+.topic-card {
+    position: relative;
+}
+
+.sheet-done {
+    border-color: var(--success);
+    background: #f0fdf4;
+    box-shadow: 0 0 0 1px var(--success) inset;
+}
+
+.sheet-done:hover {
+    background: #e7fbee;
+}
+
+.done-check {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--success);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sheet-score {
+    margin: 8px 0 0;
+    font-weight: 700;
+    color: var(--success);
+}
+
 .hint-wrap {
     margin-top: 12px;
 }

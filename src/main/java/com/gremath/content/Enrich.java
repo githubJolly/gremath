@@ -28,6 +28,22 @@ public final class Enrich {
         l.setWordStrategy(Enrich.strategyForLesson(focus, practiceKey, wordStrategy));
     }
 
+    /**
+     * A method-only hint for a single question. It nudges toward the right approach using the
+     * lesson's trigger words and core relation, and deliberately never states the answer.
+     */
+    public static String questionHint(String practiceKey, String tag) {
+        boolean wordy = tag != null && tag.toLowerCase().contains("word");
+        String trigger = Enrich.triggerHint(practiceKey);
+        String formula = Enrich.formulaHint(practiceKey);
+        if (wordy) {
+            return "Read the wording for clues (" + trigger + "), turn the story into numbers/symbols in one line, "
+                    + "then set up: " + formula + ". Work the steps yourself \u2014 don't jump to the value.";
+        }
+        return "Spot the pattern (" + trigger + ") and apply the core relation: " + formula
+                + ". Solve in small steps and sanity-check the size of your result.";
+    }
+
     public static String adaptStrategy(String lessonTitle, String practiceKey, String currentStrategy) {
         String merged = Enrich.strategyForLesson(Enrich.cleanTitle(lessonTitle), practiceKey, currentStrategy);
         return Enrich.trimDuplicateLessonFlow(merged);
