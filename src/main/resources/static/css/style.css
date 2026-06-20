@@ -601,6 +601,28 @@ input:focus {
     padding: 60px 20px;
 }
 
+.hero-letuslearn {
+    background: linear-gradient(120deg, #312e81 0%, #4338ca 45%, #0891b2 100%);
+    color: #ffffff;
+    border-radius: 18px;
+    margin: 26px auto 0;
+    max-width: 1050px;
+    box-shadow: 0 16px 34px rgba(49, 46, 129, 0.28);
+}
+
+.hero-badge {
+    display: inline-block;
+    margin-bottom: 14px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
 .hero h1 {
     font-size: 2.6rem;
     margin-bottom: 12px;
@@ -611,6 +633,39 @@ input:focus {
     color: var(--muted);
     max-width: 640px;
     margin: 0 auto 28px;
+}
+
+.hero-letuslearn h1 {
+    color: #ffffff;
+}
+
+.hero-letuslearn .hero-subtitle {
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 760px;
+}
+
+.hero-letuslearn .hero-subtitle strong {
+    color: #ffffff;
+}
+
+.hero-letuslearn .btn {
+    background: #ffffff;
+    color: #312e81;
+}
+
+.hero-letuslearn .btn:hover {
+    background: #e0e7ff;
+    color: #312e81;
+}
+
+.hero-letuslearn .btn-outline {
+    border-color: rgba(255, 255, 255, 0.85);
+    color: #ffffff;
+    background: transparent;
+}
+
+.hero-letuslearn .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .hero-actions {
