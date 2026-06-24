@@ -4,16 +4,20 @@
 <head th:fragment="head(title)">
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title th:text="${title}">GRE & CAT Math Tutor</title>
+    <title th:text="${title}">LetusLearn</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <nav class="navbar" th:fragment="navbar">
-    <a class="brand" th:href="@{/dashboard}">&#128218; GRE &amp; CAT Math Tutor</a>
+    <a class="brand" th:href="@{/}">
+        <img class="brand-logo" th:src="@{/img/letuslearn-logo.png}" alt="LetusLearn logo"/>
+        <span class="brand-text">letuslearn.it.com</span>
+    </a>
     <div class="nav-links">
         <span sec:authorize="isAuthenticated()">
             Hi, <strong sec:authentication="name">student</strong>
         </span>
+        <a th:href="@{/pricing}">Pricing</a>
         <a sec:authorize="isAuthenticated()" th:href="@{/dashboard}">Dashboard</a>
         <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
             <button type="submit" class="btn-link-plain">Logout</button>

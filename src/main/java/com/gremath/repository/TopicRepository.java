@@ -15,6 +15,8 @@ public interface TopicRepository
 extends JpaRepository<Topic, Long> {
     public List<Topic> findAllByOrderByOrderIndexAsc();
 
+    public List<Topic> findByExamTypeInOrderByOrderIndexAsc(List<String> var1);
+
     public Optional<Topic> findBySlug(String var1);
 }
 

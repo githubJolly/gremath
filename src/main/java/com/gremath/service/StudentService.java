@@ -10,6 +10,7 @@ package com.gremath.service;
 import com.gremath.dto.RegistrationForm;
 import com.gremath.model.Student;
 import com.gremath.repository.StudentRepository;
+import java.time.LocalDate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,31 @@ public class StudentService {
 
     public Student getByUsername(String username) {
         return this.studentRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("Student not found: " + username));
+    }
+
+    public boolean hasTrackAccess(Student student, String track) {
+        if ("class6-nz".equalsIgnoreCase(track)) {
+            return student.hasActiveClass6NzSubscription();
+        }
+        return student.hasActiveGreCatSubscription();
+    }
+
+    public LocalDate activateMonthlySubscription(Student student, String plan) {
+        LocalDate today = LocalDate.now();
+        if ("class6-nz".equalsIgnoreCase(plan)) {
+            LocalDate base = student.getClass6NzSubscribedUntil() != null && student.getClass6NzSubscribedUntil().isAfter(today)
+                    ? student.getClass6NzSubscribedUntil() : today;
+            LocalDate until = base.plusMonths(1);
+            student.setClass6NzSubscribedUntil(until);
+            this.studentRepository.save(student);
+            return until;
+        }
+        LocalDate base = student.getGreCatSubscribedUntil() != null && student.getGreCatSubscribedUntil().isAfter(today)
+                ? student.getGreCatSubscribedUntil() : today;
+        LocalDate until = base.plusMonths(1);
+        student.setGreCatSubscribedUntil(until);
+        this.studentRepository.save(student);
+        return until;
     }
 }
 

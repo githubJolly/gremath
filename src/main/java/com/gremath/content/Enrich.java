@@ -237,6 +237,9 @@ public final class Enrich {
         if (practiceKey.startsWith("pct-")) {
             return "percentage change and base-value clues";
         }
+        if (practiceKey.startsWith("c6nz-")) {
+            return "place-value, unit, pattern, shape, or data keywords from the prompt";
+        }
         return "key nouns and operation words in the problem statement";
     }
 
@@ -274,6 +277,9 @@ public final class Enrich {
         if (practiceKey.startsWith("pct-")) {
             return "new value = base \u00d7 (1 \u00b1 p/100)";
         }
+        if (practiceKey.startsWith("c6nz-")) {
+            return "pick the right model first (table/chart/equation/diagram), then compute";
+        }
         return "build the shortest correct equation for the given story";
     }
 
@@ -310,6 +316,9 @@ public final class Enrich {
         }
         if (practiceKey.startsWith("pct-")) {
             return "using old base after the base has changed";
+        }
+        if (practiceKey.startsWith("c6nz-")) {
+            return "jumping to arithmetic before identifying the right representation";
         }
         return "not checking whether the final answer matches the question's unit and context";
     }

@@ -44,7 +44,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.userDetailsService((UserDetailsService)this.studentDetailsService).authorizeHttpRequests(auth -> ((AuthorizeHttpRequestsConfigurer.AuthorizedUrl)((AuthorizeHttpRequestsConfigurer.AuthorizedUrl)auth.requestMatchers(new String[]{"/", "/register", "/css/**", "/js/**", "/h2-console/**"})).permitAll().anyRequest()).authenticated()).formLogin(form -> ((FormLoginConfigurer)form.loginPage("/login").defaultSuccessUrl("/dashboard", true)).permitAll()).logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll()).csrf(csrf -> csrf.ignoringRequestMatchers(new RequestMatcher[]{AntPathRequestMatcher.antMatcher((String)"/h2-console/**")})).headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+        http.userDetailsService((UserDetailsService)this.studentDetailsService).authorizeHttpRequests(auth -> ((AuthorizeHttpRequestsConfigurer.AuthorizedUrl)((AuthorizeHttpRequestsConfigurer.AuthorizedUrl)auth.requestMatchers(new String[]{"/", "/register", "/pricing", "/css/**", "/js/**", "/img/**", "/h2-console/**"})).permitAll().anyRequest()).authenticated()).formLogin(form -> ((FormLoginConfigurer)form.loginPage("/login").defaultSuccessUrl("/dashboard", true)).permitAll()).logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll()).csrf(csrf -> csrf.ignoringRequestMatchers(new RequestMatcher[]{AntPathRequestMatcher.antMatcher((String)"/h2-console/**")})).headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
         return (SecurityFilterChain)http.build();
     }
 }

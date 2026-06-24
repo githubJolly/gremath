@@ -8,6 +8,26 @@
     <div class="page-header">
         <h1 th:text="'Welcome, ' + ${student.fullName} + '!'">Welcome!</h1>
         <p class="muted">Pick a topic to learn and practice. Your scores are saved automatically.</p>
+        <div class="track-switch" style="margin-top:10px;">
+            <a class="track-tab" th:classappend="${track == 'gre-cat'} ? ' active'" th:href="@{/dashboard(track='gre-cat')}">GRE / CAT track</a>
+            <a class="track-tab" th:classappend="${track == 'class6-nz'} ? ' active'" th:href="@{/dashboard(track='class6-nz')}">Class 6 (NZ) track</a>
+        </div>
+    </div>
+
+    <div class="alert alert-success" th:if="${paid}">
+        Payment successful. Your subscription is active <span th:if="${paidUntil}">until <strong th:text="${paidUntil}">date</strong></span>.
+    </div>
+
+    <div class="card" th:unless="${hasActiveSubscription}" style="margin-bottom:20px;">
+        <h2 style="margin-top:0;">Track locked - subscription required</h2>
+        <p class="muted" style="margin:0 0 10px;">
+            This track requires an active monthly subscription.
+            Price: <strong th:text="'$' + ${trackPrice} + '/month'">$0/month</strong>.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <a class="btn" th:href="@{/billing/checkout(plan=${track})}">Subscribe now</a>
+            <a class="btn btn-outline" th:href="@{/pricing(required=${track})}">View pricing</a>
+        </div>
     </div>
 
     <div class="stats">
@@ -90,12 +110,22 @@
         </details>
     </div>
 
-    <h2>Topics</h2>
+    <h2 th:text="'Topics - ' + ${trackLabel}">Topics</h2>
+    <div class="card" th:if="${track == 'class6-nz' and hasActiveSubscription}" style="margin-bottom:16px;">
+        <div class="flex-between">
+            <div>
+                <h3 style="margin:0 0 4px;">Standards-style maths pathway</h3>
+                <p class="muted" style="margin:0;">Browse Year 6 NZ maths skills by strand in a standards-aligned layout.</p>
+            </div>
+            <a class="btn btn-outline" th:href="@{/class6/nz/maths}">Open standards view</a>
+        </div>
+    </div>
+
     <div class="grid">
         <a class="card topic-card" th:each="topic : ${topics}" th:href="@{'/topics/' + ${topic.slug}}">
             <span class="badge"
-                  th:classappend="${topic.examType == 'GRE'} ? 'badge-gre' : (${topic.examType == 'CAT'} ? 'badge-cat' : 'badge-both')"
-                  th:text="${topic.examType}">BOTH</span>
+                  th:classappend="${topic.examType == 'GRE'} ? 'badge-gre' : (${topic.examType == 'CAT'} ? 'badge-cat' : (${topic.examType == 'CLASS6_NZ'} ? 'badge-class6' : 'badge-both'))"
+                  th:text="${topic.examType == 'CLASS6_NZ' ? 'CLASS 6 NZ' : topic.examType}">BOTH</span>
             <h3 th:text="${topic.name}" style="margin-top:10px;">Topic</h3>
             <p th:text="${topic.description}">Description</p>
             <span class="muted" th:text="${#lists.size(topic.lessons)} + ' lessons &middot; ' + ${#lists.size(topic.questions)} + ' questions'">lessons</span>

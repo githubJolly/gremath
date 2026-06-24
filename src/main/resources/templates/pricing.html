@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Pricing')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <div class="page-header">
+        <h1>Subscription plans</h1>
+        <p class="muted">Choose the track that matches your learning goal.</p>
+    </div>
+
+    <div class="alert alert-info" th:if="${required == 'gre-cat'}">
+        GRE / CAT track requires an active subscription.
+    </div>
+    <div class="alert alert-info" th:if="${required == 'class6-nz'}">
+        Class 6 (New Zealand Curriculum) track requires an active subscription.
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <span class="badge badge-class6">CLASS 6 NZ</span>
+            <h2 style="margin:10px 0 4px;">Class 6 Track</h2>
+            <p class="muted" style="margin:0 0 12px;">New Zealand curriculum foundation subjects (Maths, English, Science).</p>
+            <div style="font-size:2rem; font-weight:700; color:var(--primary-dark);">$10<span style="font-size:1rem; color:var(--muted);">/month</span></div>
+            <p class="muted">Build strong fundamentals from Year 6 level with structured lessons.</p>
+            <a class="btn" th:href="@{/billing/checkout(plan='class6-nz')}">Subscribe Class 6</a>
+        </div>
+
+        <div class="card">
+            <span class="badge badge-both">GRE / CAT</span>
+            <h2 style="margin:10px 0 4px;">GRE / CAT Track</h2>
+            <p class="muted" style="margin:0 0 12px;">Quant topics, timed practice sheets, readiness predictor and exam-focused drills.</p>
+            <div style="font-size:2rem; font-weight:700; color:var(--primary-dark);">$20<span style="font-size:1rem; color:var(--muted);">/month</span></div>
+            <p class="muted">Advanced preparation flow for competitive exam performance.</p>
+            <a class="btn" th:href="@{/billing/checkout(plan='gre-cat')}">Subscribe GRE/CAT</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

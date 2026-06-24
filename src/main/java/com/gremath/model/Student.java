@@ -17,6 +17,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -36,6 +37,8 @@ public class Student {
     @Column(nullable=false)
     private String role = "ROLE_STUDENT";
     private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDate greCatSubscribedUntil;
+    private LocalDate class6NzSubscribedUntil;
 
     public Long getId() {
         return this.id;
@@ -91,6 +94,30 @@ public class Student {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDate getGreCatSubscribedUntil() {
+        return this.greCatSubscribedUntil;
+    }
+
+    public void setGreCatSubscribedUntil(LocalDate greCatSubscribedUntil) {
+        this.greCatSubscribedUntil = greCatSubscribedUntil;
+    }
+
+    public LocalDate getClass6NzSubscribedUntil() {
+        return this.class6NzSubscribedUntil;
+    }
+
+    public void setClass6NzSubscribedUntil(LocalDate class6NzSubscribedUntil) {
+        this.class6NzSubscribedUntil = class6NzSubscribedUntil;
+    }
+
+    public boolean hasActiveGreCatSubscription() {
+        return this.greCatSubscribedUntil != null && !this.greCatSubscribedUntil.isBefore(LocalDate.now());
+    }
+
+    public boolean hasActiveClass6NzSubscription() {
+        return this.class6NzSubscribedUntil != null && !this.class6NzSubscribedUntil.isBefore(LocalDate.now());
     }
 }
 

@@ -8,6 +8,7 @@
 package com.gremath.service;
 
 import com.gremath.model.Topic;
+import java.util.ArrayList;
 import com.gremath.repository.TopicRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,24 @@ public class TopicService {
     @Transactional(readOnly=true)
     public List<Topic> getAllTopics() {
         List<Topic> topics = this.topicRepository.findAllByOrderByOrderIndexAsc();
+        topics.forEach(t -> {
+            t.getLessons().size();
+            t.getQuestions().size();
+        });
+        return topics;
+    }
+
+    @Transactional(readOnly=true)
+    public List<Topic> getTopicsForTrack(String track) {
+        String key = track == null ? "gre-cat" : track.trim().toLowerCase();
+        List<String> types;
+        if ("class6-nz".equals(key)) {
+            types = List.of("CLASS6_NZ");
+        } else {
+            types = List.of("GRE", "CAT", "BOTH");
+        }
+        List<Topic> topics = this.topicRepository.findByExamTypeInOrderByOrderIndexAsc(types);
+        topics = new ArrayList<Topic>(topics);
         topics.forEach(t -> {
             t.getLessons().size();
             t.getQuestions().size();

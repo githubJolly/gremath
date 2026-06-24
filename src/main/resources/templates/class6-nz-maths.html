@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Class 6 NZ Maths Standards')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container standards-page">
+    <div class="page-header">
+        <a class="muted" th:href="@{/dashboard(track='class6-nz')}">&larr; Back to Class 6 dashboard</a>
+        <h1>Class 6 NZ Maths Standards</h1>
+        <p class="muted">Original LetusLearn standards-style pathway for New Zealand Year 6 mathematics.</p>
+    </div>
+
+    <div class="standards-toolbar card">
+        <div class="year-tabs">
+            <span class="year-chip">Year 4</span>
+            <span class="year-chip">Year 5</span>
+            <span class="year-chip active">Year 6</span>
+            <span class="year-chip">Year 7</span>
+            <span class="year-chip">Year 8</span>
+        </div>
+        <div class="alignments">
+            <label for="alignment" class="muted">Alignment view</label>
+            <select id="alignment" disabled>
+                <option selected>NZ Curriculum - Year 6</option>
+                <option>NZ Curriculum - Level 3</option>
+                <option>NZ National Standards</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="strand-block card" th:each="strand : ${strandGroups}">
+        <div class="strand-head">
+            <h2 th:text="${strand.name}">Strand</h2>
+            <p class="muted" th:text="${strand.subtitle}">Subtitle</p>
+        </div>
+
+        <div class="skills-grid">
+            <a class="skill-card" th:each="skill : ${strand.skills}" th:href="@{${skill.href}}">
+                <div class="skill-top">
+                    <span class="skill-code" th:text="${skill.code}">Y6-N-01</span>
+                    <span class="skill-level" th:text="${skill.level}">Beginner</span>
+                </div>
+                <h3 th:text="${skill.title}">Skill title</h3>
+                <p th:text="${skill.description}">Skill summary.</p>
+                <div class="skill-pattern" th:text="${skill.pattern}">[pattern preview]</div>
+                <span class="skill-cta">Open practice sheets &rarr;</span>
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+

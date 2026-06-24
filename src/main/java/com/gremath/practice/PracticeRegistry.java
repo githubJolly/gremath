@@ -9,6 +9,7 @@ package com.gremath.practice;
 import com.gremath.practice.LessonPractice;
 import com.gremath.practice.content.AlgebraPractice;
 import com.gremath.practice.content.AveragesPractice;
+import com.gremath.practice.content.Class6NzMathematicsPractice;
 import com.gremath.practice.content.CountingPractice;
 import com.gremath.practice.content.GeometryPractice;
 import com.gremath.practice.content.NumberPropertiesPractice;
@@ -36,6 +37,7 @@ public class PracticeRegistry {
         CountingPractice.register(this);
         ProbabilityPractice.register(this);
         ProfitInterestPractice.register(this);
+        Class6NzMathematicsPractice.register(this);
     }
 
     public void add(LessonPractice lessonPractice) {

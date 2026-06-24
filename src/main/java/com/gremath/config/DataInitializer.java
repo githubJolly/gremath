@@ -2,6 +2,9 @@ package com.gremath.config;
 
 import com.gremath.content.AlgebraContent;
 import com.gremath.content.AveragesContent;
+import com.gremath.content.Class6NzEnglishContent;
+import com.gremath.content.Class6NzMathematicsContent;
+import com.gremath.content.Class6NzScienceContent;
 import com.gremath.content.CountingContent;
 import com.gremath.content.GeometryContent;
 import com.gremath.content.NumberPropertiesContent;
@@ -45,7 +48,10 @@ public class DataInitializer {
             new TimeSpeedDistanceContent(),
             new CountingContent(),
             new ProbabilityContent(),
-            new ProfitInterestContent());
+            new ProfitInterestContent(),
+            new Class6NzMathematicsContent(),
+            new Class6NzEnglishContent(),
+            new Class6NzScienceContent());
 
     @Bean
     CommandLineRunner seedData(TopicRepository topicRepository, LessonRepository lessonRepository,

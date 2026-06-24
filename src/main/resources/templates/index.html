@@ -1,36 +1,41 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('GRE & CAT Math Tutor')}"></head>
+<head th:replace="~{fragments/layout :: head('LetusLearn - All Subjects Preparation')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <div class="hero hero-letuslearn">
     <div class="hero-badge">LetusLearn</div>
-    <h1>GRE &amp; CAT Preparation from the Basics</h1>
+    <h1>All Subjects Preparation from Basic Level (Year 6 Onwards)</h1>
     <p class="hero-subtitle">
-        Build strong maths foundations from <strong>Year 6 onwards</strong>, then move
-        step by step to GRE and CAT-level quantitative aptitude with guided lessons,
-        practice sheets, and instant feedback.
+        Learn school foundations and core subjects step by step, then advance to
+        competitive exam tracks like <strong>GRE</strong> and <strong>CAT</strong> with
+        guided lessons, practice sheets, and instant feedback.
     </p>
     <div class="hero-actions">
         <a class="btn" th:href="@{/register}">Start learning</a>
         <a class="btn btn-outline" th:href="@{/login}">Continue my journey</a>
+    </div>
+    <div class="track-switch hero-track-switch">
+        <a class="track-tab active" th:href="@{/dashboard(track='gre-cat')}">Open GRE / CAT lessons</a>
+        <a class="track-tab" th:href="@{/dashboard(track='class6-nz')}">Open Class 6 (NZ) lessons</a>
+        <a class="track-tab" th:href="@{/class6/nz/maths}">Open Class 6 NZ Maths standards</a>
     </div>
 </div>
 
 <div class="container">
     <div class="grid">
         <div class="card">
-            <h3>Learn foundations first</h3>
-            <p class="muted">Start from basic arithmetic and number sense, then progress to algebra, geometry, data interpretation, and exam-level quant.</p>
+            <h3>Concepts across subjects</h3>
+            <p class="muted">Build strong understanding in core subjects from the fundamentals, with structured lessons and clear explanations.</p>
         </div>
         <div class="card">
             <h3>Practice with progression</h3>
-            <p class="muted">Solve topic-wise sheets that move from foundational to advanced difficulty so students can grow from Year 6 level to GRE/CAT readiness.</p>
+            <p class="muted">Solve progressive sheets that move from foundation to advanced level, helping learners grow from Year 6 onwards.</p>
         </div>
         <div class="card">
-            <h3>Track and improve</h3>
-            <p class="muted">Get instant scoring, review mistakes, use hints for approach, and build confidence with every practice session.</p>
+            <h3>Improve and succeed</h3>
+            <p class="muted">Track scores, review mistakes, and use non-answer hints to strengthen problem-solving in every subject area.</p>
         </div>
     </div>
 </div>
