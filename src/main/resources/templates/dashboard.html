@@ -11,6 +11,7 @@
         <div class="track-switch" style="margin-top:10px;">
             <a class="track-tab" th:classappend="${track == 'gre-cat'} ? ' active'" th:href="@{/dashboard(track='gre-cat')}">GRE / CAT track</a>
             <a class="track-tab" th:classappend="${track == 'class6-nz'} ? ' active'" th:href="@{/dashboard(track='class6-nz')}">Class 6 (NZ) track</a>
+            <a class="track-tab" th:href="@{/games/murder-mystery}">Murder mystery quiz</a>
         </div>
     </div>
 

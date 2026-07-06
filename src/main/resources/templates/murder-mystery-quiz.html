@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Murder Mystery Quiz')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container mystery-page">
+    <div class="page-header">
+        <a class="muted" th:href="@{/dashboard}">&larr; Back to dashboard</a>
+        <h1>Murder Mystery Quiz</h1>
+        <p class="muted">Solve the case by reading clues carefully and choosing the best deductions.</p>
+    </div>
+
+    <div class="card mystery-story">
+        <h2>Case File: The Library Clock Incident</h2>
+        <p>
+            At 8:30 PM, Professor Hale was found dead in the school library.
+            Three suspects were nearby: <strong>Ari</strong> (lab assistant),
+            <strong>Bianca</strong> (debate captain), and <strong>Caleb</strong> (grounds manager).
+            The old clock was broken, a muddy footprint was near the east door,
+            and the victim's notebook had one torn page.
+        </p>
+        <div class="clue-grid">
+            <div class="clue-card"><strong>Clue A:</strong> Security logs show east door opened at 8:12 PM.</div>
+            <div class="clue-card"><strong>Clue B:</strong> Rain started at 8:05 PM and stopped at 8:20 PM.</div>
+            <div class="clue-card"><strong>Clue C:</strong> Ari said he was in the chemistry lab from 8:00 to 8:25 PM.</div>
+            <div class="clue-card"><strong>Clue D:</strong> Bianca said she was rehearsing speech in Room 3 with no mud on shoes.</div>
+            <div class="clue-card"><strong>Clue E:</strong> Caleb's boots were wet and had fresh library garden soil.</div>
+            <div class="clue-card"><strong>Clue F:</strong> Torn notebook page contained a half-written debt reminder with initials C.K.</div>
+        </div>
+    </div>
+
+    <form id="mysteryQuizForm" class="mystery-quiz">
+        <div class="card mystery-question">
+            <h3>1) Which clue most strongly connects someone to the east door entry?</h3>
+            <label><input type="radio" name="q1" value="0"> Ari's lab statement</label>
+            <label><input type="radio" name="q1" value="1"> Wet boots with garden soil</label>
+            <label><input type="radio" name="q1" value="0"> Speech rehearsal room</label>
+        </div>
+
+        <div class="card mystery-question">
+            <h3>2) If rain stopped at 8:20 PM, what does fresh mud suggest?</h3>
+            <label><input type="radio" name="q2" value="1"> The person moved outside shortly before entering</label>
+            <label><input type="radio" name="q2" value="0"> The mud must be from yesterday</label>
+            <label><input type="radio" name="q2" value="0"> The clue is irrelevant</label>
+        </div>
+
+        <div class="card mystery-question">
+            <h3>3) Which statement is the weakest alibi?</h3>
+            <label><input type="radio" name="q3" value="0"> Ari in lab with timestamps</label>
+            <label><input type="radio" name="q3" value="0"> Bianca in Room 3</label>
+            <label><input type="radio" name="q3" value="1"> Caleb near garden with matching soil</label>
+        </div>
+
+        <div class="card mystery-question">
+            <h3>4) The initials C.K. in a debt note most likely imply:</h3>
+            <label><input type="radio" name="q4" value="0"> Clock Keeper only</label>
+            <label><input type="radio" name="q4" value="1"> A possible motive linked to Caleb</label>
+            <label><input type="radio" name="q4" value="0"> Random letters with no meaning</label>
+        </div>
+
+        <div class="card mystery-question">
+            <h3>5) What is the best final suspect based on combined evidence?</h3>
+            <label><input type="radio" name="q5" value="0"> Ari</label>
+            <label><input type="radio" name="q5" value="0"> Bianca</label>
+            <label><input type="radio" name="q5" value="1"> Caleb</label>
+        </div>
+
+        <div class="mystery-actions">
+            <button class="btn" type="button" id="submitMysteryBtn">Submit deductions</button>
+            <button class="btn btn-outline" type="button" id="resetMysteryBtn">Reset</button>
+        </div>
+    </form>
+
+    <div id="mysteryResult" class="card mystery-result" style="display:none;"></div>
+</div>
+
+<script>
+    (function () {
+        const submitBtn = document.getElementById('submitMysteryBtn');
+        const resetBtn = document.getElementById('resetMysteryBtn');
+        const resultBox = document.getElementById('mysteryResult');
+        const form = document.getElementById('mysteryQuizForm');
+        const totalQuestions = 5;
+
+        submitBtn.addEventListener('click', function () {
+            let score = 0;
+            let answered = 0;
+
+            for (let i = 1; i <= totalQuestions; i++) {
+                const selected = form.querySelector('input[name="q' + i + '"]:checked');
+                if (selected) {
+                    answered++;
+                    score += Number(selected.value);
+                }
+            }
+
+            if (answered < totalQuestions) {
+                resultBox.style.display = 'block';
+                resultBox.innerHTML = '<h3>Need more clues</h3><p class="muted">Answer all questions before submitting your deduction.</p>';
+                return;
+            }
+
+            const pct = Math.round((score / totalQuestions) * 100);
+            let verdict = '';
+
+            if (score === totalQuestions) {
+                verdict = '<h3>Case solved!</h3><p>You correctly identified <strong>Caleb</strong> as the most likely culprit based on timeline, mud evidence, and motive note.</p>';
+            } else if (score >= 3) {
+                verdict = '<h3>Close deduction</h3><p>You are on the right track, but review the timeline and physical evidence links more carefully.</p>';
+            } else {
+                verdict = '<h3>Case unresolved</h3><p>Your deduction missed key evidence. Re-read clues A-F and try again.</p>';
+            }
+
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = verdict + '<p class="muted">Score: <strong>' + score + '/' + totalQuestions + '</strong> (' + pct + '%)</p>';
+        });
+
+        resetBtn.addEventListener('click', function () {
+            form.reset();
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = '';
+        });
+    })();
+</script>
+</body>
+</html>
+

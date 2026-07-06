@@ -19,6 +19,7 @@
         </span>
         <a th:href="@{/pricing}">Pricing</a>
         <a sec:authorize="isAuthenticated()" th:href="@{/dashboard}">Dashboard</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/games/murder-mystery}">Mystery Quiz</a>
         <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
             <button type="submit" class="btn-link-plain">Logout</button>
         </form>

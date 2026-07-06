@@ -854,6 +854,66 @@ input:focus {
     color: var(--primary-dark);
 }
 
+/* Murder mystery quiz */
+.mystery-page {
+    max-width: 1080px;
+}
+
+.mystery-story h2 {
+    margin-top: 0;
+}
+
+.clue-grid {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 10px;
+}
+
+.clue-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: #f8fafc;
+    padding: 10px 12px;
+    color: #334155;
+    font-size: 0.92rem;
+}
+
+.mystery-quiz {
+    margin-top: 16px;
+}
+
+.mystery-question {
+    margin-bottom: 12px;
+}
+
+.mystery-question h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.mystery-question label {
+    display: block;
+    margin: 7px 0;
+    font-weight: 500;
+}
+
+.mystery-question input[type="radio"] {
+    margin-right: 8px;
+}
+
+.mystery-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 10px 0 14px;
+}
+
+.mystery-result h3 {
+    margin-top: 0;
+}
+
 .flex-between {
     display: flex;
     align-items: center;
