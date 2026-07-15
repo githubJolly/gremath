@@ -1,41 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('LetusLearn - All Subjects Preparation')}"></head>
+<head th:replace="~{fragments/layout :: head('LetusLearn - NZ Curriculum for families')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <div class="hero hero-letuslearn">
     <div class="hero-badge">LetusLearn</div>
-    <h1>All Subjects Preparation from Basic Level (Year 6 Onwards)</h1>
+    <h1>See where your child is strong — and where to focus next</h1>
     <p class="hero-subtitle">
-        Learn school foundations and core subjects step by step, then advance to
-        competitive exam tracks like <strong>GRE</strong> and <strong>CAT</strong> with
-        guided lessons, practice sheets, and instant feedback.
+        Lessons and practice aligned to the
+        <a href="https://newzealandcurriculum.tahurangi.education.govt.nz/" target="_blank" rel="noopener" style="color:inherit; text-decoration:underline;">New Zealand Curriculum</a>
+        across years and subjects. Parents get a clear progress view after each practice session.
     </p>
     <div class="hero-actions">
-        <a class="btn" th:href="@{/register}">Start learning</a>
-        <a class="btn btn-outline" th:href="@{/login}">Continue my journey</a>
-    </div>
-    <div class="track-switch hero-track-switch">
-        <a class="track-tab active" th:href="@{/dashboard(track='gre-cat')}">Open GRE / CAT lessons</a>
-        <a class="track-tab" th:href="@{/dashboard(track='class6-nz')}">Open Class 6 (NZ) lessons</a>
-        <a class="track-tab" th:href="@{/class6/nz/maths}">Open Class 6 NZ Maths standards</a>
+        <a class="btn" th:href="@{/register}">Start 2-day free trial</a>
+        <a class="btn btn-outline" th:href="@{/curriculum/nz}">Browse NZ Curriculum</a>
     </div>
 </div>
 
 <div class="container">
     <div class="grid">
         <div class="card">
-            <h3>Concepts across subjects</h3>
-            <p class="muted">Build strong understanding in core subjects from the fundamentals, with structured lessons and clear explanations.</p>
+            <h3>Parent progress view</h3>
+            <p class="muted">See overall scores, skills going well, and the areas below 70% that need more practice this week.</p>
         </div>
         <div class="card">
-            <h3>Practice with progression</h3>
-            <p class="muted">Solve progressive sheets that move from foundation to advanced level, helping learners grow from Year 6 onwards.</p>
+            <h3>Curriculum pathway</h3>
+            <p class="muted">Years 1–10 learning areas mapped from Tāhūrangi, with live Maths, English and Science lessons where content is ready.</p>
         </div>
         <div class="card">
-            <h3>Improve and succeed</h3>
-            <p class="muted">Track scores, review mistakes, and use non-answer hints to strengthen problem-solving in every subject area.</p>
+            <h3>2-day free trial</h3>
+            <p class="muted">Try the full NZ track free for 2 days, then continue from $10/month when you are ready.</p>
         </div>
     </div>
 </div>

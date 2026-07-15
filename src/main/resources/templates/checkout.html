@@ -6,43 +6,34 @@
 
 <div class="container container-narrow">
     <div class="card">
-        <h1 style="margin-top:0;">Online payment</h1>
+        <h1 style="margin-top:0;">Subscribe to NZ Curriculum</h1>
         <p class="muted" style="margin-top:0;">
             Plan: <strong th:text="${planLabel}">Plan</strong> &middot;
-            Amount: <strong th:text="'$' + ${amount} + '/month'">$0/month</strong>
+            Amount: <strong th:text="'$' + ${amount} + '/month'">$10/month</strong>
         </p>
 
+        <div class="alert alert-success" th:if="${onTrial}">
+            Free trial active until <strong th:text="${trialUntil}">date</strong>.
+            Subscribing now extends access by one month from the later of today or your trial end.
+        </div>
+
         <div class="alert alert-error" th:if="${error}" th:text="${error}">Payment error</div>
+        <div class="alert alert-info" th:if="${cancelled}">
+            Stripe checkout was cancelled. You can start again when ready.
+        </div>
 
         <form th:action="@{/billing/checkout}" method="post">
             <input type="hidden" name="plan" th:value="${plan}"/>
-
-            <div class="form-group">
-                <label for="cardName">Cardholder name</label>
-                <input id="cardName" name="cardName" type="text" required/>
-            </div>
-            <div class="form-group">
-                <label for="cardNumber">Card number</label>
-                <input id="cardNumber" name="cardNumber" type="text" maxlength="19" placeholder="4242 4242 4242 4242" required/>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                <div class="form-group">
-                    <label for="expiry">Expiry (MM/YY)</label>
-                    <input id="expiry" name="expiry" type="text" placeholder="12/30" required/>
-                </div>
-                <div class="form-group">
-                    <label for="cvv">CVV</label>
-                    <input id="cvv" name="cvv" type="password" maxlength="4" required/>
-                </div>
-            </div>
-
-            <button class="btn btn-success btn-block" type="submit" th:text="'Pay $' + ${amount} + ' now'">Pay now</button>
+            <p class="muted">
+                Includes parent progress insights and curriculum pathways for Years 1–10.
+                New families receive a <strong th:text="${trialDays}">2</strong>-day free trial on signup before billing.
+            </p>
+            <button class="btn btn-success btn-block" type="submit" th:text="'Continue to Stripe - $' + ${amount} + '/month'">Continue to Stripe</button>
         </form>
         <p class="muted" style="margin:10px 0 0; font-size:0.88rem;">
-            Demo payment page for online checkout flow integration.
+            LetusLearn does not store card numbers, expiry dates, or CVV values.
         </p>
     </div>
 </div>
 </body>
 </html>
-

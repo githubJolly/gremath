@@ -5,6 +5,7 @@ import com.gremath.content.AveragesContent;
 import com.gremath.content.Class6NzEnglishContent;
 import com.gremath.content.Class6NzMathematicsContent;
 import com.gremath.content.Class6NzScienceContent;
+import com.gremath.content.Class7NzMathematicsContent;
 import com.gremath.content.CountingContent;
 import com.gremath.content.GeometryContent;
 import com.gremath.content.NumberPropertiesContent;
@@ -51,7 +52,8 @@ public class DataInitializer {
             new ProfitInterestContent(),
             new Class6NzMathematicsContent(),
             new Class6NzEnglishContent(),
-            new Class6NzScienceContent());
+            new Class6NzScienceContent(),
+            new Class7NzMathematicsContent());
 
     @Bean
     CommandLineRunner seedData(TopicRepository topicRepository, LessonRepository lessonRepository,

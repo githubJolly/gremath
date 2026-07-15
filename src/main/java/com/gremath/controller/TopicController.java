@@ -34,7 +34,8 @@ public class TopicController {
     @GetMapping(value={"/topics/{slug}"})
     public String topic(@PathVariable String slug, Principal principal, Model model) {
         Topic topic = this.topicService.getBySlug(slug);
-        String requiredTrack = "CLASS6_NZ".equals(topic.getExamType()) ? "class6-nz" : "gre-cat";
+        String examType = topic.getExamType();
+        String requiredTrack = ("CLASS6_NZ".equals(examType) || "CLASS7_NZ".equals(examType)) ? "class6-nz" : "gre-cat";
         Student student = this.studentService.getByUsername(principal.getName());
         if (!this.studentService.hasTrackAccess(student, requiredTrack)) {
             return "redirect:/pricing?required=" + requiredTrack;

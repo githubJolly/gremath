@@ -39,6 +39,9 @@ public class Student {
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDate greCatSubscribedUntil;
     private LocalDate class6NzSubscribedUntil;
+    /** End date of complimentary NZ curriculum trial (inclusive). */
+    private LocalDate nzTrialUntil;
+    private boolean nzTrialUsed;
 
     public Long getId() {
         return this.id;
@@ -112,11 +115,37 @@ public class Student {
         this.class6NzSubscribedUntil = class6NzSubscribedUntil;
     }
 
+    public LocalDate getNzTrialUntil() {
+        return this.nzTrialUntil;
+    }
+
+    public void setNzTrialUntil(LocalDate nzTrialUntil) {
+        this.nzTrialUntil = nzTrialUntil;
+    }
+
+    public boolean isNzTrialUsed() {
+        return this.nzTrialUsed;
+    }
+
+    public void setNzTrialUsed(boolean nzTrialUsed) {
+        this.nzTrialUsed = nzTrialUsed;
+    }
+
     public boolean hasActiveGreCatSubscription() {
         return this.greCatSubscribedUntil != null && !this.greCatSubscribedUntil.isBefore(LocalDate.now());
     }
 
+    /** Trial is active while today is strictly before the until date (2 full calendar days from signup). */
+    public boolean hasActiveNzTrial() {
+        return this.nzTrialUntil != null && this.nzTrialUntil.isAfter(LocalDate.now());
+    }
+
     public boolean hasActiveClass6NzSubscription() {
+        return (this.class6NzSubscribedUntil != null && !this.class6NzSubscribedUntil.isBefore(LocalDate.now()))
+                || this.hasActiveNzTrial();
+    }
+
+    public boolean hasPaidNzSubscription() {
         return this.class6NzSubscribedUntil != null && !this.class6NzSubscribedUntil.isBefore(LocalDate.now());
     }
 }

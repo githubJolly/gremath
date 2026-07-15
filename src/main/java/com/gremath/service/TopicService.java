@@ -34,10 +34,10 @@ public class TopicService {
 
     @Transactional(readOnly=true)
     public List<Topic> getTopicsForTrack(String track) {
-        String key = track == null ? "gre-cat" : track.trim().toLowerCase();
+        String key = track == null ? "class6-nz" : track.trim().toLowerCase();
         List<String> types;
         if ("class6-nz".equals(key)) {
-            types = List.of("CLASS6_NZ");
+            types = List.of("CLASS6_NZ", "CLASS7_NZ");
         } else {
             types = List.of("GRE", "CAT", "BOTH");
         }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('NZ Curriculum')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <div class="page-header">
+        <h1>New Zealand Curriculum</h1>
+        <p class="muted">
+            Learning areas for Years 1–10, organised to match the official curriculum on
+            <a th:href="${curriculumHome}" href="https://newzealandcurriculum.tahurangi.education.govt.nz/" target="_blank" rel="noopener">Tāhūrangi</a>.
+            Live lessons open where content is ready; other subjects show as coming soon.
+        </p>
+    </div>
+
+    <div class="track-switch" style="margin-bottom:20px; flex-wrap:wrap;">
+        <a th:each="y : ${years}"
+           class="track-tab"
+           th:classappend="${y == selectedYear} ? ' active'"
+           th:href="@{/curriculum/nz(year=${y})}"
+           th:text="'Year ' + ${y}">Year</a>
+    </div>
+
+    <div class="grid">
+        <div class="card" th:each="s : ${subjects}">
+            <span class="badge" th:classappend="${s.available} ? 'badge-class6' : 'badge-both'"
+                  th:text="${s.available} ? 'Ready' : 'Coming soon'">Ready</span>
+            <h3 style="margin-top:10px;" th:text="${s.subject}">Subject</h3>
+            <p class="muted" th:text="${s.blurb}">Blurb</p>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+                <a class="btn" th:if="${s.available and hasAccess}" th:href="${s.href}" th:text="${s.cta}">Open</a>
+                <a class="btn" th:if="${s.available and !hasAccess}" th:href="@{/register}" th:text="'Start trial to open'">Start trial</a>
+                <span class="muted" th:unless="${s.available}" th:text="${s.cta}">Coming soon</span>
+                <a class="btn btn-outline" th:href="${s.curriculumUrl}" target="_blank" rel="noopener">View on Tāhūrangi</a>
+            </div>
+        </div>
+    </div>
+
+    <p class="muted" style="margin-top:24px; font-size:0.9rem;">
+        Content on LetusLearn is original teaching material structured around NZ Curriculum learning areas.
+        Official curriculum statements remain on the Ministry’s Tāhūrangi site.
+    </p>
+</div>
+</body>
+</html>

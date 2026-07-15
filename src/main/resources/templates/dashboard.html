@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<head th:replace="~{fragments/layout :: head('Parent progress')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <div class="container">
     <div class="page-header">
-        <h1 th:text="'Welcome, ' + ${student.fullName} + '!'">Welcome!</h1>
-        <p class="muted">Pick a topic to learn and practice. Your scores are saved automatically.</p>
+        <h1 th:text="'Progress for ' + ${student.fullName}">Progress</h1>
+        <p class="muted">A parent-friendly view of practice results and where to focus next.</p>
         <div class="track-switch" style="margin-top:10px;">
-            <a class="track-tab" th:classappend="${track == 'gre-cat'} ? ' active'" th:href="@{/dashboard(track='gre-cat')}">GRE / CAT track</a>
-            <a class="track-tab" th:classappend="${track == 'class6-nz'} ? ' active'" th:href="@{/dashboard(track='class6-nz')}">Class 6 (NZ) track</a>
+            <a class="track-tab active" th:href="@{/dashboard}">NZ Curriculum</a>
+            <a class="track-tab" th:href="@{/curriculum/nz}">All years &amp; subjects</a>
             <a class="track-tab" th:href="@{/games/murder-mystery}">Murder mystery quiz</a>
         </div>
     </div>
@@ -19,121 +19,113 @@
         Payment successful. Your subscription is active <span th:if="${paidUntil}">until <strong th:text="${paidUntil}">date</strong></span>.
     </div>
 
+    <div class="alert alert-info" th:if="${onTrial}">
+        Free trial active until <strong th:text="${trialUntil}">date</strong>.
+        <a th:href="@{/billing/checkout(plan='class6-nz')}">Subscribe for $10/month</a> to keep access after the trial.
+    </div>
+
     <div class="card" th:unless="${hasActiveSubscription}" style="margin-bottom:20px;">
-        <h2 style="margin-top:0;">Track locked - subscription required</h2>
+        <h2 style="margin-top:0;">Unlock lessons &amp; parent insights</h2>
         <p class="muted" style="margin:0 0 10px;">
-            This track requires an active monthly subscription.
-            Price: <strong th:text="'$' + ${trackPrice} + '/month'">$0/month</strong>.
+            Start with a <strong>2-day free trial</strong>, then continue for
+            <strong th:text="'$' + ${trackPrice} + '/month'">$10/month</strong>.
+            You will see where your child needs to focus more after each practice sheet.
         </p>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <a class="btn" th:href="@{/billing/checkout(plan=${track})}">Subscribe now</a>
-            <a class="btn btn-outline" th:href="@{/pricing(required=${track})}">View pricing</a>
+            <a class="btn" th:href="@{/billing/checkout(plan='class6-nz')}">Subscribe now</a>
+            <a class="btn btn-outline" th:href="@{/pricing}">View pricing</a>
+            <a class="btn btn-outline" th:href="@{/curriculum/nz}">Browse curriculum map</a>
         </div>
     </div>
 
     <div class="stats">
         <div class="stat">
-            <div class="value" th:text="${attemptsCount}">0</div>
-            <div class="label">Practice attempts</div>
+            <div class="value" th:text="${parentProgress.overallPercent} + '%'">0%</div>
+            <div class="label">Overall practice average</div>
         </div>
         <div class="stat">
-            <div class="value" th:text="${bestPercentage} + '%'">0%</div>
-            <div class="label">Best score</div>
+            <div class="value" th:text="${parentProgress.focusAreasCount}">0</div>
+            <div class="label">Areas needing focus</div>
         </div>
         <div class="stat">
-            <div class="value" th:text="${#lists.size(topics)}">0</div>
-            <div class="label">Topics available</div>
+            <div class="value" th:text="${parentProgress.strongAreas}">0</div>
+            <div class="label">Going well</div>
+        </div>
+        <div class="stat">
+            <div class="value" th:text="${parentProgress.practiceSessions}">0</div>
+            <div class="label">Practice sheets done</div>
         </div>
     </div>
 
-    <h2>Readiness predictor</h2>
+    <h2>Where to focus more</h2>
     <div class="card">
-        <div class="stats" style="margin-bottom:10px;">
-            <div class="stat">
-                <div class="value" th:text="${readiness.greProbability} + '%'">0%</div>
-                <div class="label">Live GRE probability</div>
-            </div>
-            <div class="stat">
-                <div class="value" th:text="${readiness.catProbability} + '%'">0%</div>
-                <div class="label">Live CAT probability</div>
-            </div>
-            <div class="stat">
-                <div class="value" th:text="${readiness.readinessScore} + '/100'">0/100</div>
-                <div class="label">Readiness score</div>
-            </div>
-            <div class="stat">
-                <div class="value" th:text="${readiness.confidence} + '%'">0%</div>
-                <div class="label">Prediction confidence</div>
+        <p style="margin-top:0;" th:text="${parentProgress.summary}">Summary</p>
+        <div th:if="${#lists.isEmpty(parentProgress.needsFocus)}">
+            <p class="muted" style="margin:0;">No weak areas yet — complete a few practice sheets to unlock focus recommendations.</p>
+        </div>
+        <div th:each="area : ${parentProgress.needsFocus}" style="padding:12px 0; border-top:1px solid var(--border, #e5e7eb);">
+            <div class="flex-between" style="gap:12px; flex-wrap:wrap;">
+                <div>
+                    <strong th:text="${area.lessonTitle}">Lesson</strong>
+                    <span class="muted" th:text="' · ' + ${area.averagePercent} + '% avg · ' + ${area.attempts} + ' sheets'"> · 0%</span>
+                    <p class="muted" style="margin:4px 0 0;" th:text="${area.guidance}">Guidance</p>
+                </div>
+                <a class="btn btn-outline" th:if="${hasActiveSubscription}" th:href="${area.practiceHref}">Practise again</a>
             </div>
         </div>
-
-        <div style="margin:8px 0 12px;">
-            <strong>Current band:</strong> <span th:text="${readiness.band}">Build foundation</span>
-            <span class="muted"> &middot; based on </span>
-            <span th:text="${readiness.attemptsUsed}">0</span>
-            <span class="muted"> attempts (avg </span><span th:text="${readiness.averageScore} + '%'">0%</span>
-            <span class="muted">, recent </span><span th:text="${readiness.recentScore} + '%'">0%</span><span class="muted">)</span>
-        </div>
-
-        <div class="prob-track">
-            <div class="prob-fill prob-gre" th:style="'width:' + ${readiness.greProbability} + '%'"></div>
-        </div>
-        <div class="muted" style="font-size:0.9rem; margin-bottom:8px;">GRE readiness bar</div>
-
-        <div class="prob-track">
-            <div class="prob-fill prob-cat" th:style="'width:' + ${readiness.catProbability} + '%'"></div>
-        </div>
-        <div class="muted" style="font-size:0.9rem;">CAT readiness bar</div>
-
-        <details style="margin-top:14px;">
-            <summary style="cursor:pointer; font-weight:600;">How this score is calculated</summary>
-            <div class="muted" style="margin-top:8px;">
-                <p style="margin:0 0 8px;">
-                    This is a live estimate based on your practice history in this app. It is not an official exam guarantee,
-                    but a directional readiness signal that updates after every attempt.
-                </p>
-                <ul style="margin:0 0 8px 18px; padding:0;">
-                    <li><strong>Accuracy:</strong> weighted using average score, recent score trend, and best score.</li>
-                    <li><strong>Consistency:</strong> steadier performance gives a stronger readiness signal.</li>
-                    <li><strong>Completion:</strong> more quality attempts increase confidence in the estimate.</li>
-                </ul>
-                <p style="margin:0 0 8px;">
-                    <strong>Current breakdown:</strong>
-                    Accuracy <span th:text="${readiness.accuracyComponent}">0</span>/100,
-                    Consistency <span th:text="${readiness.consistencyComponent}">0</span>/100,
-                    Completion <span th:text="${readiness.completionComponent}">0</span>/100.
-                </p>
-                <p style="margin:0;">
-                    <strong>Confidence</strong> rises with number of attempts. Improve score + consistency over time to raise
-                    GRE/CAT readiness probabilities.
-                </p>
-            </div>
-        </details>
     </div>
 
-    <h2 th:text="'Topics - ' + ${trackLabel}">Topics</h2>
-    <div class="card" th:if="${track == 'class6-nz' and hasActiveSubscription}" style="margin-bottom:16px;">
+    <h2 style="margin-top:28px;">Going well</h2>
+    <div class="card" th:if="${#lists.isEmpty(parentProgress.goingWell)}">
+        <p class="muted" style="margin:0;">Strong areas will appear here once average sheet scores reach 70%+.</p>
+    </div>
+    <div class="card" th:unless="${#lists.isEmpty(parentProgress.goingWell)}">
+        <div th:each="area : ${parentProgress.goingWell}" style="padding:10px 0; border-top:1px solid var(--border, #e5e7eb);">
+            <strong th:text="${area.lessonTitle}">Lesson</strong>
+            <span class="muted" th:text="' · ' + ${area.averagePercent} + '% avg'"> · 0%</span>
+        </div>
+    </div>
+
+    <h2 style="margin-top:36px;" th:text="'Topics — ' + ${trackLabel}">Topics</h2>
+    <div class="card" th:if="${hasActiveSubscription}" style="margin-bottom:16px;">
         <div class="flex-between">
             <div>
-                <h3 style="margin:0 0 4px;">Standards-style maths pathway</h3>
-                <p class="muted" style="margin:0;">Browse Year 6 NZ maths skills by strand in a standards-aligned layout.</p>
+                <h3 style="margin:0 0 4px;">NZ Curriculum map</h3>
+                <p class="muted" style="margin:0;">Browse Years 1–10 and all learning areas (aligned to Tāhūrangi).</p>
             </div>
-            <a class="btn btn-outline" th:href="@{/class6/nz/maths}">Open standards view</a>
+            <a class="btn btn-outline" th:href="@{/curriculum/nz}">Open map</a>
+        </div>
+    </div>
+    <div class="card" th:if="${hasActiveSubscription}" style="margin-bottom:16px;">
+        <div class="flex-between">
+            <div>
+                <h3 style="margin:0 0 4px;">Year 6 maths standards</h3>
+                <p class="muted" style="margin:0;">Browse Year 6 NZ maths skills by strand.</p>
+            </div>
+            <a class="btn btn-outline" th:href="@{/class6/nz/maths}">Open Year 6 standards</a>
+        </div>
+    </div>
+    <div class="card" th:if="${hasActiveSubscription}" style="margin-bottom:16px;">
+        <div class="flex-between">
+            <div>
+                <h3 style="margin:0 0 4px;">Year 7 Mathematics</h3>
+                <p class="muted" style="margin:0;">Lessons and practice from the Year 7 teaching sequence.</p>
+            </div>
+            <a class="btn btn-outline" th:href="@{/topics/class7-nz-mathematics}">Open Year 7 maths</a>
         </div>
     </div>
 
     <div class="grid">
         <a class="card topic-card" th:each="topic : ${topics}" th:href="@{'/topics/' + ${topic.slug}}">
-            <span class="badge"
-                  th:classappend="${topic.examType == 'GRE'} ? 'badge-gre' : (${topic.examType == 'CAT'} ? 'badge-cat' : (${topic.examType == 'CLASS6_NZ'} ? 'badge-class6' : 'badge-both'))"
-                  th:text="${topic.examType == 'CLASS6_NZ' ? 'CLASS 6 NZ' : topic.examType}">BOTH</span>
+            <span class="badge badge-class6"
+                  th:text="${topic.examType == 'CLASS7_NZ' ? 'YEAR 7 NZ' : 'CLASS 6 NZ'}">NZ</span>
             <h3 th:text="${topic.name}" style="margin-top:10px;">Topic</h3>
             <p th:text="${topic.description}">Description</p>
             <span class="muted" th:text="${#lists.size(topic.lessons)} + ' lessons &middot; ' + ${#lists.size(topic.questions)} + ' questions'">lessons</span>
         </a>
     </div>
 
-    <h2 style="margin-top:36px;">Recent lesson sheet history</h2>
+    <h2 style="margin-top:36px;">Recent practice sheets</h2>
     <div class="card" th:if="${#lists.isEmpty(sheetHistory)}">
         <p class="muted" style="margin:0;">No lesson sheets attempted yet. Open a topic, pick a lesson, and try a practice sheet.</p>
     </div>
@@ -157,33 +149,6 @@
                 <td th:text="${a.percentage} + '%'">0%</td>
                 <td th:text="${#temporals.format(a.takenAt, 'dd MMM, HH:mm')}">date</td>
                 <td><a th:href="@{'/practice/result/' + ${a.id}}">View</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <h2 style="margin-top:36px;">Recent topic-test history</h2>
-    <div class="card" th:if="${#lists.isEmpty(history)}">
-        <p class="muted" style="margin:0;">No attempts yet. Start a practice sheet to see results here.</p>
-    </div>
-    <div class="card" th:unless="${#lists.isEmpty(history)}">
-        <table class="history">
-            <thead>
-            <tr>
-                <th>Topic</th>
-                <th>Score</th>
-                <th>Percentage</th>
-                <th>Date</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="a : ${history}">
-                <td th:text="${a.topic.name}">Topic</td>
-                <td th:text="${a.score} + ' / ' + ${a.totalQuestions}">0/0</td>
-                <td th:text="${a.percentage} + '%'">0%</td>
-                <td th:text="${#temporals.format(a.takenAt, 'dd MMM yyyy, HH:mm')}">date</td>
-                <td><a th:href="@{'/result/' + ${a.id}}">View</a></td>
             </tr>
             </tbody>
         </table>

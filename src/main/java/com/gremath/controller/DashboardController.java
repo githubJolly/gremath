@@ -1,18 +1,11 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  org.springframework.stereotype.Controller
- *  org.springframework.ui.Model
- *  org.springframework.web.bind.annotation.GetMapping
- */
 package com.gremath.controller;
 
+import com.gremath.dto.ParentProgressSnapshot;
 import com.gremath.model.PracticeAttempt;
 import com.gremath.model.SheetAttempt;
 import com.gremath.model.Student;
+import com.gremath.service.ParentProgressService;
 import com.gremath.service.PracticeService;
-import com.gremath.service.ReadinessService;
 import com.gremath.service.SheetPracticeService;
 import com.gremath.service.StudentService;
 import com.gremath.service.TopicService;
@@ -29,43 +22,59 @@ public class DashboardController {
     private final StudentService studentService;
     private final PracticeService practiceService;
     private final SheetPracticeService sheetPracticeService;
-    private final ReadinessService readinessService;
+    private final ParentProgressService parentProgressService;
 
-    public DashboardController(TopicService topicService, StudentService studentService, PracticeService practiceService, SheetPracticeService sheetPracticeService, ReadinessService readinessService) {
+    public DashboardController(TopicService topicService,
+                               StudentService studentService,
+                               PracticeService practiceService,
+                               SheetPracticeService sheetPracticeService,
+                               ParentProgressService parentProgressService) {
         this.topicService = topicService;
         this.studentService = studentService;
         this.practiceService = practiceService;
         this.sheetPracticeService = sheetPracticeService;
-        this.readinessService = readinessService;
+        this.parentProgressService = parentProgressService;
     }
 
-    @GetMapping(value={"/dashboard"})
+    @GetMapping(value = {"/dashboard"})
     public String dashboard(Principal principal,
-                            @RequestParam(name="track", required=false, defaultValue="gre-cat") String track,
-                            @RequestParam(name="paid", required=false, defaultValue="0") int paid,
-                            @RequestParam(name="until", required=false) String until,
+                            @RequestParam(name = "track", required = false, defaultValue = "class6-nz") String track,
+                            @RequestParam(name = "paid", required = false, defaultValue = "0") int paid,
+                            @RequestParam(name = "until", required = false) String until,
                             Model model) {
         Student student = this.studentService.getByUsername(principal.getName());
+        // NZ-first: auto-start complimentary trial for accounts that have never used one
+        if (!student.hasPaidNzSubscription() && !student.isNzTrialUsed()) {
+            this.studentService.startNzTrialIfEligible(student);
+            student = this.studentService.getByUsername(principal.getName());
+        }
+
         List<PracticeAttempt> history = this.practiceService.getHistory(student);
         List<SheetAttempt> sheetHistory = this.sheetPracticeService.getHistory(student);
         int bestTopic = history.stream().mapToInt(PracticeAttempt::getPercentage).max().orElse(0);
         int bestSheet = sheetHistory.stream().mapToInt(SheetAttempt::getPercentage).max().orElse(0);
-        String activeTrack = "class6-nz".equalsIgnoreCase(track) ? "class6-nz" : "gre-cat";
+
+        // GRE/CAT hidden for now — always use NZ curriculum track
+        String activeTrack = "class6-nz";
         boolean hasSubscription = this.studentService.hasTrackAccess(student, activeTrack);
-        model.addAttribute("student", (Object)student);
-        model.addAttribute("topics", hasSubscription ? this.topicService.getTopicsForTrack(activeTrack) : java.util.List.of());
+        ParentProgressSnapshot parentProgress = this.parentProgressService.build(sheetHistory);
+
+        model.addAttribute("student", student);
+        model.addAttribute("topics", hasSubscription ? this.topicService.getTopicsForTrack(activeTrack) : List.of());
         model.addAttribute("track", activeTrack);
-        model.addAttribute("trackLabel", "class6-nz".equals(activeTrack) ? "Class 6 (New Zealand Curriculum)" : "GRE / CAT");
-        model.addAttribute("trackPrice", "class6-nz".equals(activeTrack) ? 10 : 20);
+        model.addAttribute("trackLabel", "NZ Curriculum");
+        model.addAttribute("trackPrice", 10);
         model.addAttribute("hasActiveSubscription", hasSubscription);
+        model.addAttribute("onTrial", student.hasActiveNzTrial() && !student.hasPaidNzSubscription());
+        model.addAttribute("trialUntil", student.getNzTrialUntil());
+        model.addAttribute("paidNz", student.hasPaidNzSubscription());
         model.addAttribute("paid", paid == 1);
         model.addAttribute("paidUntil", until);
         model.addAttribute("history", history);
         model.addAttribute("sheetHistory", sheetHistory);
-        model.addAttribute("attemptsCount", (Object)(history.size() + sheetHistory.size()));
-        model.addAttribute("bestPercentage", (Object)Math.max(bestTopic, bestSheet));
-        model.addAttribute("readiness", (Object)this.readinessService.estimate(history, sheetHistory));
+        model.addAttribute("attemptsCount", history.size() + sheetHistory.size());
+        model.addAttribute("bestPercentage", Math.max(bestTopic, bestSheet));
+        model.addAttribute("parentProgress", parentProgress);
         return "dashboard";
     }
 }
-

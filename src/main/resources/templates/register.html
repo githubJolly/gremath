@@ -7,7 +7,7 @@
 <div class="container container-narrow">
     <div class="card">
         <h1>Create your account</h1>
-        <p class="muted">Each student gets their own private login and progress.</p>
+        <p class="muted">Create a family account to follow your child’s NZ Curriculum progress. Includes a <strong>2-day free trial</strong>.</p>
 
         <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
 
@@ -32,7 +32,7 @@
                 <input type="password" id="password" th:field="*{password}"/>
                 <div class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
             </div>
-            <button type="submit" class="btn btn-block">Sign up</button>
+            <button type="submit" class="btn btn-block">Start free trial</button>
         </form>
         <p class="muted" style="margin-top:16px;">
             Already registered? <a th:href="@{/login}">Log in</a>

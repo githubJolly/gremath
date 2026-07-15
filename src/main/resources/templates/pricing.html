@@ -6,37 +6,44 @@
 
 <div class="container">
     <div class="page-header">
-        <h1>Subscription plans</h1>
-        <p class="muted">Choose the track that matches your learning goal.</p>
+        <h1>Family subscription</h1>
+        <p class="muted">NZ Curriculum access with a parent progress dashboard. Includes a 2-day free trial.</p>
     </div>
 
-    <div class="alert alert-info" th:if="${required == 'gre-cat'}">
-        GRE / CAT track requires an active subscription.
-    </div>
-    <div class="alert alert-info" th:if="${required == 'class6-nz'}">
-        Class 6 (New Zealand Curriculum) track requires an active subscription.
+    <div class="alert alert-info" th:if="${required != null}">
+        An active subscription or trial is required to open lessons and the parent progress view.
     </div>
 
-    <div class="grid">
+    <div class="alert alert-success" th:if="${onTrial}">
+        Your free trial is active until <strong th:text="${trialUntil}">date</strong>.
+        Subscribe anytime to keep access without interruption.
+    </div>
+
+    <div class="grid" style="max-width:520px;">
         <div class="card">
-            <span class="badge badge-class6">CLASS 6 NZ</span>
-            <h2 style="margin:10px 0 4px;">Class 6 Track</h2>
-            <p class="muted" style="margin:0 0 12px;">New Zealand curriculum foundation subjects (Maths, English, Science).</p>
+            <span class="badge badge-class6">NZ CURRICULUM</span>
+            <h2 style="margin:10px 0 4px;">All years &amp; subjects</h2>
+            <p class="muted" style="margin:0 0 12px;">
+                Aligned to
+                <a href="https://newzealandcurriculum.tahurangi.education.govt.nz/" target="_blank" rel="noopener">Tāhūrangi NZ Curriculum</a>.
+                Live content for Year 6–7 Maths and Year 6 English &amp; Science; more subjects unlocking over time.
+            </p>
             <div style="font-size:2rem; font-weight:700; color:var(--primary-dark);">$10<span style="font-size:1rem; color:var(--muted);">/month</span></div>
-            <p class="muted">Build strong fundamentals from Year 6 level with structured lessons.</p>
-            <a class="btn" th:href="@{/billing/checkout(plan='class6-nz')}">Subscribe Class 6</a>
-        </div>
-
-        <div class="card">
-            <span class="badge badge-both">GRE / CAT</span>
-            <h2 style="margin:10px 0 4px;">GRE / CAT Track</h2>
-            <p class="muted" style="margin:0 0 12px;">Quant topics, timed practice sheets, readiness predictor and exam-focused drills.</p>
-            <div style="font-size:2rem; font-weight:700; color:var(--primary-dark);">$20<span style="font-size:1rem; color:var(--muted);">/month</span></div>
-            <p class="muted">Advanced preparation flow for competitive exam performance.</p>
-            <a class="btn" th:href="@{/billing/checkout(plan='gre-cat')}">Subscribe GRE/CAT</a>
+            <ul class="muted" style="margin:12px 0 16px 18px; padding:0;">
+                <li><strong th:text="${trialDays}">2</strong>-day free trial on signup</li>
+                <li>Parent focus areas (where to practise more)</li>
+                <li>Lessons, practice sheets, and score history</li>
+            </ul>
+            <a class="btn" th:if="${hasPaidNz == null or !hasPaidNz}" th:href="@{/billing/checkout(plan='class6-nz')}">
+                <span th:if="${onTrial}">Continue after trial — subscribe</span>
+                <span th:unless="${onTrial}">Start subscription</span>
+            </a>
+            <p class="muted" th:if="${hasPaidNz}" style="margin:0;">Your paid subscription is already active.</p>
+            <p class="muted" style="margin:12px 0 0; font-size:0.9rem;">
+                New accounts get a complimentary 2-day trial automatically.
+            </p>
         </div>
     </div>
 </div>
 </body>
 </html>
-
