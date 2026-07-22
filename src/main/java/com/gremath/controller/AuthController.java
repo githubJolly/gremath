@@ -1,20 +1,10 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  jakarta.validation.Valid
- *  org.springframework.stereotype.Controller
- *  org.springframework.ui.Model
- *  org.springframework.validation.BindingResult
- *  org.springframework.web.bind.annotation.GetMapping
- *  org.springframework.web.bind.annotation.ModelAttribute
- *  org.springframework.web.bind.annotation.PostMapping
- */
 package com.gremath.controller;
 
 import com.gremath.dto.RegistrationForm;
 import com.gremath.service.StudentService;
 import jakarta.validation.Valid;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,45 +21,52 @@ public class AuthController {
         this.studentService = studentService;
     }
 
-    @GetMapping(value={"/"})
+    @GetMapping("/")
     public String home() {
         return "index";
     }
 
-    @GetMapping(value={"/login"})
+    @GetMapping("/login")
     public String login() {
         return "login";
     }
 
-    @GetMapping(value={"/register"})
+    @GetMapping("/register")
     public String registerForm(Model model) {
         if (!model.containsAttribute("registrationForm")) {
-            model.addAttribute("registrationForm", (Object)new RegistrationForm());
+            model.addAttribute("registrationForm", new RegistrationForm());
         }
         return "register";
     }
 
-    @PostMapping(value={"/register"})
-    public String register(@Valid @ModelAttribute(value="registrationForm") RegistrationForm form, BindingResult bindingResult, Model model) {
+    @PostMapping("/register")
+    public String register(@Valid @ModelAttribute("registrationForm") RegistrationForm form,
+                           BindingResult bindingResult,
+                           Model model) {
         if (bindingResult.hasErrors()) {
             return "register";
         }
         try {
             this.studentService.register(form);
-        }
-        catch (IllegalArgumentException ex) {
-            model.addAttribute("error", (Object)ex.getMessage());
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("error", ex.getMessage());
             return "register";
         }
-        return "redirect:/login?registered";
+        String email = URLEncoder.encode(form.getEmail(), StandardCharsets.UTF_8);
+        return "redirect:/check-email?email=" + email;
     }
 
-    @GetMapping(value={"/verify-email"})
-    public String verifyEmail(@RequestParam(value="token", required=false) String token) {
+    @GetMapping("/check-email")
+    public String checkEmail(@RequestParam(value = "email", required = false) String email, Model model) {
+        model.addAttribute("email", email);
+        return "check-email";
+    }
+
+    @GetMapping("/verify-email")
+    public String verifyEmail(@RequestParam(value = "token", required = false) String token) {
         if (this.studentService.verifyEmail(token)) {
             return "redirect:/login?verified";
         }
         return "redirect:/login?verifyFailed";
     }
 }
-

@@ -1,14 +1,3 @@
-/*
- * Decompiled with CFR 0.152.
- * 
- * Could not load the following classes:
- *  org.springframework.security.core.authority.SimpleGrantedAuthority
- *  org.springframework.security.core.userdetails.User
- *  org.springframework.security.core.userdetails.UserDetails
- *  org.springframework.security.core.userdetails.UserDetailsService
- *  org.springframework.security.core.userdetails.UsernameNotFoundException
- *  org.springframework.stereotype.Service
- */
 package com.gremath.service;
 
 import com.gremath.model.Student;
@@ -22,17 +11,22 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StudentDetailsService
-implements UserDetailsService {
+public class StudentDetailsService implements UserDetailsService {
     private final StudentRepository studentRepository;
 
     public StudentDetailsService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Student student = this.studentRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No student found with username: " + username));
-        return new User(student.getUsername(), student.getPassword(), List.of(new SimpleGrantedAuthority(student.getRole())));
+        Student student = this.studentRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("No student found with username: " + username));
+        // enabled=false blocks login until /verify-email succeeds
+        return User.withUsername(student.getUsername())
+                .password(student.getPassword())
+                .disabled(!student.isEmailVerified())
+                .authorities(List.of(new SimpleGrantedAuthority(student.getRole())))
+                .build();
     }
 }
-

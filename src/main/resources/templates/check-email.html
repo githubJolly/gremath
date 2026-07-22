@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Verify your email')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container container-narrow">
+    <div class="card">
+        <h1>Check your email</h1>
+        <p class="muted">
+            We’ve sent a verification link
+            <span th:if="${email}"> to <strong th:text="${email}">you@example.com</strong></span>.
+        </p>
+        <div class="alert alert-success">
+            Please open that email and click the link to verify your account. You can log in only after verification.
+        </div>
+        <p class="muted">
+            Didn’t get it? Check spam/junk, wait a minute, then try again. The link expires in 48 hours.
+        </p>
+        <p style="margin-top:20px;">
+            <a class="btn btn-block" th:href="@{/login}">Go to login</a>
+        </p>
+    </div>
+</div>
+</body>
+</html>
