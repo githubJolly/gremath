@@ -17,5 +17,7 @@ extends JpaRepository<Student, Long> {
     public boolean existsByUsername(String var1);
 
     public boolean existsByEmail(String var1);
+
+    public Optional<Student> findByEmailVerificationToken(String emailVerificationToken);
 }
 

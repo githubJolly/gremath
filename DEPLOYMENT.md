@@ -45,7 +45,26 @@ If your project is already present at `/opt/gremath`, you can skip `repo_url`:
    - `app.example.com` -> `<provider panel public IP>`
 3. Enable SSL in provider panel (Free SSL or upload custom cert)
 
-## 5) Useful operations
+## 5) Email verification (SMTP)
+
+Copy the example env file and set your public URL + SMTP credentials:
+
+```bash
+cd /opt/gremath
+cp .env.example .env
+# edit .env — at minimum APP_BASE_URL, MAIL_FROM, SPRING_MAIL_*
+docker compose up -d --build
+```
+
+Verification links in emails use `APP_BASE_URL` (e.g. `https://app.example.com`), not the container hostname.
+
+If SMTP is unset, the app still starts and logs the verification link:
+
+```bash
+docker compose logs -f app | grep -i verification
+```
+
+## 6) Useful operations
 
 ```bash
 systemctl status gremath-stack

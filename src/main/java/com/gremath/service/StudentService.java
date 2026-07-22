@@ -4,19 +4,26 @@ import com.gremath.dto.RegistrationForm;
 import com.gremath.model.Student;
 import com.gremath.repository.StudentRepository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class StudentService {
     public static final int NZ_TRIAL_DAYS = 2;
+    public static final int EMAIL_VERIFICATION_HOURS = 48;
 
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
-    public StudentService(StudentRepository studentRepository, PasswordEncoder passwordEncoder) {
+    public StudentService(StudentRepository studentRepository,
+                          PasswordEncoder passwordEncoder,
+                          EmailService emailService) {
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     public Student register(RegistrationForm form) {
@@ -32,8 +39,39 @@ public class StudentService {
         student.setEmail(form.getEmail());
         student.setPassword(this.passwordEncoder.encode((CharSequence)form.getPassword()));
         student.setRole("ROLE_STUDENT");
+        student.setEmailVerified(false);
+        String token = UUID.randomUUID().toString();
+        student.setEmailVerificationToken(token);
+        student.setEmailVerificationExpiresAt(LocalDateTime.now().plusHours(EMAIL_VERIFICATION_HOURS));
         startNzTrial(student);
-        return (Student)this.studentRepository.save(student);
+        Student saved = this.studentRepository.save(student);
+        if (saved.getEmail() != null && !saved.getEmail().isBlank()) {
+            this.emailService.sendVerificationEmail(saved.getEmail(), saved.getFullName(), token);
+        }
+        return saved;
+    }
+
+    /**
+     * Marks the student's email as verified when the token is valid and unexpired.
+     *
+     * @return true if verification succeeded
+     */
+    public boolean verifyEmail(String token) {
+        if (token == null || token.isBlank()) {
+            return false;
+        }
+        return this.studentRepository.findByEmailVerificationToken(token)
+                .filter(student -> !student.isEmailVerified())
+                .filter(student -> student.getEmailVerificationExpiresAt() != null
+                        && student.getEmailVerificationExpiresAt().isAfter(LocalDateTime.now()))
+                .map(student -> {
+                    student.setEmailVerified(true);
+                    student.setEmailVerificationToken(null);
+                    student.setEmailVerificationExpiresAt(null);
+                    this.studentRepository.save(student);
+                    return true;
+                })
+                .orElse(false);
     }
 
     public Student getByUsername(String username) {

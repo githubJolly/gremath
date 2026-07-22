@@ -1,6 +1,7 @@
 target/
 data/
 *.log
+.env
 deploy/nginx/app.conf
 recovery/
 tools/

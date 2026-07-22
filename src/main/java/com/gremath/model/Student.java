@@ -36,6 +36,11 @@ public class Student {
     private String password;
     @Column(nullable=false)
     private String role = "ROLE_STUDENT";
+    @Column(nullable=false, columnDefinition="boolean default false")
+    private boolean emailVerified = false;
+    @Column(unique=true)
+    private String emailVerificationToken;
+    private LocalDateTime emailVerificationExpiresAt;
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDate greCatSubscribedUntil;
     private LocalDate class6NzSubscribedUntil;
@@ -73,6 +78,30 @@ public class Student {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isEmailVerified() {
+        return this.emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getEmailVerificationToken() {
+        return this.emailVerificationToken;
+    }
+
+    public void setEmailVerificationToken(String emailVerificationToken) {
+        this.emailVerificationToken = emailVerificationToken;
+    }
+
+    public LocalDateTime getEmailVerificationExpiresAt() {
+        return this.emailVerificationExpiresAt;
+    }
+
+    public void setEmailVerificationExpiresAt(LocalDateTime emailVerificationExpiresAt) {
+        this.emailVerificationExpiresAt = emailVerificationExpiresAt;
     }
 
     public String getPassword() {

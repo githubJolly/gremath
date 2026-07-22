@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AuthController {
@@ -61,6 +62,14 @@ public class AuthController {
             return "register";
         }
         return "redirect:/login?registered";
+    }
+
+    @GetMapping(value={"/verify-email"})
+    public String verifyEmail(@RequestParam(value="token", required=false) String token) {
+        if (this.studentService.verifyEmail(token)) {
+            return "redirect:/login?verified";
+        }
+        return "redirect:/login?verifyFailed";
     }
 }
 
