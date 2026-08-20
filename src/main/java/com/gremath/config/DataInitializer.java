@@ -66,98 +66,89 @@ public class DataInitializer {
     CommandLineRunner seedData(TopicRepository topicRepository, LessonRepository lessonRepository,
                                PlatformTransactionManager transactionManager) {
         TransactionTemplate tx = new TransactionTemplate(transactionManager);
-        return args -> tx.executeWithoutResult(status -> {
-            if (topicRepository.count() == 0L) {
+        return args -> {
+            Long count = tx.execute(status -> topicRepository.count());
+            if (count == null || count == 0L) {
                 log.info("Seeding initial topic and lesson content.");
-                seedAll(topicRepository);
+                for (TopicContent content : CONTENT) {
+                    tx.executeWithoutResult(status -> topicRepository.save(content.build()));
+                }
+                log.info("Finished seeding {} topics.", CONTENT.size());
                 return;
             }
 
-            if (needsContentRefresh(topicRepository, lessonRepository)) {
-                log.info("Refreshing topic and lesson content from latest builders.");
-                refreshAll(topicRepository);
+            int added = 0;
+            int updated = 0;
+            Map<String, Topic> existingBySlug = tx.execute(status -> {
+                Map<String, Topic> map = new HashMap<>();
+                for (Topic t : topicRepository.findAll()) {
+                    t.getLessons().size();
+                    map.put(t.getSlug(), t);
+                }
+                return map;
+            });
+            if (existingBySlug == null) {
+                existingBySlug = new HashMap<>();
             }
-        });
+
+            boolean practiceMissing = tx.execute(status -> {
+                List<Lesson> lessons = lessonRepository.findAll();
+                return lessons.isEmpty() || lessons.stream().anyMatch(lesson -> !lesson.hasPractice());
+            });
+
+            for (TopicContent content : CONTENT) {
+                Topic fresh = content.build();
+                Topic existing = existingBySlug.get(fresh.getSlug());
+                if (existing == null) {
+                    tx.executeWithoutResult(status -> topicRepository.save(fresh));
+                    added++;
+                    continue;
+                }
+                if (Boolean.TRUE.equals(practiceMissing) || needsSync(existing, fresh)) {
+                    tx.executeWithoutResult(status -> {
+                        Topic current = topicRepository.findBySlug(fresh.getSlug()).orElse(null);
+                        if (current == null) {
+                            topicRepository.save(fresh);
+                            return;
+                        }
+                        current.getLessons().size();
+                        syncTopicContent(current, fresh);
+                        topicRepository.save(current);
+                    });
+                    updated++;
+                }
+            }
+            if (added > 0 || updated > 0) {
+                log.info("Curriculum sync complete: {} topics added, {} updated.", added, updated);
+            }
+        };
     }
 
-    private boolean needsContentRefresh(TopicRepository topicRepository, LessonRepository lessonRepository) {
-        List<Lesson> lessons = lessonRepository.findAll();
-        if (lessons.isEmpty()) {
+    private boolean needsSync(Topic existing, Topic fresh) {
+        if (existing.getLessons().size() != fresh.getLessons().size()) {
             return true;
         }
-        if (lessons.stream().anyMatch(lesson -> !lesson.hasPractice())) {
+        if (!java.util.Objects.equals(existing.getName(), fresh.getName())
+                || !java.util.Objects.equals(existing.getExamType(), fresh.getExamType())) {
             return true;
         }
-
-        Map<String, Topic> existingBySlug = new HashMap<>();
-        for (Topic t : topicRepository.findAll()) {
-            existingBySlug.put(t.getSlug(), t);
+        Map<Integer, Lesson> existingByOrder = new HashMap<>();
+        for (Lesson l : existing.getLessons()) {
+            existingByOrder.put(l.getOrderIndex(), l);
         }
-
-        for (TopicContent content : CONTENT) {
-            Topic fresh = content.build();
-            Topic existing = existingBySlug.get(fresh.getSlug());
-            if (existing == null) {
+        for (Lesson fl : fresh.getLessons()) {
+            Lesson el = existingByOrder.get(fl.getOrderIndex());
+            if (el == null) {
                 return true;
             }
-            if (existing.getLessons().size() != fresh.getLessons().size()) {
+            if (!java.util.Objects.equals(el.getTitle(), fl.getTitle())) {
                 return true;
             }
-            Map<Integer, Lesson> existingByOrder = new HashMap<>();
-            for (Lesson l : existing.getLessons()) {
-                existingByOrder.put(l.getOrderIndex(), l);
-            }
-            for (Lesson fl : fresh.getLessons()) {
-                Lesson el = existingByOrder.get(fl.getOrderIndex());
-                if (el == null) {
-                    return true;
-                }
-                if (!java.util.Objects.equals(el.getTitle(), fl.getTitle())) {
-                    return true;
-                }
-                if (!java.util.Objects.equals(el.getPracticeKey(), fl.getPracticeKey())) {
-                    return true;
-                }
-                if (!java.util.Objects.equals(el.getWordStrategy(), fl.getWordStrategy())) {
-                    return true;
-                }
-                String elNorm = com.gremath.content.Enrich.normalizeLessonContent(el.getTitle(), el.getOrderIndex(), el.getContent());
-                String flNorm = com.gremath.content.Enrich.normalizeLessonContent(fl.getTitle(), fl.getOrderIndex(), fl.getContent());
-                if (!java.util.Objects.equals(elNorm, flNorm)) {
-                    return true;
-                }
+            if (!java.util.Objects.equals(el.getPracticeKey(), fl.getPracticeKey())) {
+                return true;
             }
         }
         return false;
-    }
-
-    private void seedAll(TopicRepository topicRepository) {
-        CONTENT.forEach(content -> topicRepository.save(content.build()));
-    }
-
-    private void refreshAll(TopicRepository topicRepository) {
-        Map<String, Topic> freshBySlug = new HashMap<>();
-        for (TopicContent content : CONTENT) {
-            freshBySlug.put(content.build().getSlug(), content.build());
-        }
-
-        for (Topic existing : topicRepository.findAll()) {
-            Topic fresh = freshBySlug.get(existing.getSlug());
-            if (fresh == null) {
-                continue;
-            }
-            syncTopicContent(existing, fresh);
-            topicRepository.save(existing);
-        }
-
-        Set<String> existingSlugs = topicRepository.findAll().stream()
-                .map(Topic::getSlug)
-                .collect(java.util.stream.Collectors.toSet());
-        for (Topic fresh : freshBySlug.values()) {
-            if (!existingSlugs.contains(fresh.getSlug())) {
-                topicRepository.save(fresh);
-            }
-        }
     }
 
     private void syncTopicContent(Topic existing, Topic fresh) {
