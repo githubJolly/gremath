@@ -66,10 +66,6 @@ a[href], button, .btn, .year-pill, .subject-tile, .track-tab, .year-chip {
     width: 100%;
     height: auto;
     flex-shrink: 0;
-    pointer-events: none;
-}
-.navbar > * {
-    pointer-events: auto;
 }
 
 .navbar .brand {
