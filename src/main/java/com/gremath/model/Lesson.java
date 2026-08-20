@@ -36,7 +36,7 @@ public class Lesson {
     @Column(nullable=false)
     private String title;
     @Lob
-    @Column(nullable=false, length=20000)
+    @Column(nullable=false, length=100000)
     private String content;
     private int orderIndex;
     private String practiceKey;
