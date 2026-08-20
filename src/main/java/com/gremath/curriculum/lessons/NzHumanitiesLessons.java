@@ -311,12 +311,28 @@ public final class NzHumanitiesLessons {
 
     private static String langTitle(int y, int n) {
         return switch (n) {
-            case 1 -> "Kia ora, tēnā koe, tēnā koutou — greetings that fit the situation";
-            case 2 -> "Tahi–tekau, colours, kai and classroom kupu";
-            case 3 -> "Kei te pēhea koe? Short exchanges you can really say";
-            case 4 -> "Reading labels, signs, waiata lines and simple sentences";
-            case 5 -> "Writing or performing a mihi, caption or dialogue";
-            default -> "Tikanga: pōwhiri, manaakitanga, and using te reo with respect";
+            case 1 -> y <= 3 ? "Kia ora, tēnā koe, tēnā koutou — greetings that fit"
+                    : y <= 6 ? "Mihi beginnings: greet, name yourself, greet the group"
+                    : y <= 8 ? "Formal mihi: people, place and purpose"
+                    : "Audience and occasion: mihi, pepeha and public talk";
+            case 2 -> y <= 3 ? "Tahi–tekau, colours, kai and classroom kupu"
+                    : y <= 6 ? "Word families: numbers, time, kai and classroom"
+                    : y <= 8 ? "Building sentences from high-frequency kupu"
+                    : "Precise kupu for academic and everyday topics";
+            case 3 -> y <= 3 ? "Kei te pēhea koe? Short exchanges you can really say"
+                    : y <= 6 ? "Questions and answers you can reuse all day"
+                    : y <= 8 ? "Sustained conversation: ask, answer, add a reason"
+                    : "Oral texts: interviews, podcasts and classroom debate";
+            case 4 -> y <= 3 ? "Reading labels, signs, waiata lines and simple sentences"
+                    : y <= 6 ? "Dual-language texts: gist, then key kupu"
+                    : y <= 8 ? "Reading short authentic notices and waiata"
+                    : "Reading longer te reo and bilingual non-fiction";
+            case 5 -> y <= 3 ? "Writing or performing a caption, greeting or waiata line"
+                    : y <= 6 ? "A short mihi, comic or classroom dialogue"
+                    : y <= 8 ? "Crafting a paragraph or performance in te reo"
+                    : "Publishing a short text for a real audience";
+            default -> y <= 6 ? "Tikanga: pōwhiri, manaakitanga, and using te reo with respect"
+                    : "Language and tikanga together — mana, occasion, audience";
         };
     }
 

@@ -283,6 +283,62 @@ public final class NzCurriculumPractice {
     }
 
     private static QuestionTemplate[] mathAlgebra(int year, boolean word) {
+        if (year >= 10) {
+            return new QuestionTemplate[]{
+                    rng -> QBuilder.build(rng, word
+                                    ? "A rectangle is (x + 3) by (x + 1). Which expansion is its area?"
+                                    : "Expand (x + 3)(x + 1).",
+                            "x² + 4x + 3", "FOIL: x² + x + 3x + 3.",
+                            "MEDIUM", word ? "word problem" : "skill-check",
+                            "x² + 3", "x² + 3x + 1", "2x + 4"),
+                    rng -> QBuilder.build(rng, "Factorise x² + 5x + 6.",
+                            "(x + 2)(x + 3)", "Two numbers that multiply to 6 and add to 5: 2 and 3.",
+                            "MEDIUM", "skill-check", "(x + 1)(x + 6)", "(x + 5)(x + 1)", "x(x + 5) + 6"),
+                    rng -> QBuilder.build(rng, "The solutions of (x + 2)(x − 5) = 0 are…",
+                            "x = −2 and x = 5", "A product is 0 when a factor is 0.",
+                            "EASY", "skill-check", "x = 2 and x = −5", "x = 2 and x = 5", "no real solutions")
+            };
+        }
+        if (year >= 8) {
+            return new QuestionTemplate[]{
+                    rng -> {
+                        int a = QBuilder.range(rng, 2, 6);
+                        int x = QBuilder.range(rng, 3, 9);
+                        int b = QBuilder.range(rng, 1, 8);
+                        int rhs = a * x + b;
+                        return QBuilder.build(rng, "Solve " + a + "x + " + b + " = " + rhs + ".",
+                                String.valueOf(x), "Subtract " + b + ", then divide by " + a + ".",
+                                "MEDIUM", "skill-check",
+                                String.valueOf(rhs), String.valueOf(a + b), String.valueOf(x + 1));
+                    },
+                    rng -> QBuilder.build(rng, "On y = 2x + 1, when x = 3 the y-value is…",
+                            "7", "2×3 + 1 = 7. Gradient 2, intercept 1.",
+                            "EASY", "skill-check", "5", "6", "9"),
+                    rng -> QBuilder.build(rng, "Like terms: 3a + 5a equals…",
+                            "8a", "Add coefficients; keep the same letter.",
+                            "EASY", "skill-check", "8a²", "15a", "3a5a")
+            };
+        }
+        if (year <= 2) {
+            return new QuestionTemplate[]{
+                    rng -> QBuilder.build(rng, "The repeating pattern 🔴🔵🔴🔵🔴… next is…",
+                            "blue", "The unit of repeat is red-blue.",
+                            "EASY", "visual pattern", "red twice", "green", "stop"),
+                    rng -> QBuilder.build(rng, "7 = 3 + 4 is true because equals means…",
+                            "both sides name the same amount", "Equals is a balance, not 'write the answer'.",
+                            "MEDIUM", "skill-check", "always put a bigger number on the right", "the left is a question only", "4 is ignored"),
+                    rng -> {
+                        int start = QBuilder.range(rng, 1, 5);
+                        int step = 2;
+                        int next = start + 4 * step;
+                        String seq = start + ", " + (start + step) + ", " + (start + 2 * step) + ", " + (start + 3 * step) + ", …";
+                        return QBuilder.build(rng, "What is the next number in " + seq + "?", String.valueOf(next),
+                                "The pattern adds " + step + " each time.",
+                                "EASY", "visual pattern",
+                                String.valueOf(next + step), String.valueOf(next - 1), String.valueOf(start * step));
+                    }
+            };
+        }
         return new QuestionTemplate[]{
                 rng -> {
                     int start = QBuilder.range(rng, 1, 8);
@@ -331,6 +387,26 @@ public final class NzCurriculumPractice {
                     rng -> QBuilder.build(rng, "A full cup holds more than an empty cup. This is comparing…", "capacity",
                             "Capacity is how much a container can hold.", "EASY", "skill-check",
                             "only colour", "only speed", "only time")
+            };
+        }
+        if (year >= 9) {
+            return new QuestionTemplate[]{
+                    rng -> QBuilder.build(rng, "In a right triangle, opposite / hypotenuse is…",
+                            "sin", "SOH: sine = opposite / hypotenuse.",
+                            "MEDIUM", "skill-check", "cos", "tan", "area"),
+                    rng -> {
+                        int r = QBuilder.range(rng, 2, 5);
+                        int h = QBuilder.range(rng, 4, 10);
+                        return QBuilder.build(rng, word
+                                        ? "A water tank is a cylinder, radius " + r + " m, height " + h + " m. Volume formula is…"
+                                        : "Volume of a cylinder radius " + r + ", height " + h + " is…",
+                                "π × " + r + "² × " + h, "V = πr²h.",
+                                "MEDIUM", word ? "word problem" : "skill-check",
+                                "2π × " + r + " × " + h, String.valueOf(2 * (r + h)), "π × " + r + " × " + h);
+                    },
+                    rng -> QBuilder.build(rng, "Adjacent / hypotenuse is…",
+                            "cos", "CAH: cosine = adjacent / hypotenuse.",
+                            "EASY", "skill-check", "sin", "tan", "πr²")
             };
         }
         return new QuestionTemplate[]{
