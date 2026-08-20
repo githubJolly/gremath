@@ -4,28 +4,32 @@
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-<div class="container">
+<div class="container" th:classappend="subjectTheme != null ? 'theme-' + subjectTheme : ''">
     <div class="page-header flex-between">
         <div>
-            <a class="muted" th:href="@{/dashboard}">&larr; Back to dashboard</a>
+            <a class="muted" th:href="${curriculumYearHref} ?: @{/dashboard}">&larr; Back to year subjects</a>
+            <p class="muted" style="margin:8px 0 0;" th:if="${yearLevel}">
+                <span class="badge badge-class6" th:text="${subjectEmoji} + ' YEAR ' + ${yearLevel}">YEAR</span>
+                <span th:if="${subjectName}" th:text="' · ' + ${subjectName}">Subject</span>
+            </p>
             <h1 th:text="${topic.name}">Topic</h1>
             <p class="muted" th:text="${topic.description}">Description</p>
         </div>
     </div>
 
-    <div class="card">
-        <h2>Learn</h2>
-        <div class="lesson" th:each="lesson : ${topic.lessons}">
-            <h3 th:text="${lesson.title}">Lesson title</h3>
-            <div th:utext="${lesson.content}">Lesson content</div>
-            <div th:if="${lesson.hasPractice()}" style="margin-top:12px;">
-                <a class="btn btn-outline" th:href="@{'/practice/lesson/' + ${lesson.practiceKey}}">
-                    &#9999;&#65039; Practice sheets for this lesson &rarr;
-                </a>
-            </div>
+    <div class="lesson-card" th:each="lesson : ${topic.lessons}">
+        <div class="lesson-kicker">
+            <span class="lesson-num" th:text="${lesson.orderIndex}">1</span>
+            <h2 style="margin:0; font-size:1.25rem;" th:text="${lesson.title}">Lesson title</h2>
+        </div>
+        <div class="lesson" th:utext="${lesson.content}">Lesson content</div>
+        <div th:if="${lesson.hasPractice()}" style="margin-top:8px;">
+            <a class="btn" th:href="@{'/practice/lesson/' + ${lesson.practiceKey}}">
+                Practice this lesson →
+            </a>
         </div>
     </div>
-
 </div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
 </html>

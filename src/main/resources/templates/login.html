@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Login')}"></head>
+<head th:replace="~{fragments/layout :: head('Log in')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-<div class="container container-narrow">
-    <div class="card">
-        <h1>Welcome back</h1>
-        <p class="muted">Log in to continue learning.</p>
+<div class="container container-narrow auth-wrap">
+    <div class="card auth-card">
+        <span class="badge badge-class6">WELCOME BACK</span>
+        <h1>Log in to keep learning</h1>
+        <p class="muted">Your lessons, sheets and family progress are waiting.</p>
 
         <div class="alert alert-error" th:if="${param.error}">
             Invalid username or password.
@@ -40,9 +41,10 @@
             <button type="submit" class="btn btn-block">Log in</button>
         </form>
         <p class="muted" style="margin-top:16px;">
-            No account? <a th:href="@{/register}">Create one</a>
+            No account? <a th:href="@{/register}">Start a free trial</a>
         </p>
     </div>
 </div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
 </html>

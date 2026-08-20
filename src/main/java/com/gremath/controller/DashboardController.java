@@ -1,5 +1,6 @@
 package com.gremath.controller;
 
+import com.gremath.curriculum.NzCurriculumMap;
 import com.gremath.dto.ParentProgressSnapshot;
 import com.gremath.model.PracticeAttempt;
 import com.gremath.model.SheetAttempt;
@@ -8,7 +9,6 @@ import com.gremath.service.ParentProgressService;
 import com.gremath.service.PracticeService;
 import com.gremath.service.SheetPracticeService;
 import com.gremath.service.StudentService;
-import com.gremath.service.TopicService;
 import java.security.Principal;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -18,18 +18,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class DashboardController {
-    private final TopicService topicService;
     private final StudentService studentService;
     private final PracticeService practiceService;
     private final SheetPracticeService sheetPracticeService;
     private final ParentProgressService parentProgressService;
 
-    public DashboardController(TopicService topicService,
-                               StudentService studentService,
+    public DashboardController(StudentService studentService,
                                PracticeService practiceService,
                                SheetPracticeService sheetPracticeService,
                                ParentProgressService parentProgressService) {
-        this.topicService = topicService;
         this.studentService = studentService;
         this.practiceService = practiceService;
         this.sheetPracticeService = sheetPracticeService;
@@ -39,6 +36,7 @@ public class DashboardController {
     @GetMapping(value = {"/dashboard"})
     public String dashboard(Principal principal,
                             @RequestParam(name = "track", required = false, defaultValue = "class6-nz") String track,
+                            @RequestParam(name = "year", required = false, defaultValue = "6") int year,
                             @RequestParam(name = "paid", required = false, defaultValue = "0") int paid,
                             @RequestParam(name = "until", required = false) String until,
                             Model model) {
@@ -60,7 +58,7 @@ public class DashboardController {
         ParentProgressSnapshot parentProgress = this.parentProgressService.build(sheetHistory);
 
         model.addAttribute("student", student);
-        model.addAttribute("topics", hasSubscription ? this.topicService.getTopicsForTrack(activeTrack) : List.of());
+        model.addAttribute("topics", List.of());
         model.addAttribute("track", activeTrack);
         model.addAttribute("trackLabel", "NZ Curriculum");
         model.addAttribute("trackPrice", 10);
@@ -75,6 +73,10 @@ public class DashboardController {
         model.addAttribute("attemptsCount", history.size() + sheetHistory.size());
         model.addAttribute("bestPercentage", Math.max(bestTopic, bestSheet));
         model.addAttribute("parentProgress", parentProgress);
+        int selectedYear = Math.max(1, Math.min(10, year));
+        model.addAttribute("years", NzCurriculumMap.years());
+        model.addAttribute("selectedYear", selectedYear);
+        model.addAttribute("subjects", NzCurriculumMap.cardsForYear(selectedYear));
         return "dashboard";
     }
 }

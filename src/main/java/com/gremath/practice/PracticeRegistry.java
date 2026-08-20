@@ -12,6 +12,7 @@ import com.gremath.practice.content.AveragesPractice;
 import com.gremath.practice.content.Class6NzMathematicsPractice;
 import com.gremath.practice.content.Class7NzMathematicsPractice;
 import com.gremath.practice.content.CountingPractice;
+import com.gremath.practice.content.NzCurriculumPractice;
 import com.gremath.practice.content.GeometryPractice;
 import com.gremath.practice.content.NumberPropertiesPractice;
 import com.gremath.practice.content.PercentagesPractice;
@@ -40,6 +41,7 @@ public class PracticeRegistry {
         ProfitInterestPractice.register(this);
         Class6NzMathematicsPractice.register(this);
         Class7NzMathematicsPractice.register(this);
+        NzCurriculumPractice.register(this);
     }
 
     public void add(LessonPractice lessonPractice) {

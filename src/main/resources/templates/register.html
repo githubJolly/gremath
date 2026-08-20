@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Sign up')}"></head>
+<head th:replace="~{fragments/layout :: head('Create your family account')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-<div class="container container-narrow">
-    <div class="card">
-        <h1>Create your account</h1>
-        <p class="muted">Create a family account to follow your child’s NZ Curriculum progress. Includes a <strong>2-day free trial</strong>.</p>
+<div class="container container-narrow auth-wrap">
+    <div class="card auth-card">
+        <span class="badge badge-class6">2-DAY FREE TRIAL</span>
+        <h1>Create your family account</h1>
+        <p class="muted">Follow your child’s NZ Curriculum progress across every year and subject.</p>
 
         <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
 
@@ -39,5 +40,6 @@
         </p>
     </div>
 </div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
 </html>

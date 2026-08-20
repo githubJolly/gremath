@@ -7,6 +7,7 @@ import com.gremath.content.Class6NzMathematicsContent;
 import com.gremath.content.Class6NzScienceContent;
 import com.gremath.content.Class7NzMathematicsContent;
 import com.gremath.content.CountingContent;
+import com.gremath.content.NzCurriculumTopicFactory;
 import com.gremath.content.GeometryContent;
 import com.gremath.content.NumberPropertiesContent;
 import com.gremath.content.PercentagesContent;
@@ -39,21 +40,27 @@ public class DataInitializer {
 
     private static final Logger log = LoggerFactory.getLogger(DataInitializer.class);
 
-    private static final List<TopicContent> CONTENT = List.of(
-            new NumberPropertiesContent(),
-            new PercentagesContent(),
-            new RatiosContent(),
-            new AveragesContent(),
-            new AlgebraContent(),
-            new GeometryContent(),
-            new TimeSpeedDistanceContent(),
-            new CountingContent(),
-            new ProbabilityContent(),
-            new ProfitInterestContent(),
-            new Class6NzMathematicsContent(),
-            new Class6NzEnglishContent(),
-            new Class6NzScienceContent(),
-            new Class7NzMathematicsContent());
+    private static final List<TopicContent> CONTENT = buildContentList();
+
+    private static List<TopicContent> buildContentList() {
+        List<TopicContent> all = new ArrayList<>();
+        all.add(new NumberPropertiesContent());
+        all.add(new PercentagesContent());
+        all.add(new RatiosContent());
+        all.add(new AveragesContent());
+        all.add(new AlgebraContent());
+        all.add(new GeometryContent());
+        all.add(new TimeSpeedDistanceContent());
+        all.add(new CountingContent());
+        all.add(new ProbabilityContent());
+        all.add(new ProfitInterestContent());
+        all.add(new Class6NzMathematicsContent());
+        all.add(new Class6NzEnglishContent());
+        all.add(new Class6NzScienceContent());
+        all.add(new Class7NzMathematicsContent());
+        all.addAll(NzCurriculumTopicFactory.allGenerated());
+        return List.copyOf(all);
+    }
 
     @Bean
     CommandLineRunner seedData(TopicRepository topicRepository, LessonRepository lessonRepository,

@@ -34,6 +34,8 @@ public class CurriculumController {
         model.addAttribute("selectedYear", selected);
         model.addAttribute("subjects", NzCurriculumMap.cardsForYear(selected));
         model.addAttribute("curriculumHome", "https://newzealandcurriculum.tahurangi.education.govt.nz/");
+        String band = selected <= 3 ? "Junior primary" : selected <= 6 ? "Upper primary" : selected <= 8 ? "Intermediate" : "Junior secondary";
+        model.addAttribute("yearBand", band);
         return "nz-curriculum";
     }
 }

@@ -6,18 +6,18 @@
 
 <div class="container standards-page">
     <div class="page-header">
-        <a class="muted" th:href="@{/dashboard(track='class6-nz')}">&larr; Back to Class 6 dashboard</a>
-        <h1>Class 6 NZ Maths Standards</h1>
-        <p class="muted">Original LetusLearn standards-style pathway for New Zealand Year 6 mathematics.</p>
+        <a class="muted" th:href="@{/dashboard(year=6)}">&larr; Back to dashboard</a>
+        <h1>Year 6 maths standards</h1>
+        <p class="muted">Year 6 maths skills by strand. Jump to any other year from the chips — every subject is live.</p>
     </div>
 
     <div class="standards-toolbar card">
         <div class="year-tabs">
-            <span class="year-chip">Year 4</span>
-            <span class="year-chip">Year 5</span>
+            <a class="year-chip" th:href="@{/curriculum/nz(year=4)}">Year 4</a>
+            <a class="year-chip" th:href="@{/curriculum/nz(year=5)}">Year 5</a>
             <span class="year-chip active">Year 6</span>
-            <span class="year-chip">Year 7</span>
-            <span class="year-chip">Year 8</span>
+            <a class="year-chip" th:href="@{/curriculum/nz(year=7)}">Year 7</a>
+            <a class="year-chip" th:href="@{/curriculum/nz(year=8)}">Year 8</a>
         </div>
         <div class="alignments">
             <label for="alignment" class="muted">Alignment view</label>
@@ -49,6 +49,6 @@
         </div>
     </div>
 </div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
 </html>
-

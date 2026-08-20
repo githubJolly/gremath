@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Parent progress')}"></head>
+<head th:replace="~{fragments/layout :: head('Family progress')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <div class="container">
     <div class="page-header">
-        <h1 th:text="'Progress for ' + ${student.fullName}">Progress</h1>
-        <p class="muted">A parent-friendly view of practice results and where to focus next.</p>
+        <h1 th:text="'Hi ' + ${student.fullName} + ' 👋'">Progress</h1>
+        <p class="muted">A colourful view of practice — and a calm list of where to focus next.</p>
         <div class="track-switch" style="margin-top:10px;">
-            <a class="track-tab active" th:href="@{/dashboard}">NZ Curriculum</a>
+            <a class="track-tab active" th:href="@{/dashboard}">Progress</a>
             <a class="track-tab" th:href="@{/curriculum/nz}">All years &amp; subjects</a>
-            <a class="track-tab" th:href="@{/games/murder-mystery}">Murder mystery quiz</a>
+            <a class="track-tab" th:href="@{/games/murder-mystery}">Mystery quiz</a>
         </div>
     </div>
 
@@ -29,12 +29,12 @@
         <p class="muted" style="margin:0 0 10px;">
             Start with a <strong>2-day free trial</strong>, then continue for
             <strong th:text="'$' + ${trackPrice} + '/month'">$10/month</strong>.
-            You will see where your child needs to focus more after each practice sheet.
+            You’ll see where your child needs to focus more after each practice sheet.
         </p>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
             <a class="btn" th:href="@{/billing/checkout(plan='class6-nz')}">Subscribe now</a>
             <a class="btn btn-outline" th:href="@{/pricing}">View pricing</a>
-            <a class="btn btn-outline" th:href="@{/curriculum/nz}">Browse curriculum map</a>
+            <a class="btn btn-outline" th:href="@{/curriculum/nz}">Browse curriculum</a>
         </div>
     </div>
 
@@ -63,7 +63,7 @@
         <div th:if="${#lists.isEmpty(parentProgress.needsFocus)}">
             <p class="muted" style="margin:0;">No weak areas yet — complete a few practice sheets to unlock focus recommendations.</p>
         </div>
-        <div th:each="area : ${parentProgress.needsFocus}" style="padding:12px 0; border-top:1px solid var(--border, #e5e7eb);">
+        <div th:each="area : ${parentProgress.needsFocus}" style="padding:12px 0; border-top:1px solid var(--border-soft, #e5e7eb);">
             <div class="flex-between" style="gap:12px; flex-wrap:wrap;">
                 <div>
                     <strong th:text="${area.lessonTitle}">Lesson</strong>
@@ -80,54 +80,44 @@
         <p class="muted" style="margin:0;">Strong areas will appear here once average sheet scores reach 70%+.</p>
     </div>
     <div class="card" th:unless="${#lists.isEmpty(parentProgress.goingWell)}">
-        <div th:each="area : ${parentProgress.goingWell}" style="padding:10px 0; border-top:1px solid var(--border, #e5e7eb);">
+        <div th:each="area : ${parentProgress.goingWell}" style="padding:10px 0; border-top:1px solid var(--border-soft, #e5e7eb);">
             <strong th:text="${area.lessonTitle}">Lesson</strong>
             <span class="muted" th:text="' · ' + ${area.averagePercent} + '% avg'"> · 0%</span>
         </div>
     </div>
 
-    <h2 style="margin-top:36px;" th:text="'Topics — ' + ${trackLabel}">Topics</h2>
-    <div class="card" th:if="${hasActiveSubscription}" style="margin-bottom:16px;">
-        <div class="flex-between">
-            <div>
-                <h3 style="margin:0 0 4px;">NZ Curriculum map</h3>
-                <p class="muted" style="margin:0;">Browse Years 1–10 and all learning areas (aligned to Tāhūrangi).</p>
-            </div>
-            <a class="btn btn-outline" th:href="@{/curriculum/nz}">Open map</a>
+    <div class="flex-between" style="margin-top:36px;">
+        <div>
+            <h2 style="margin:0;">Choose a year, then a subject</h2>
+            <p class="muted" style="margin:4px 0 0;">Years 1–10 · all eight learning areas</p>
         </div>
+        <a class="btn btn-outline" th:if="${hasActiveSubscription}" th:href="@{/class6/nz/maths}">Year 6 maths standards</a>
     </div>
-    <div class="card" th:if="${hasActiveSubscription}" style="margin-bottom:16px;">
-        <div class="flex-between">
-            <div>
-                <h3 style="margin:0 0 4px;">Year 6 maths standards</h3>
-                <p class="muted" style="margin:0;">Browse Year 6 NZ maths skills by strand.</p>
-            </div>
-            <a class="btn btn-outline" th:href="@{/class6/nz/maths}">Open Year 6 standards</a>
-        </div>
-    </div>
-    <div class="card" th:if="${hasActiveSubscription}" style="margin-bottom:16px;">
-        <div class="flex-between">
-            <div>
-                <h3 style="margin:0 0 4px;">Year 7 Mathematics</h3>
-                <p class="muted" style="margin:0;">Lessons and practice from the Year 7 teaching sequence.</p>
-            </div>
-            <a class="btn btn-outline" th:href="@{/topics/class7-nz-mathematics}">Open Year 7 maths</a>
-        </div>
+
+    <div class="year-picker" style="justify-content:flex-start; margin:16px 0 22px;">
+        <a th:each="y : ${years}"
+           class="year-pill"
+           th:classappend="'y' + y + (y == selectedYear ? ' active' : '')"
+           th:href="@{/dashboard(year=${y})}"
+           th:text="${y}">1</a>
     </div>
 
     <div class="grid">
-        <a class="card topic-card" th:each="topic : ${topics}" th:href="@{'/topics/' + ${topic.slug}}">
-            <span class="badge badge-class6"
-                  th:text="${topic.examType == 'CLASS7_NZ' ? 'YEAR 7 NZ' : 'CLASS 6 NZ'}">NZ</span>
-            <h3 th:text="${topic.name}" style="margin-top:10px;">Topic</h3>
-            <p th:text="${topic.description}">Description</p>
-            <span class="muted" th:text="${#lists.size(topic.lessons)} + ' lessons &middot; ' + ${#lists.size(topic.questions)} + ' questions'">lessons</span>
+        <a class="subject-tile"
+           th:each="s : ${subjects}"
+           th:classappend="'theme-' + ${s.themeClass}"
+           th:href="${hasActiveSubscription} ? ${s.href} : @{/pricing}">
+            <div class="emoji" th:text="${s.emoji}">🔢</div>
+            <span class="badge badge-class6" th:text="${s.lessonCount} + ' lessons'">lessons</span>
+            <h3 th:text="${s.subject}">Subject</h3>
+            <p th:text="${s.blurb}">Blurb</p>
+            <span class="tile-cta" th:text="${hasActiveSubscription} ? 'Open lessons →' : 'Unlock to open →'">Open</span>
         </a>
     </div>
 
     <h2 style="margin-top:36px;">Recent practice sheets</h2>
     <div class="card" th:if="${#lists.isEmpty(sheetHistory)}">
-        <p class="muted" style="margin:0;">No lesson sheets attempted yet. Open a topic, pick a lesson, and try a practice sheet.</p>
+        <p class="muted" style="margin:0;">No lesson sheets attempted yet. Pick a year and subject above, then try a practice sheet.</p>
     </div>
     <div class="card" th:unless="${#lists.isEmpty(sheetHistory)}">
         <table class="history">
@@ -154,5 +144,6 @@
         </table>
     </div>
 </div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
 </html>

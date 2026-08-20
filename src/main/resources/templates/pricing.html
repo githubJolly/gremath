@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Pricing')}"></head>
+<head th:replace="~{fragments/layout :: head('Family pricing')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <div class="container">
-    <div class="page-header">
-        <h1>Family subscription</h1>
-        <p class="muted">NZ Curriculum access with a parent progress dashboard. Includes a 2-day free trial.</p>
+    <div class="page-header" style="text-align:center;">
+        <h1>Simple family pricing</h1>
+        <p class="muted">Every year, every subject, plus a parent progress dashboard. Includes a 2-day free trial.</p>
     </div>
 
     <div class="alert alert-info" th:if="${required != null}">
@@ -19,31 +19,31 @@
         Subscribe anytime to keep access without interruption.
     </div>
 
-    <div class="grid" style="max-width:520px;">
-        <div class="card">
-            <span class="badge badge-class6">NZ CURRICULUM</span>
-            <h2 style="margin:10px 0 4px;">All years &amp; subjects</h2>
-            <p class="muted" style="margin:0 0 12px;">
-                Aligned to
-                <a href="https://newzealandcurriculum.tahurangi.education.govt.nz/" target="_blank" rel="noopener">Tāhūrangi NZ Curriculum</a>.
-                Live content for Year 6–7 Maths and Year 6 English &amp; Science; more subjects unlocking over time.
-            </p>
-            <div style="font-size:2rem; font-weight:700; color:var(--primary-dark);">$10<span style="font-size:1rem; color:var(--muted);">/month</span></div>
-            <ul class="muted" style="margin:12px 0 16px 18px; padding:0;">
-                <li><strong th:text="${trialDays}">2</strong>-day free trial on signup</li>
-                <li>Parent focus areas (where to practise more)</li>
-                <li>Lessons, practice sheets, and score history</li>
-            </ul>
-            <a class="btn" th:if="${hasPaidNz == null or !hasPaidNz}" th:href="@{/billing/checkout(plan='class6-nz')}">
-                <span th:if="${onTrial}">Continue after trial — subscribe</span>
-                <span th:unless="${onTrial}">Start subscription</span>
-            </a>
-            <p class="muted" th:if="${hasPaidNz}" style="margin:0;">Your paid subscription is already active.</p>
-            <p class="muted" style="margin:12px 0 0; font-size:0.9rem;">
-                New accounts get a complimentary 2-day trial automatically.
-            </p>
-        </div>
+    <div class="price-hero">
+        <span class="badge badge-class6">NZ CURRICULUM</span>
+        <h2 style="margin:12px 0 4px;">All years &amp; subjects</h2>
+        <p class="muted" style="margin:0 0 12px;">
+            Aligned to
+            <a href="https://newzealandcurriculum.tahurangi.education.govt.nz/" target="_blank" rel="noopener">Tāhūrangi NZ Curriculum</a>.
+            Lessons and practice for Mathematics, English, Science, Social Sciences, Technology, The Arts, Health &amp; PE, and Learning Languages — Years 1 to 10.
+        </p>
+        <div class="amount">$10<span>/month</span></div>
+        <ul class="muted" style="text-align:left; margin:12px auto 20px; max-width:340px; padding-left:18px;">
+            <li><strong th:text="${trialDays}">2</strong>-day free trial on signup</li>
+            <li>Parent focus areas (where to practise more)</li>
+            <li>Lessons, practice sheets, and score history</li>
+            <li>Kid-friendly layout for every year level</li>
+        </ul>
+        <a class="btn" th:if="${hasPaidNz == null or !hasPaidNz}" th:href="@{/billing/checkout(plan='class6-nz')}">
+            <span th:if="${onTrial}">Continue after trial — subscribe</span>
+            <span th:unless="${onTrial}">Start subscription</span>
+        </a>
+        <p class="muted" th:if="${hasPaidNz}" style="margin:0;">Your paid subscription is already active.</p>
+        <p class="muted" style="margin:12px 0 0; font-size:0.9rem;">
+            New accounts get a complimentary 2-day trial automatically.
+        </p>
     </div>
 </div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
 </html>

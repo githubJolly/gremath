@@ -8,7 +8,7 @@
     <div class="page-header">
         <a class="muted" th:href="@{'/topics/' + ${topicSlug}}">&larr; Back to lessons</a>
         <h1 th:text="${lessonTitle}">Lesson</h1>
-        <p class="muted">Pick a sheet to practice. Each numbered sheet has fresh questions; sheets are auto-graded with full explanations.</p>
+        <p class="muted">Pick a colourful sheet. Each numbered sheet has fresh questions and is auto-marked with explanations. Attempted sheets turn green.</p>
     </div>
 
     <div class="card" th:if="${wordStrategy}" style="margin-bottom:24px;">
@@ -50,5 +50,6 @@
         </a>
     </div>
 </div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>
 </html>

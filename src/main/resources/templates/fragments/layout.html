@@ -5,28 +5,53 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title th:text="${title}">LetusLearn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <nav class="navbar" th:fragment="navbar">
     <a class="brand" th:href="@{/}">
         <img class="brand-logo" th:src="@{/img/letuslearn-logo.png}" alt="LetusLearn logo"/>
-        <span class="brand-text">letuslearn.it.com</span>
+        <span class="brand-text">LetusLearn</span>
     </a>
+    <button class="nav-toggle" type="button" aria-label="Open menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
     <div class="nav-links">
-        <span sec:authorize="isAuthenticated()">
+        <span class="nav-hi" sec:authorize="isAuthenticated()">
             Hi, <strong sec:authentication="name">student</strong>
         </span>
-        <a th:href="@{/curriculum/nz}">NZ Curriculum</a>
+        <a th:href="@{/curriculum/nz}">Subjects</a>
         <a th:href="@{/pricing}">Pricing</a>
         <a sec:authorize="isAuthenticated()" th:href="@{/dashboard}">Progress</a>
         <a sec:authorize="isAuthenticated()" th:href="@{/games/murder-mystery}">Mystery Quiz</a>
         <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
-            <button type="submit" class="btn-link-plain">Logout</button>
+            <button type="submit" class="btn-link-plain">Log out</button>
         </form>
-        <a sec:authorize="!isAuthenticated()" th:href="@{/login}">Login</a>
-        <a sec:authorize="!isAuthenticated()" th:href="@{/register}">Sign up</a>
+        <a class="nav-login" sec:authorize="!isAuthenticated()" th:href="@{/login}">Log in</a>
+        <a class="btn btn-nav" sec:authorize="!isAuthenticated()" th:href="@{/register}">Start free trial</a>
     </div>
 </nav>
+
+<footer class="site-footer" th:fragment="footer">
+    <div class="footer-inner">
+        <div>
+            <strong>LetusLearn</strong>
+            <p>Lessons and practice for every New Zealand Curriculum learning area, Years 1–10. Built for children, with a clear view for parents.</p>
+        </div>
+        <div>
+            <strong>Explore</strong>
+            <a th:href="@{/curriculum/nz}">All years &amp; subjects</a>
+            <a th:href="@{/pricing}">Family pricing</a>
+            <a th:href="@{/register}">2-day free trial</a>
+        </div>
+        <div>
+            <strong>Curriculum</strong>
+            <a href="https://newzealandcurriculum.tahurangi.education.govt.nz/" target="_blank" rel="noopener">Tāhūrangi NZ Curriculum</a>
+            <p class="footer-note">Original teaching material structured around official learning areas. Curriculum statements remain with the Ministry.</p>
+        </div>
+    </div>
+    <p class="footer-copy">© LetusLearn · letuslearn.it.com</p>
+</footer>
 </body>
 </html>

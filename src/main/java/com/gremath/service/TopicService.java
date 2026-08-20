@@ -37,7 +37,12 @@ public class TopicService {
         String key = track == null ? "class6-nz" : track.trim().toLowerCase();
         List<String> types;
         if ("class6-nz".equals(key)) {
-            types = List.of("CLASS6_NZ", "CLASS7_NZ");
+            types = new ArrayList<String>();
+            types.add("CLASS6_NZ");
+            types.add("CLASS7_NZ");
+            for (int year = 1; year <= 10; year++) {
+                types.add("NZ_Y" + year);
+            }
         } else {
             types = List.of("GRE", "CAT", "BOTH");
         }
