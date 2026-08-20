@@ -272,9 +272,33 @@ input:focus, select:focus {
 
 /* Lessons */
 .lesson { margin-bottom: 22px; padding-bottom: 8px; border-bottom: 1px dashed var(--border-soft); }
-.lesson h3 { color: var(--navy); }
-.lesson table { border-collapse: collapse; margin: 12px 0; }
-.lesson th, .lesson td { border: 1px solid var(--border-soft); padding: 6px 12px; }
+.lesson h3 { color: var(--navy); font-size: 1.12rem; margin: 22px 0 8px; }
+.lesson table, .lesson-table { border-collapse: collapse; margin: 12px 0; width: 100%; }
+.lesson th, .lesson td, .lesson-table th, .lesson-table td { border: 1px solid var(--border-soft); padding: 8px 12px; text-align: left; }
+.lesson-table th { background: #fff7ed; font-size: 0.85rem; }
+.lesson-phase { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 0 0 12px; }
+.strand-chip {
+    display: inline-block; background: #e0f2fe; color: #0369a1; font-weight: 800;
+    font-size: 0.78rem; padding: 4px 10px; border-radius: 999px;
+}
+.learn-goals {
+    background: #fffbeb; border: 1px solid #fde68a; border-radius: 14px; padding: 14px 16px; margin: 12px 0 18px;
+}
+.learn-goals ul { margin: 8px 0 0; padding-left: 1.2rem; }
+.learn-goals li { margin: 4px 0; }
+.lesson-toc {
+    background: #fff; border: 1px solid var(--border-soft); border-radius: 16px;
+    padding: 16px 20px; margin: 0 0 24px; box-shadow: var(--shadow);
+}
+.lesson-toc ol { margin: 8px 0 0; padding-left: 1.2rem; columns: 2; gap: 24px; }
+.lesson-toc a { font-weight: 700; color: var(--navy); }
+.lesson-toc a:hover { color: var(--primary); }
+.lesson-preview {
+    margin: 8px 0 0; padding-left: 1.1rem; font-size: 0.82rem; color: #475569; font-weight: 600;
+}
+.lesson-preview li { margin: 3px 0; }
+.subject-tile { align-items: flex-start; }
+.lesson-card { scroll-margin-top: 84px; }
 
 .formula {
     background: #f8fafc;

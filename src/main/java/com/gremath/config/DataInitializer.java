@@ -144,6 +144,9 @@ public class DataInitializer {
             if (!java.util.Objects.equals(el.getTitle(), fl.getTitle())) {
                 return true;
             }
+            if (!java.util.Objects.equals(el.getContent(), fl.getContent())) {
+                return true;
+            }
             if (!java.util.Objects.equals(el.getPracticeKey(), fl.getPracticeKey())) {
                 return true;
             }

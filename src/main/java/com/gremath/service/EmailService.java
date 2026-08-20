@@ -35,7 +35,7 @@ public class EmailService {
                 .build(true)
                 .toUriString();
 
-        String subject = "Verify your GRE Math email";
+        String subject = "Verify your LetusLearn email";
         String body = """
                 Hi %s,
 
