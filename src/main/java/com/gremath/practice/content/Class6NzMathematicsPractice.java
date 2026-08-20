@@ -25,6 +25,7 @@ public final class Class6NzMathematicsPractice {
         reg.add(geometry());
         reg.add(measurement());
         reg.add(dataAndChance());
+        reg.add(probability());
     }
 
     private static String s(int n) {
@@ -510,6 +511,34 @@ public final class Class6NzMathematicsPractice {
                         "Sum is 100, divide by 5 gives 20.", "MEDIUM", WORD)
         );
         return lp.sheets(20, 10, 20);
+    }
+
+    private static LessonPractice probability() {
+        LessonPractice lp = new LessonPractice("c6nz-probability", TOPIC, "Probability: sample space and the 0-to-1 scale");
+        lp.concept(
+                rng -> QBuilder.build(rng, "A fair six-sided die is rolled. P(rolling a 4) is:",
+                        "1/6", "One favourable face out of six equally likely outcomes.",
+                        "EASY", SKILL, "1/4", "4/6", "1/2"),
+                rng -> {
+                    int fav = QBuilder.range(rng, 1, 4);
+                    int tot = QBuilder.pick(rng, 6, 8, 10);
+                    return QBuilder.build(rng, "A spinner is split into " + tot + " equal sectors; " + fav + " are red. P(red) = ?",
+                            fav + "/" + tot, "Favourable sectors over total equal sectors. Sum of all disjoint outcomes is 1.",
+                            "MEDIUM", SKILL, tot + "/" + fav, fav + "/" + (tot + 1), "1/" + fav);
+                },
+                rng -> QBuilder.build(rng, "P(not a 6) on a fair die is:",
+                        "5/6", "Complement: 1 − 1/6 = 5/6.", "MEDIUM", SKILL, "1/6", "6/5", "1"),
+                rng -> QBuilder.build(rng, "The probabilities of all disjoint outcomes of a fair spinner should sum to:",
+                        "1", "A complete set of exclusive outcomes is certain.", "EASY", SKILL, "0", "6", "100 only")
+        );
+        lp.word(
+                rng -> QBuilder.build(rng, "A bag has 3 red and 5 blue marbles, equally likely. P(blue) is:",
+                        "5/8", "5 blue out of 8 marbles.", "EASY", WORD, "3/8", "5/3", "1/5"),
+                rng -> QBuilder.build(rng, "A class raffle has 40 equal tickets; 10 are yours. Theoretical P(you win) is:",
+                        "10/40", "Favourable tickets over total tickets (simplifies to 1/4).", "MEDIUM", WORD,
+                        "10/30", "40/10", "1/10")
+        );
+        return lp.sheets(10, 6, 12);
     }
 }
 

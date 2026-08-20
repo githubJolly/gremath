@@ -48,7 +48,9 @@ public final class NzCurriculumPractice {
             case "FRACTION" -> mathFraction(year, false);
             case "ALGEBRA" -> mathAlgebra(year, false);
             case "MEASURE" -> mathMeasure(year, false);
+            case "GEOMETRY" -> mathGeometry(year, false);
             case "DATA" -> mathData(year, false);
+            case "CHANCE" -> mathChance(year, false);
             case "READING" -> reading(year, false);
             case "WRITING" -> writing(year, false);
             case "GRAMMAR" -> grammar(year, false);
@@ -95,7 +97,9 @@ public final class NzCurriculumPractice {
             case "FRACTION" -> mathFraction(year, true);
             case "ALGEBRA" -> mathAlgebra(year, true);
             case "MEASURE" -> mathMeasure(year, true);
+            case "GEOMETRY" -> mathGeometry(year, true);
             case "DATA" -> mathData(year, true);
+            case "CHANCE" -> mathChance(year, true);
             default -> conceptTemplates(year, kind);
         };
     }
@@ -115,16 +119,20 @@ public final class NzCurriculumPractice {
 
     private static QuestionTemplate[] mathNumber(int year, boolean word) {
         int max = maxN(year);
+        if (year == 1) {
+            max = 20;
+        }
+        int cap = max;
         return new QuestionTemplate[]{
                 rng -> {
-                    int a = QBuilder.range(rng, max / 4, max);
-                    int b = QBuilder.range(rng, max / 5, max);
+                    int a = QBuilder.range(rng, Math.max(2, cap / 4), cap);
+                    int b = QBuilder.range(rng, Math.max(1, cap / 5), cap);
                     if (a == b) {
-                        b = a + 1;
+                        b = Math.min(cap, a + 1);
                     }
                     String greater = String.valueOf(Math.max(a, b));
                     String prompt = word
-                            ? "A school has " + a + " books and another has " + b + ". Which school has more books (give the larger number)?"
+                            ? "A kura has " + a + " books and another has " + b + ". Which has more books (give the larger number)?"
                             : "Which number is greater: " + a + " or " + b + "?";
                     return QBuilder.build(rng, prompt, greater,
                             "Compare digits from the left. The first larger place wins.",
@@ -132,21 +140,44 @@ public final class NzCurriculumPractice {
                             String.valueOf(Math.min(a, b)), String.valueOf(Math.abs(a - b)), String.valueOf(a + b));
                 },
                 rng -> {
-                    int n = QBuilder.range(rng, 10, Math.max(20, max / 2));
+                    int n = QBuilder.range(rng, year <= 1 ? 10 : 10, Math.max(20, Math.min(cap, year <= 2 ? 99 : cap / 2)));
                     int tens = (n / 10) * 10;
                     int rounded = n % 10 >= 5 ? tens + 10 : tens;
+                    if (year == 1) {
+                        int before = QBuilder.range(rng, 2, 19);
+                        return QBuilder.build(rng, "What number comes just after " + before + "?",
+                                String.valueOf(before + 1), "Count on one.", "EASY", "skill-check",
+                                String.valueOf(before - 1), String.valueOf(before), String.valueOf(before + 2));
+                    }
                     return QBuilder.build(rng, "Round " + n + " to the nearest ten.", String.valueOf(rounded),
                             "Look at the ones digit. 5 or more rounds up.",
                             "MEDIUM", "skill-check",
                             String.valueOf(tens), String.valueOf(n), String.valueOf(rounded + 10));
                 },
                 rng -> {
-                    int n = QBuilder.range(rng, 21, Math.min(max, 999));
+                    int n = year <= 2
+                            ? QBuilder.range(rng, 10, Math.min(cap, 99))
+                            : QBuilder.range(rng, 21, Math.min(cap, 999));
                     int tensDigit = (n / 10) % 10;
-                    return QBuilder.build(rng, "What digit is in the tens place of " + n + "?", String.valueOf(tensDigit),
+                    return QBuilder.build(rng, "What digit is in the tens place of " + n + "?",
+                            String.valueOf(tensDigit),
                             "From the right: ones, then tens.",
                             "EASY", "visual pattern",
                             String.valueOf(n % 10), String.valueOf((n / 100) % 10), String.valueOf(n));
+                },
+                rng -> {
+                    if (year < 5) {
+                        int n = QBuilder.range(rng, 4, Math.min(cap, 40));
+                        boolean even = n % 2 == 0;
+                        return QBuilder.build(rng, "Is " + n + " even or odd?", even ? "even" : "odd",
+                                "Even numbers end in 0, 2, 4, 6 or 8.", "EASY", "skill-check",
+                                even ? "odd" : "even", "prime", "a fraction");
+                    }
+                    int n = QBuilder.pick(rng, 4, 9, 16, 25, 36, 49, 64, 81, 100);
+                    int root = (int) Math.round(Math.sqrt(n));
+                    return QBuilder.build(rng, "What is √" + n + " (the square root)?", String.valueOf(root),
+                            n + " is " + root + " × " + root + ".", "MEDIUM", "skill-check",
+                            String.valueOf(n / 2), String.valueOf(root + 1), String.valueOf(n));
                 }
         };
     }
@@ -192,6 +223,19 @@ public final class NzCurriculumPractice {
     }
 
     private static QuestionTemplate[] mathFraction(int year, boolean word) {
+        if (year <= 2) {
+            return new QuestionTemplate[]{
+                    rng -> QBuilder.build(rng, "A sandwich cut into two equal pieces: each piece is a…", "half",
+                            "A half is one of two equal parts.", "EASY", "skill-check",
+                            "quarter of a different whole", "whole sandwich twice", "three pieces"),
+                    rng -> QBuilder.build(rng, "8 mussels shared equally onto 2 plates. How many on each plate?", "4",
+                            "Half of 8 is 4. Equal sharing.", "EASY", word ? "word problem" : "skill-check",
+                            "8", "2", "6"),
+                    rng -> QBuilder.build(rng, "Two pieces are halves only if they are…", "equal in size",
+                            "Fairness is the mathematics of a half.", "MEDIUM", "skill-check",
+                            "any two pieces", "one much bigger", "three pieces")
+            };
+        }
         return new QuestionTemplate[]{
                 rng -> {
                     int d = QBuilder.pick(rng, 2, 4, 5, 10);
@@ -203,6 +247,11 @@ public final class NzCurriculumPractice {
                             n + "/" + (d + 1), d + "/" + n, "1/" + n);
                 },
                 rng -> {
+                    if (year < 4) {
+                        return QBuilder.build(rng, "Which is larger for the same whole: 1/3 or 1/4?", "1/3",
+                                "Thirds are larger pieces than quarters of the same whole.", "MEDIUM", "skill-check",
+                                "1/4", "they must be equal", "1/12");
+                    }
                     int pct = QBuilder.pick(rng, 10, 25, 50, 75);
                     String dec = pct == 10 ? "0.1" : pct == 25 ? "0.25" : pct == 50 ? "0.5" : "0.75";
                     String prompt = word
@@ -217,8 +266,13 @@ public final class NzCurriculumPractice {
                     int whole = QBuilder.pick(rng, 20, 40, 80, 100);
                     int pct = QBuilder.pick(rng, 10, 25, 50);
                     int ans = whole * pct / 100;
+                    if (year < 5) {
+                        return QBuilder.build(rng, "What is 1/2 of " + whole + "?", String.valueOf(whole / 2),
+                                "Half means divide by 2.", "EASY", "skill-check",
+                                String.valueOf(whole), String.valueOf(whole / 4), String.valueOf(whole - 2));
+                    }
                     String prompt = word
-                            ? "There are " + whole + " students. " + pct + "% walk to school. How many walk?"
+                            ? "There are " + whole + " students. " + pct + "% walk to kura. How many walk?"
                             : "What is " + pct + "% of " + whole + "?";
                     return QBuilder.build(rng, prompt, String.valueOf(ans),
                             "Percent of a number: (percent × whole) ÷ 100.",
@@ -263,6 +317,22 @@ public final class NzCurriculumPractice {
     }
 
     private static QuestionTemplate[] mathMeasure(int year, boolean word) {
+        if (year <= 2) {
+            return new QuestionTemplate[]{
+                    rng -> QBuilder.build(rng, "Which is longer: a classroom or a pencil?", "A classroom",
+                            "Compare the same attribute: length.", "EASY", "skill-check",
+                            "A pencil", "They are always the same", "Length cannot be compared"),
+                    rng -> {
+                        int cm = QBuilder.range(rng, 8, 19);
+                        return QBuilder.build(rng, "A crayon is about " + cm + " cm long. Which unit was used?", "centimetres",
+                                "cm is a length unit for small objects.", "EASY", "skill-check",
+                                "kilograms", "litres", "degrees");
+                    },
+                    rng -> QBuilder.build(rng, "A full cup holds more than an empty cup. This is comparing…", "capacity",
+                            "Capacity is how much a container can hold.", "EASY", "skill-check",
+                            "only colour", "only speed", "only time")
+            };
+        }
         return new QuestionTemplate[]{
                 rng -> {
                     int l = QBuilder.range(rng, 3, 12);
@@ -292,13 +362,170 @@ public final class NzCurriculumPractice {
                             String.valueOf(m * 100), "1 m = 100 cm.",
                             "EASY", "skill-check",
                             String.valueOf(m * 10), String.valueOf(m * 1000), String.valueOf(m + 100));
+                },
+                rng -> {
+                    if (year < 6) {
+                        int b = QBuilder.range(rng, 4, 12);
+                        int h = QBuilder.range(rng, 2, 10);
+                        if (year < 5) {
+                            return QBuilder.build(rng, "A right angle measures…", "90°",
+                                    "A quarter turn is 90 degrees.", "EASY", "skill-check",
+                                    "45°", "180°", "360°");
+                        }
+                        return QBuilder.build(rng, "Area of a " + b + " cm by " + h + " cm rectangle in cm²?",
+                                String.valueOf(b * h), "A = l × w, unit cm².", "MEDIUM", "skill-check",
+                                String.valueOf(2 * (b + h)), String.valueOf(b + h), String.valueOf(b * h * 2));
+                    }
+                    int b = 2 * QBuilder.range(rng, 3, 8);
+                    int h = QBuilder.range(rng, 4, 12);
+                    int area = b * h / 2;
+                    return QBuilder.build(rng, "Area of a right triangle with base " + b + " cm and height " + h + " cm?",
+                            String.valueOf(area), "A = ½ × base × height.", "MEDIUM", "skill-check",
+                            String.valueOf(b * h), String.valueOf(b + h), String.valueOf(2 * (b + h)));
+                },
+                rng -> {
+                    if (year < 8) {
+                        int h = QBuilder.range(rng, 1, 5);
+                        int min = QBuilder.pick(rng, 15, 30, 45);
+                        return QBuilder.build(rng, h + " hour(s) and " + min + " minutes is how many minutes?",
+                                String.valueOf(h * 60 + min), "1 hour = 60 minutes.", "MEDIUM", "skill-check",
+                                String.valueOf(h * 100 + min), String.valueOf(h + min), String.valueOf(h * 60));
+                    }
+                    return QBuilder.build(rng, "In a right triangle the side opposite the right angle is the…",
+                            "hypotenuse", "The hypotenuse is the longest side.", "EASY", "skill-check",
+                            "adjacent only", "perimeter", "radius");
+                }
+        };
+    }
+
+    private static QuestionTemplate[] mathGeometry(int year, boolean word) {
+        return new QuestionTemplate[]{
+                rng -> {
+                    if (year <= 2) {
+                        return QBuilder.build(rng, "How many sides does a triangle have?", "3",
+                                "A triangle has 3 sides and 3 corners.", "EASY", "skill-check",
+                                "4", "2", "8");
+                    }
+                    if (year <= 4) {
+                        return QBuilder.build(rng, "A square rotated on its corner is still a…", "square",
+                                "Properties do not change when you turn a shape.", "MEDIUM", "skill-check",
+                                "circle", "triangle that lost a side", "not a shape");
+                    }
+                    return QBuilder.build(rng, "Parallel lines…", "stay the same distance apart and never meet",
+                            "Parallel means never meeting, constant distance.", "EASY", "skill-check",
+                            "always cross at 90°", "must be curved", "meet at one point only");
+                },
+                rng -> {
+                    if (year <= 3) {
+                        return QBuilder.build(rng, "A quarter turn is the same as a…", "right angle / 90° turn",
+                                "A quarter of a full turn is 90°.", "EASY", "skill-check",
+                                "full circle", "half turn", "no turn");
+                    }
+                    if (year <= 6) {
+                        return QBuilder.build(rng, "A cube has how many faces?", "6",
+                                "Six square faces.", "EASY", "skill-check", "4", "8", "12");
+                    }
+                    return QBuilder.build(rng, "The angles in a triangle add to…", "180°",
+                            "Triangle angle sum is 180°.", "EASY", "skill-check", "90°", "360°", "100°");
+                },
+                rng -> {
+                    if (year <= 5) {
+                        return QBuilder.build(rng, word
+                                        ? "You slide a shape without turning it. That transformation is a…"
+                                        : "A slide without turning is a…",
+                                "translation", "Translation is a slide. Reflection is a flip. Rotation is a turn.",
+                                "MEDIUM", word ? "word problem" : "skill-check",
+                                "reflection", "enlargement only", "subtraction");
+                    }
+                    if (year <= 8) {
+                        int a = QBuilder.range(rng, 40, 80);
+                        return QBuilder.build(rng, "Two angles on a straight line: one is " + a + "°. The other is?",
+                                String.valueOf(180 - a), "Angles on a straight line sum to 180°.",
+                                "MEDIUM", "skill-check", String.valueOf(90 - a), String.valueOf(360 - a), String.valueOf(a));
+                    }
+                    return QBuilder.build(rng, "Similar figures have…", "equal corresponding angles and proportional sides",
+                            "Same shape, possibly different size.", "MEDIUM", "skill-check",
+                            "always the same size as well", "no equal angles", "only matching colours");
+                }
+        };
+    }
+
+    private static QuestionTemplate[] mathChance(int year, boolean word) {
+        if (year <= 2) {
+            return new QuestionTemplate[]{
+                    rng -> QBuilder.build(rng, "The sun will rise tomorrow. In chance language this is…", "certain / will happen",
+                            "Some events must happen.", "EASY", "skill-check",
+                            "impossible", "never", "a guess with no meaning"),
+                    rng -> QBuilder.build(rng, "A cow flying over the field is…", "won't / impossible in ordinary life",
+                            "Impossible means it cannot happen.", "EASY", "skill-check",
+                            "certain", "even chance", "the same as likely"),
+                    rng -> QBuilder.build(rng, "A fair two-colour counter might land red or yellow. Purple is…", "not a possible outcome",
+                            "List what the object can actually do.", "MEDIUM", "skill-check",
+                            "certain", "the most likely", "the only outcome")
+            };
+        }
+        return new QuestionTemplate[]{
+                rng -> QBuilder.build(rng, "A fair six-sided die is rolled. What is P(rolling a 4)?",
+                        "1/6", "One favourable outcome out of six equally likely faces.",
+                        "EASY", "skill-check", "1/4", "4/6", "1/2"),
+                rng -> {
+                    int fav = QBuilder.range(rng, 1, 4);
+                    int tot = QBuilder.range(rng, 6, 10);
+                    return QBuilder.build(rng, "A bag has " + tot + " marbles and " + fav + " are red. P(red) = ?",
+                            fav + "/" + tot, "Probability = favourable / total.",
+                            "MEDIUM", word ? "word problem" : "skill-check",
+                            tot + "/" + fav, fav + "/" + (tot + 1), "1/" + fav);
+                },
+                rng -> {
+                    if (year < 6) {
+                        return QBuilder.build(rng, "On a 0 to 1 chance line, even chance sits at…", "1/2",
+                                "Equally likely sits in the middle.", "EASY", "skill-check", "0", "1", "2");
+                    }
+                    return QBuilder.build(rng, "P(not a 6) on a fair die is…", "5/6",
+                            "Complement: 1 − 1/6 = 5/6.", "MEDIUM", "skill-check", "1/6", "6/5", "1");
+                },
+                rng -> {
+                    if (year < 9) {
+                        return QBuilder.build(rng, "The probabilities of all disjoint outcomes of a spinner should sum to…", "1",
+                                "A complete set of exclusive outcomes covers certainty.", "MEDIUM", "skill-check",
+                                "0", "100 only if you ignore fractions", "6");
+                    }
+                    return QBuilder.build(rng, "Two fair coins. P(both heads) is…", "1/4",
+                            "HH is one of four equally likely pairs: HH HT TH TT.", "MEDIUM", "skill-check",
+                            "1/2", "1/3", "2/3");
                 }
         };
     }
 
     private static QuestionTemplate[] mathData(int year, boolean word) {
+        if (year <= 2) {
+            return new QuestionTemplate[]{
+                    rng -> QBuilder.build(rng, word
+                                    ? "A class tally: apples 8, bananas 5. Which fruit was more popular?"
+                                    : "On a pictogram, the tallest column shows…",
+                            word ? "apples" : "the most common category",
+                            "The tallest bar or largest tally is the mode (most common).",
+                            "EASY", word ? "word problem" : "skill-check",
+                            word ? "bananas" : "the rarest category", "a random guess", "the title of the graph"),
+                    rng -> QBuilder.build(rng, "A tally of |||| ||| means how many?",
+                            "8", "Each | is one. Four in a gate is 5, plus 3 is 8 — or eight ones.",
+                            "EASY", "visual pattern", "4", "3", "5"),
+                    rng -> QBuilder.build(rng, "A graph needs a title so that…",
+                            "readers know what was counted", "Title, labels and a key make data readable.",
+                            "MEDIUM", "skill-check", "the numbers can stay secret", "colour is illegal", "tally marks are banned")
+            };
+        }
         return new QuestionTemplate[]{
                 rng -> {
+                    if (year <= 4) {
+                        return QBuilder.build(rng, word
+                                        ? "A survey of favourite sports: rugby 12, netball 9, football 12. What is the mode?"
+                                        : "Data 3, 5, 5, 7. The mode is…",
+                                word ? "rugby and football (bimodal 12)" : "5",
+                                "Mode is the most common value. Two categories can share the mode.",
+                                "MEDIUM", word ? "word problem" : "skill-check",
+                                word ? "netball" : "3", word ? "football only" : "7", "the mean of all sports");
+                    }
                     int x = QBuilder.range(rng, 5, 15);
                     int y = QBuilder.range(rng, 5, 15);
                     int z = 3 * QBuilder.range(rng, 6, 14) - x - y;
@@ -314,22 +541,57 @@ public final class NzCurriculumPractice {
                             String.valueOf(x + y + z), String.valueOf(Math.max(x, Math.max(y, z))), String.valueOf(m + 1));
                 },
                 rng -> {
-                    return QBuilder.build(rng, "A fair six-sided die is rolled. What is P(rolling a 4)?",
-                            "1/6", "One favourable outcome out of six equally likely faces.",
-                            "EASY", "skill-check", "1/4", "4/6", "1/2");
+                    int a = 4;
+                    int b = 8;
+                    int c = 12;
+                    int median = b;
+                    if (year < 5) {
+                        return QBuilder.build(rng, "A bar graph should have…",
+                                "a title and labelled axes", "Without labels, the bars have no meaning.",
+                                "EASY", "skill-check", "no title ever", "only colours and no numbers", "secret axes");
+                    }
+                    return QBuilder.build(rng, "For ordered data " + a + ", " + b + ", " + c + ", the median is…",
+                            String.valueOf(median), "Median is the middle value when ordered.",
+                            "EASY", "skill-check", String.valueOf(a), String.valueOf((a + b + c) / 3), String.valueOf(c - a));
                 },
                 rng -> {
-                    int fav = QBuilder.range(rng, 1, 4);
-                    int tot = QBuilder.range(rng, 6, 10);
-                    return QBuilder.build(rng, "A bag has " + tot + " marbles and " + fav + " are red. P(red) = ?",
-                            fav + "/" + tot, "Probability = favourable / total.",
-                            "MEDIUM", word ? "word problem" : "skill-check",
-                            tot + "/" + fav, fav + "/" + (tot + 1), "1/" + fav);
+                    if (year < 6) {
+                        return QBuilder.build(rng, "Range of 10, 14 and 18 is…",
+                                "8", "Range = largest − smallest = 18 − 10.",
+                                "MEDIUM", "skill-check", "14", "42", "10");
+                    }
+                    if (year < 9) {
+                        return QBuilder.build(rng, "A sample of one class cannot prove a claim about…",
+                                "every student in Aotearoa", "Samples have limits. State the population you actually measured.",
+                                "MEDIUM", "skill-check", "that class's own favourite fruit", "the title of their graph", "how they tallied");
+                    }
+                    return QBuilder.build(rng, "In a scatter graph, points rising together suggest…",
+                            "a positive association", "Bivariate data can show a relationship, not automatically a cause.",
+                            "MEDIUM", "skill-check", "that one variable caused the other for sure", "no relationship is possible", "the median of a pie chart");
                 }
         };
     }
 
     private static QuestionTemplate[] reading(int year, boolean word) {
+        if (year >= 9) {
+            return new QuestionTemplate[]{
+                    rng -> QBuilder.build(rng, "A news headline says 'chaos' but the article describes a permitted hīkoi. The headline is mainly…",
+                            "positioning the reader before they read the evidence",
+                            "Diction in headlines is a design choice, not a neutral summary.",
+                            "MEDIUM", "skill-check",
+                            "proof that the march was illegal", "a spelling rule", "unrelated to audience"),
+                    rng -> QBuilder.build(rng, "Critical reading of media should first ask…",
+                            "Who made this, for whom, and what is missing?",
+                            "Maker, audience and omission before you quote.",
+                            "EASY", "skill-check",
+                            "Which font is prettiest?", "Can I skip the date?", "Is this the longest paragraph?"),
+                    rng -> QBuilder.build(rng, "A metaphor should be analysed by stating…",
+                            "the image and the effect on a reader",
+                            "Technique without effect is name-dropping.",
+                            "MEDIUM", "skill-check",
+                            "only the page number", "that all metaphors are errors", "the author's favourite colour")
+            };
+        }
         return new QuestionTemplate[]{
                 rng -> QBuilder.build(rng, "You read a story once to get the overall idea. What is that first reading for?",
                         "The gist or main idea", "First reading is for overall meaning.",
@@ -337,10 +599,14 @@ public final class NzCurriculumPractice {
                 rng -> QBuilder.build(rng, "Two answers look possible. What should you do?",
                         "Choose the one best supported by the text", "Evidence in the text decides.",
                         "MEDIUM", "skill-check", "Pick the longest answer", "Guess the author's feelings only", "Choose the first option"),
-                rng -> QBuilder.build(rng, "Inference means…",
-                        "Using clues in the text to work out something not stated directly",
-                        "Inference still needs text clues.",
-                        "MEDIUM", "skill-check", "Ignoring the text and using only your opinion", "Copying a sentence word for word", "Reading only the title")
+                rng -> QBuilder.build(rng, year <= 3 ? "A retell should include…" : "Inference means…",
+                        year <= 3 ? "Who, where and what happened, in order"
+                                : "Using clues in the text to work out something not stated directly",
+                        year <= 3 ? "Beginning, middle and end keep the listener with you."
+                                : "Inference still needs text clues.",
+                        "MEDIUM", "skill-check",
+                        year <= 3 ? "Only the title in a random order" : "Ignoring the text and using only your opinion",
+                        "Copying a sentence word for word", "Reading only the title")
         };
     }
 
@@ -415,6 +681,22 @@ public final class NzCurriculumPractice {
     }
 
     private static QuestionTemplate[] living(int year, boolean word) {
+        if (year >= 7) {
+            return new QuestionTemplate[]{
+                    rng -> QBuilder.build(rng, "Cells are…",
+                            "the basic units of living things", "Tissue is made of cells; organs of tissues.",
+                            "EASY", "skill-check", "only found in rocks", "the same as atoms", "a type of weather"),
+                    rng -> QBuilder.build(rng, "Natural selection acts on…",
+                            "variation already present in a population",
+                            "Traits that help survival and reproduction become more common over generations.",
+                            "MEDIUM", "skill-check",
+                            "a single animal choosing to grow a new organ in one afternoon",
+                            "only the colour of the sky", "the days of the week"),
+                    rng -> QBuilder.build(rng, "A food web in an Aotearoa forest is mainly about…",
+                            "feeding relationships and energy flow", "Arrows usually point to the eater / energy receiver as taught.",
+                            "EASY", "skill-check", "only the names of minerals", "map north", "the school timetable")
+            };
+        }
         return new QuestionTemplate[]{
                 rng -> QBuilder.build(rng, "A food chain shows…",
                         "How energy and food pass from one living thing to another", "Eating relationships.",
