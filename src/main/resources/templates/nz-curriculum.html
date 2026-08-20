@@ -8,9 +8,10 @@
     <div class="page-header" style="text-align:center;">
         <span class="badge badge-class6" th:text="${yearBand}">Upper primary</span>
         <h1>Year <span th:text="${selectedYear}">6</span> subjects</h1>
-        <p class="muted" style="max-width:640px; margin:8px auto 0;">
-            All eight New Zealand Curriculum learning areas for this year.
-            Open a subject to read lessons and try practice sheets.
+        <p class="muted" style="max-width:720px; margin:8px auto 0;">
+            Detailed, year-specific lessons for all eight New Zealand Curriculum learning areas.
+            Mathematics follows the six official strands (number, algebra, measurement, geometry, statistics, probability).
+            English follows oral language, reading and writing (then text studies in Years 9–10).
             Official statements live on
             <a th:href="${curriculumHome}" href="https://newzealandcurriculum.tahurangi.education.govt.nz/" target="_blank" rel="noopener">Tāhūrangi</a>.
         </p>
@@ -31,9 +32,13 @@
            th:href="${hasAccess} ? ${s.href} : @{/register}">
             <div class="emoji" th:text="${s.emoji}">🔢</div>
             <span class="badge" th:classappend="${s.featured} ? ' badge-featured' : ' badge-class6'"
-                  th:text="${s.featured} ? 'Featured lessons' : (s.lessonCount + ' lessons')">Ready</span>
+                  th:text="${s.featured} ? 'Featured · ' + ${s.lessonCount} + ' lessons' : (s.lessonCount + ' detailed lessons')">Ready</span>
             <h3 th:text="${s.subject}">Subject</h3>
+            <p class="muted" style="font-size:0.82rem; margin:0 0 8px;" th:text="${s.phaseLabel}">Phase</p>
             <p th:text="${s.blurb}">Blurb</p>
+            <ul class="lesson-preview">
+                <li th:each="title : ${s.lessonTitles}" th:text="${title}">Lesson</li>
+            </ul>
             <span class="tile-cta" th:text="${hasAccess} ? 'Open lessons →' : 'Start trial to open →'">Open</span>
         </a>
     </div>

@@ -17,7 +17,16 @@
         </div>
     </div>
 
-    <div class="lesson-card" th:each="lesson : ${topic.lessons}">
+    <nav class="lesson-toc" th:if="${topic.lessons != null and !topic.lessons.isEmpty()}">
+        <strong>In this year</strong>
+        <ol>
+            <li th:each="lesson : ${topic.lessons}">
+                <a th:href="'#lesson-' + ${lesson.orderIndex}" th:text="${lesson.title}">Lesson</a>
+            </li>
+        </ol>
+    </nav>
+
+    <div class="lesson-card" th:each="lesson : ${topic.lessons}" th:id="'lesson-' + ${lesson.orderIndex}">
         <div class="lesson-kicker">
             <span class="lesson-num" th:text="${lesson.orderIndex}">1</span>
             <h2 style="margin:0; font-size:1.25rem;" th:text="${lesson.title}">Lesson title</h2>

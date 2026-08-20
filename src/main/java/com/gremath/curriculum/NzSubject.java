@@ -9,9 +9,9 @@ import java.util.Optional;
 public enum NzSubject {
     MATHEMATICS("mathematics", "Mathematics and Statistics", "Number, algebra, measurement, geometry, statistics and probability.",
             "🔢", "math", "#2563EB"),
-    ENGLISH("english", "English", "Reading, writing, oral language and structured literacy foundations.",
+    ENGLISH("english", "English", "Oral language, reading and writing (structured literacy), then text and language studies in Years 9–10.",
             "📚", "english", "#D97706"),
-    SCIENCE("science", "Science", "Investigating the natural world, living systems, matter and forces.",
+    SCIENCE("science", "Science", "Nature of science plus living, material, physical, and Planet Earth and beyond — with Aotearoa contexts.",
             "🔬", "science", "#059669"),
     SOCIAL_SCIENCES("social-sciences", "Social Sciences", "People, places, histories and citizenship in Aotearoa New Zealand.",
             "🌏", "social", "#EA580C"),

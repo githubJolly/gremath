@@ -35,8 +35,10 @@ public final class NzCurriculumMap {
 
     private static SubjectCard card(int year, NzSubject subject) {
         String href = NzCurriculumCatalog.topicHref(year, subject);
-        int lessons = NzCurriculumCatalog.lessonCount(year, subject);
+        var lessons = NzCurriculumCatalog.lessons(year, subject);
+        int lessonCount = lessons.size();
         boolean featured = NzCurriculumCatalog.isHandcrafted(year, subject);
+        var titles = lessons.stream().map(l -> l.title().replaceFirst("^\\d+\\.\\s*", "")).toList();
         return new SubjectCard(
                 year,
                 subject.displayName(),
@@ -49,13 +51,15 @@ public final class NzCurriculumMap {
                 subject.emoji(),
                 subject.themeClass(),
                 subject.accent(),
-                lessons,
-                featured
+                lessonCount,
+                featured,
+                titles,
+                LessonHtml.phaseLabel(year)
         );
     }
 
     public record SubjectCard(int year, String subject, String slug, String blurb, boolean available, String href,
                               String cta, String curriculumUrl, String emoji, String themeClass, String accent,
-                              int lessonCount, boolean featured) {
+                              int lessonCount, boolean featured, java.util.List<String> lessonTitles, String phaseLabel) {
     }
 }
