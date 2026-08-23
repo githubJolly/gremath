@@ -1,5 +1,6 @@
 package com.gremath.practice.content;
 
+import com.gremath.curriculum.MathFigures;
 import com.gremath.curriculum.NzCurriculumCatalog;
 import com.gremath.curriculum.NzLessonSpec;
 import com.gremath.curriculum.NzSubject;
@@ -43,63 +44,98 @@ public final class NzCurriculumPractice {
 
     private static QuestionTemplate[] conceptTemplates(int year, String kind) {
         return switch (kind) {
-            case "NUMBER" -> mathNumber(year, false);
-            case "OPS" -> mathOps(year, false);
-            case "FRACTION" -> mathFraction(year, false);
-            case "ALGEBRA" -> mathAlgebra(year, false);
-            case "MEASURE" -> mathMeasure(year, false);
-            case "GEOMETRY" -> mathGeometry(year, false);
-            case "DATA" -> mathData(year, false);
-            case "CHANCE" -> mathChance(year, false);
-            case "READING" -> reading(year, false);
-            case "WRITING" -> writing(year, false);
-            case "GRAMMAR" -> grammar(year, false);
-            case "VOCAB" -> vocab(year, false);
-            case "ORAL" -> oral(year, false);
-            case "INVESTIGATE" -> investigate(year, false);
-            case "LIVING" -> living(year, false);
-            case "MATTER" -> matter(year, false);
-            case "FORCES" -> forces(year, false);
-            case "EARTH" -> earth(year, false);
-            case "IDENTITY" -> identity(year, false);
-            case "PLACE" -> place(year, false);
-            case "HISTORY" -> history(year, false);
-            case "ECONOMY" -> economy(year, false);
-            case "CIVICS" -> civics(year, false);
-            case "DESIGN" -> design(year, false);
-            case "DIGITAL" -> digital(year, false);
-            case "MAKING" -> making(year, false);
-            case "COMPUTE" -> compute(year, false);
-            case "EVALUATE" -> evaluate(year, false);
-            case "VISUAL" -> visual(year, false);
-            case "MUSIC" -> music(year, false);
-            case "DRAMA" -> drama(year, false);
-            case "DANCE" -> dance(year, false);
-            case "RESPOND" -> respond(year, false);
-            case "MOVE" -> move(year, false);
-            case "HAUORA" -> hauora(year, false);
-            case "RELATE" -> relate(year, false);
-            case "SAFETY" -> safety(year, false);
-            case "COMMUNITY" -> community(year, false);
-            case "GREETINGS" -> greetings(year, false);
-            case "WORDS" -> words(year, false);
-            case "LISTEN" -> listen(year, false);
-            case "READLANG" -> readLang(year, false);
-            case "TIKANGA" -> tikanga(year, false);
+            case "NUMBER" -> NzMathQuestionBank.number(year, false);
+            case "OPS" -> NzMathQuestionBank.ops(year, false);
+            case "FRACTION" -> NzMathQuestionBank.fraction(year, false);
+            case "ALGEBRA" -> NzMathQuestionBank.algebra(year, false);
+            case "MEASURE" -> NzMathQuestionBank.measure(year, false);
+            case "GEOMETRY" -> NzMathQuestionBank.geometry(year, false);
+            case "DATA" -> NzMathQuestionBank.data(year, false);
+            case "CHANCE" -> NzMathQuestionBank.chance(year, false);
+            case "READING" -> NzEnglishQuestionBank.reading(year, false);
+            case "WRITING" -> NzEnglishQuestionBank.writing(year, false);
+            case "GRAMMAR" -> NzEnglishQuestionBank.grammar(year, false);
+            case "VOCAB" -> NzEnglishQuestionBank.vocab(year, false);
+            case "ORAL" -> NzEnglishQuestionBank.oral(year, false);
+            case "INVESTIGATE" -> NzScienceQuestionBank.investigate(year, false);
+            case "LIVING" -> NzScienceQuestionBank.living(year, false);
+            case "MATTER" -> NzScienceQuestionBank.matter(year, false);
+            case "FORCES" -> NzScienceQuestionBank.forces(year, false);
+            case "EARTH" -> NzScienceQuestionBank.earth(year, false);
+            case "IDENTITY" -> NzSocialQuestionBank.identity(year, false);
+            case "PLACE" -> NzSocialQuestionBank.place(year, false);
+            case "HISTORY" -> NzSocialQuestionBank.history(year, false);
+            case "ECONOMY" -> NzSocialQuestionBank.economy(year, false);
+            case "CIVICS" -> NzSocialQuestionBank.civics(year, false);
+            case "DESIGN" -> NzCreativeQuestionBank.design(year, false);
+            case "DIGITAL" -> NzCreativeQuestionBank.digital(year, false);
+            case "MAKING" -> NzCreativeQuestionBank.making(year, false);
+            case "COMPUTE" -> NzCreativeQuestionBank.compute(year, false);
+            case "EVALUATE" -> NzCreativeQuestionBank.evaluate(year, false);
+            case "VISUAL" -> NzCreativeQuestionBank.visual(year, false);
+            case "MUSIC" -> NzCreativeQuestionBank.music(year, false);
+            case "DRAMA" -> NzCreativeQuestionBank.drama(year, false);
+            case "DANCE" -> NzCreativeQuestionBank.dance(year, false);
+            case "RESPOND" -> NzCreativeQuestionBank.respond(year, false);
+            case "MOVE" -> NzCreativeQuestionBank.move(year, false);
+            case "HAUORA" -> NzCreativeQuestionBank.hauora(year, false);
+            case "RELATE" -> NzCreativeQuestionBank.relate(year, false);
+            case "SAFETY" -> NzCreativeQuestionBank.safety(year, false);
+            case "COMMUNITY" -> NzCreativeQuestionBank.community(year, false);
+            case "GREETINGS" -> NzCreativeQuestionBank.greetings(year, false);
+            case "WORDS" -> NzCreativeQuestionBank.words(year, false);
+            case "LISTEN" -> NzCreativeQuestionBank.listen(year, false);
+            case "READLANG" -> NzCreativeQuestionBank.readLang(year, false);
+            case "TIKANGA" -> NzCreativeQuestionBank.tikanga(year, false);
             default -> mathNumber(year, false);
         };
     }
 
     private static QuestionTemplate[] wordTemplates(int year, String kind) {
         return switch (kind) {
-            case "NUMBER" -> mathNumber(year, true);
-            case "OPS" -> mathOps(year, true);
-            case "FRACTION" -> mathFraction(year, true);
-            case "ALGEBRA" -> mathAlgebra(year, true);
-            case "MEASURE" -> mathMeasure(year, true);
-            case "GEOMETRY" -> mathGeometry(year, true);
-            case "DATA" -> mathData(year, true);
-            case "CHANCE" -> mathChance(year, true);
+            case "NUMBER" -> NzMathQuestionBank.number(year, true);
+            case "OPS" -> NzMathQuestionBank.ops(year, true);
+            case "FRACTION" -> NzMathQuestionBank.fraction(year, true);
+            case "ALGEBRA" -> NzMathQuestionBank.algebra(year, true);
+            case "MEASURE" -> NzMathQuestionBank.measure(year, true);
+            case "GEOMETRY" -> NzMathQuestionBank.geometry(year, true);
+            case "DATA" -> NzMathQuestionBank.data(year, true);
+            case "CHANCE" -> NzMathQuestionBank.chance(year, true);
+            case "INVESTIGATE" -> NzScienceQuestionBank.investigate(year, true);
+            case "LIVING" -> NzScienceQuestionBank.living(year, true);
+            case "MATTER" -> NzScienceQuestionBank.matter(year, true);
+            case "FORCES" -> NzScienceQuestionBank.forces(year, true);
+            case "EARTH" -> NzScienceQuestionBank.earth(year, true);
+            case "IDENTITY" -> NzSocialQuestionBank.identity(year, true);
+            case "PLACE" -> NzSocialQuestionBank.place(year, true);
+            case "HISTORY" -> NzSocialQuestionBank.history(year, true);
+            case "ECONOMY" -> NzSocialQuestionBank.economy(year, true);
+            case "CIVICS" -> NzSocialQuestionBank.civics(year, true);
+            case "READING" -> NzEnglishQuestionBank.reading(year, true);
+            case "WRITING" -> NzEnglishQuestionBank.writing(year, true);
+            case "GRAMMAR" -> NzEnglishQuestionBank.grammar(year, true);
+            case "VOCAB" -> NzEnglishQuestionBank.vocab(year, true);
+            case "ORAL" -> NzEnglishQuestionBank.oral(year, true);
+            case "DESIGN" -> NzCreativeQuestionBank.design(year, true);
+            case "DIGITAL" -> NzCreativeQuestionBank.digital(year, true);
+            case "MAKING" -> NzCreativeQuestionBank.making(year, true);
+            case "COMPUTE" -> NzCreativeQuestionBank.compute(year, true);
+            case "EVALUATE" -> NzCreativeQuestionBank.evaluate(year, true);
+            case "VISUAL" -> NzCreativeQuestionBank.visual(year, true);
+            case "MUSIC" -> NzCreativeQuestionBank.music(year, true);
+            case "DRAMA" -> NzCreativeQuestionBank.drama(year, true);
+            case "DANCE" -> NzCreativeQuestionBank.dance(year, true);
+            case "RESPOND" -> NzCreativeQuestionBank.respond(year, true);
+            case "MOVE" -> NzCreativeQuestionBank.move(year, true);
+            case "HAUORA" -> NzCreativeQuestionBank.hauora(year, true);
+            case "RELATE" -> NzCreativeQuestionBank.relate(year, true);
+            case "SAFETY" -> NzCreativeQuestionBank.safety(year, true);
+            case "COMMUNITY" -> NzCreativeQuestionBank.community(year, true);
+            case "GREETINGS" -> NzCreativeQuestionBank.greetings(year, true);
+            case "WORDS" -> NzCreativeQuestionBank.words(year, true);
+            case "LISTEN" -> NzCreativeQuestionBank.listen(year, true);
+            case "READLANG" -> NzCreativeQuestionBank.readLang(year, true);
+            case "TIKANGA" -> NzCreativeQuestionBank.tikanga(year, true);
             default -> conceptTemplates(year, kind);
         };
     }
@@ -248,7 +284,11 @@ public final class NzCurriculumPractice {
                 },
                 rng -> {
                     if (year < 4) {
-                        return QBuilder.build(rng, "Which is larger for the same whole: 1/3 or 1/4?", "1/3",
+                        return QBuilder.build(rng, MathFigures.ask(
+                                        "Which is larger for the same whole: 1/3 or 1/4?",
+                                        MathFigures.fractionCompare(1, 3, 1, 4, "1/3", "1/4",
+                                                "Same-length bars. Larger pieces win.")),
+                                "1/3",
                                 "Thirds are larger pieces than quarters of the same whole.", "MEDIUM", "skill-check",
                                 "1/4", "they must be equal", "1/12");
                     }
@@ -415,8 +455,9 @@ public final class NzCurriculumPractice {
                     int w = QBuilder.range(rng, 2, 10);
                     String prompt = word
                             ? "A garden is " + l + " m long and " + w + " m wide. What is its area in m²?"
-                            : "Area of a " + l + " by " + w + " rectangle?";
-                    return QBuilder.build(rng, prompt, String.valueOf(l * w),
+                            : "What is the area of this rectangle?";
+                    return QBuilder.build(rng, MathFigures.ask(prompt, MathFigures.rectangle(l, w, l + " by " + w)),
+                            String.valueOf(l * w),
                             "Area of a rectangle = length × width.",
                             "EASY", word ? "word problem" : "skill-check",
                             String.valueOf(2 * (l + w)), String.valueOf(l + w), String.valueOf(l * w + l));
@@ -455,7 +496,9 @@ public final class NzCurriculumPractice {
                     int b = 2 * QBuilder.range(rng, 3, 8);
                     int h = QBuilder.range(rng, 4, 12);
                     int area = b * h / 2;
-                    return QBuilder.build(rng, "Area of a right triangle with base " + b + " cm and height " + h + " cm?",
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "What is the area of this right triangle?",
+                                    MathFigures.rightTriangle(b, h, null, "Right triangle: A = ½ × base × height.")),
                             String.valueOf(area), "A = ½ × base × height.", "MEDIUM", "skill-check",
                             String.valueOf(b * h), String.valueOf(b + h), String.valueOf(2 * (b + h)));
                 },
@@ -478,7 +521,10 @@ public final class NzCurriculumPractice {
         return new QuestionTemplate[]{
                 rng -> {
                     if (year <= 2) {
-                        return QBuilder.build(rng, "How many sides does a triangle have?", "3",
+                        return QBuilder.build(rng, MathFigures.ask(
+                                        "How many sides does this shape have?",
+                                        MathFigures.triangleAngles(60, 60, "60°", "A triangle has 3 sides and 3 corners.")),
+                                "3",
                                 "A triangle has 3 sides and 3 corners.", "EASY", "skill-check",
                                 "4", "2", "8");
                     }
@@ -501,7 +547,10 @@ public final class NzCurriculumPractice {
                         return QBuilder.build(rng, "A cube has how many faces?", "6",
                                 "Six square faces.", "EASY", "skill-check", "4", "8", "12");
                     }
-                    return QBuilder.build(rng, "The angles in a triangle add to…", "180°",
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "The angles in this triangle add to…",
+                                    MathFigures.triangleAngles(70, 50, "?", "Use the angle sum, not the sketch.")),
+                            "180°",
                             "Triangle angle sum is 180°.", "EASY", "skill-check", "90°", "360°", "100°");
                 },
                 rng -> {
@@ -515,7 +564,9 @@ public final class NzCurriculumPractice {
                     }
                     if (year <= 8) {
                         int a = QBuilder.range(rng, 40, 80);
-                        return QBuilder.build(rng, "Two angles on a straight line: one is " + a + "°. The other is?",
+                        return QBuilder.build(rng, MathFigures.ask(
+                                        "Two angles on a straight line: one is " + a + "°. The other is?",
+                                        MathFigures.anglesOnLine(a, "Adjacent angles on a line add to 180°.")),
                                 String.valueOf(180 - a), "Angles on a straight line sum to 180°.",
                                 "MEDIUM", "skill-check", String.valueOf(90 - a), String.valueOf(360 - a), String.valueOf(a));
                     }
@@ -547,7 +598,14 @@ public final class NzCurriculumPractice {
                 rng -> {
                     int fav = QBuilder.range(rng, 1, 4);
                     int tot = QBuilder.range(rng, 6, 10);
-                    return QBuilder.build(rng, "A bag has " + tot + " marbles and " + fav + " are red. P(red) = ?",
+                    String[] labels = new String[Math.min(tot, 8)];
+                    int shownFav = Math.min(fav, labels.length);
+                    for (int i = 0; i < labels.length; i++) {
+                        labels[i] = i < shownFav ? "R" : "B";
+                    }
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "A bag has " + tot + " marbles and " + fav + " are red. P(red) = ?",
+                                    MathFigures.spinner(labels, 0, "Equal chance for each marble. Red is favourable.")),
                             fav + "/" + tot, "Probability = favourable / total.",
                             "MEDIUM", word ? "word problem" : "skill-check",
                             tot + "/" + fav, fav + "/" + (tot + 1), "1/" + fav);
@@ -682,7 +740,16 @@ public final class NzCurriculumPractice {
                                 : "Inference still needs text clues.",
                         "MEDIUM", "skill-check",
                         year <= 3 ? "Only the title in a random order" : "Ignoring the text and using only your opinion",
-                        "Copying a sentence word for word", "Reading only the title")
+                        "Copying a sentence word for word", "Reading only the title"),
+                rng -> QBuilder.build(rng, "A heading in an information text mainly helps you…",
+                        "predict what the next section is about", "Headings are signposts.",
+                        "EASY", "skill-check", "count the vowels", "skip the pictures forever", "change the author's name"),
+                rng -> QBuilder.build(rng, "When two characters disagree, a good reader asks…",
+                        "what each character wants and why", "Motive sits under the argument.",
+                        "MEDIUM", "skill-check", "which font is larger", "whether the page is even-numbered", "how many commas appear"),
+                rng -> QBuilder.build(rng, "A fact can be checked. An opinion…",
+                        "is a view that can be agreed with or not", "Fact vs opinion is a Year-ready habit.",
+                        "EASY", "skill-check", "is always false", "never uses the word I", "must include a percentage")
         };
     }
 
@@ -696,7 +763,16 @@ public final class NzCurriculumPractice {
                         "MEDIUM", "skill-check", "Start with the last sentence", "Ignore who will read it", "Copy a friend"),
                 rng -> QBuilder.build(rng, "A topic sentence usually…",
                         "States the main point of the paragraph", "It tells the reader the focus.",
-                        "EASY", "skill-check", "Is always a question mark only", "Lists every fact in the whole text", "Has no meaning")
+                        "EASY", "skill-check", "Is always a question mark only", "Lists every fact in the whole text", "Has no meaning"),
+                rng -> QBuilder.build(rng, "The best way to end a piece of writing is to…",
+                        "Close the idea so the reader feels finished", "A conclusion is not a new random topic.",
+                        "MEDIUM", "skill-check", "Start a brand-new story in the last line", "Stop mid-word", "Repeat the title ten times"),
+                rng -> QBuilder.build(rng, "Choosing words for a younger audience means you should…",
+                        "Keep sentences clear and explain new words", "Audience changes vocabulary.",
+                        "MEDIUM", "skill-check", "Use only university words", "Remove all full stops", "Write in a secret code"),
+                rng -> QBuilder.build(rng, "Revising is different from proofreading because revising…",
+                        "improves ideas, order and clarity first", "Proofreading later catches spelling.",
+                        "MEDIUM", "skill-check", "only changes the font", "deletes the audience", "is the same as publishing")
         };
     }
 
@@ -710,7 +786,16 @@ public final class NzCurriculumPractice {
                         "MEDIUM", "skill-check", "We went to the beach because it was hot.", "It was hot at the beach.", "The beach was hot."),
                 rng -> QBuilder.build(rng, "Choose the verb that agrees: She ____ to school.",
                         "walks", "Singular she takes walks.",
-                        "EASY", "skill-check", "walk", "walking", "walked to")
+                        "EASY", "skill-check", "walk", "walking", "walked to"),
+                rng -> QBuilder.build(rng, "Which needs a question mark?",
+                        "When does the bus leave", "A question asks something.",
+                        "EASY", "skill-check", "The bus leaves at 3.", "Leave the bus.", "Bus, leave now."),
+                rng -> QBuilder.build(rng, "An apostrophe of possession is correct in…",
+                        "the student's bag", "Owner then apostrophe then belonging.",
+                        "MEDIUM", "skill-check", "the students bag's", "the students' bag's hat's", "students bag"),
+                rng -> QBuilder.build(rng, "Which is a complete sentence?",
+                        "Tāne kicked the ball.", "Subject + verb + complete idea.",
+                        "EASY", "skill-check", "Kicked the ball.", "The ball.", "Because the wind.")
         };
     }
 

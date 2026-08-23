@@ -17,7 +17,8 @@ year-appropriately until their refresh). Official curriculum statements stay wit
   worked solutions, tables, common mistakes, vocabulary and recap.
 - **Year-specific question banks** — concept and word sheets matched to the lesson strand
   (not a single generic template for every year).
-- **Family progress** — overall scores, strong skills, and areas under 70% to practise again.
+- **Family progress** — overall scores, averages by subject, strong skills, and areas under 70% to practise again.
+- **Parent emails** — after every practice sheet the parent inbox receives the latest score and a subject-by-subject summary.
 - **Per-student accounts** — register and log in (passwords hashed with BCrypt).
 
 ## Tech stack
@@ -37,6 +38,26 @@ Then open <http://localhost:8080>. New accounts get a 2-day trial for the NZ cur
 
 To reset seeded lessons after a content update, delete `./data/` and restart (accounts are also cleared).
 `DataInitializer` also updates existing topics when lesson titles, keys or HTML change.
+
+## Go live
+
+Run with the production profile and real environment variables:
+
+```bash
+export SPRING_PROFILES_ACTIVE=prod
+export APP_BASE_URL=https://letuslearn.it.com
+export MAIL_FROM=noreply@letuslearn.it.com
+export SPRING_MAIL_HOST=smtp.example.com
+export SPRING_MAIL_PORT=587
+export SPRING_MAIL_USERNAME=...
+export SPRING_MAIL_PASSWORD=...
+export STRIPE_SECRET_KEY=...
+export STRIPE_PUBLISHABLE_KEY=...
+export STRIPE_WEBHOOK_SECRET=...
+mvn spring-boot:run
+```
+
+Without SMTP, verification and parent-progress emails are written to the application log so you can still test the flow locally.
 
 ## Tests
 

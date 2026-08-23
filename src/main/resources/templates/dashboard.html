@@ -10,9 +10,13 @@
         <p class="muted">A colourful view of practice — and a calm list of where to focus next.</p>
         <div class="track-switch" style="margin-top:10px;">
             <a class="track-tab active" th:href="@{/dashboard}">Progress</a>
+            <a class="track-tab" th:href="@{/rewards}">Goodies locker</a>
             <a class="track-tab" th:href="@{/curriculum/nz}">All years &amp; subjects</a>
-            <a class="track-tab" th:href="@{/games/murder-mystery}">Mystery quiz</a>
         </div>
+    </div>
+
+    <div class="alert alert-success" th:if="${parentInboxSaved}">
+        Parent inbox saved. The next practice sheet will email that address with scores by subject.
     </div>
 
     <div class="alert alert-success" th:if="${paid}">
@@ -55,6 +59,39 @@
             <div class="value" th:text="${parentProgress.practiceSessions}">0</div>
             <div class="label">Practice sheets done</div>
         </div>
+        <div class="stat">
+            <div class="value" th:text="${student.stars} + ' ★'">0 ★</div>
+            <div class="label">Stars · Lv <span th:text="${student.rewardLevel}">1</span></div>
+        </div>
+        <div class="stat">
+            <div class="value rbx" th:text="${student.rbxPoints}">0</div>
+            <div class="label">Rbx points</div>
+        </div>
+    </div>
+
+    <h2>Progress by subject</h2>
+    <div class="card" th:if="${#lists.isEmpty(parentProgress.subjectScores)}">
+        <p class="muted" style="margin:0;">Complete a practice sheet and this table fills with an average for each subject. The parent inbox gets the same breakdown after every sheet.</p>
+    </div>
+    <div class="card" th:unless="${#lists.isEmpty(parentProgress.subjectScores)}">
+        <table class="history">
+            <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Average</th>
+                <th>Sheets</th>
+                <th>Latest lesson</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="s : ${parentProgress.subjectScores}">
+                <td th:text="${s.subject}">Mathematics</td>
+                <td th:text="${s.averagePercent} + '%'">0%</td>
+                <td th:text="${s.sessions}">0</td>
+                <td th:text="${s.latestLesson}">Lesson</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 
     <h2>Where to focus more</h2>
@@ -97,7 +134,7 @@
     <div class="year-picker" style="justify-content:flex-start; margin:16px 0 22px;">
         <a th:each="y : ${years}"
            class="year-pill"
-           th:classappend="'y' + y + (y == selectedYear ? ' active' : '')"
+           th:classappend="${'y' + y + (y == selectedYear ? ' active' : '')}"
            th:href="@{/dashboard(year=${y})}"
            th:text="${y}">1</a>
     </div>
@@ -138,10 +175,26 @@
                 <td th:text="${a.score} + ' / ' + ${a.totalQuestions}">0/0</td>
                 <td th:text="${a.percentage} + '%'">0%</td>
                 <td th:text="${#temporals.format(a.takenAt, 'dd MMM, HH:mm')}">date</td>
-                <td><a th:href="@{'/practice/result/' + ${a.id}}">View</a></td>
+                <td><a th:href="@{/practice/result/{id}(id=${a.id})}">View</a></td>
             </tr>
             </tbody>
         </table>
+    </div>
+
+    <h2 style="margin-top:36px;">Parent inbox</h2>
+    <div class="card parent-inbox">
+        <p class="muted" style="margin-top:0;">After each sheet we email this address with the latest score and a progress summary by subject.</p>
+        <form th:action="@{/dashboard/parent-inbox}" method="post" class="inbox-form">
+            <div class="form-group">
+                <label for="parentEmail">Parent / guardian email</label>
+                <input type="email" id="parentEmail" name="parentEmail" th:value="${student.progressEmail()}"/>
+            </div>
+            <label class="check-row">
+                <input type="checkbox" name="parentNotifyEnabled" value="true" th:checked="${student.parentNotifyEnabled}"/>
+                Send a progress email after every practice sheet
+            </label>
+            <button type="submit" class="btn">Save parent inbox</button>
+        </form>
     </div>
 </div>
 <footer th:replace="~{fragments/layout :: footer}"></footer>

@@ -3,6 +3,7 @@ package com.gremath.curriculum.lessons;
 import com.gremath.curriculum.LessonHtml;
 import com.gremath.curriculum.NzLessonSpec;
 import com.gremath.curriculum.NzSubject;
+import com.gremath.curriculum.SubjectFigures;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,9 @@ public final class NzHumanitiesLessons {
 
     private static NzLessonSpec spec(int year, NzSubject subject, int order, String title, String strand,
                                      String kind, String html) {
+        if (html != null && !html.contains("<svg")) {
+            html = insertFigure(html, figureFor(kind));
+        }
         return new NzLessonSpec(order, order + ". " + title, strand, html,
                 "nz-" + year + "-" + subject.slug() + "-" + order,
                 LessonHtml.strategy(strand.toLowerCase(),
@@ -366,5 +370,45 @@ public final class NzHumanitiesLessons {
                 "Five words in sentences beat twenty words in a list you cannot use.",
                 "Greet, recycle kupu, respect tikanga. Year " + y + ".",
                 "kia ora, tēnā koe, kupu, macron, tikanga, manaakitanga");
+    }
+
+    private static String insertFigure(String html, String figure) {
+        if (figure == null || figure.isBlank()) {
+            return html;
+        }
+        String marker = "<h3>How to work it out</h3>";
+        int i = html.indexOf(marker);
+        if (i >= 0) {
+            return html.substring(0, i) + figure + html.substring(i);
+        }
+        return html + figure;
+    }
+
+    private static String figureFor(String kind) {
+        return switch (kind) {
+            case "IDENTITY" -> SubjectFigures.identityPlaces(
+                    "Maunga and awa locate a person in place — a pepeha names those connections.");
+            case "PLACE" -> SubjectFigures.mapKey(
+                    "Read the key before you guess what a colour or shape means.");
+            case "HISTORY" -> SubjectFigures.timeline(
+                    "Time order first: voyaging, Te Tiriti in 1840, then today.");
+            case "ECONOMY" -> SubjectFigures.needsWants(
+                    "A need keeps you alive. A want is an extra you can live without.");
+            case "CIVICS" -> SubjectFigures.civicRules(
+                    "Rights and responsibilities travel together.");
+            case "DESIGN", "EVALUATE", "MAKING", "DIGITAL", "COMPUTE" -> SubjectFigures.designBrief(
+                    "User, problem, idea — then test and improve.");
+            case "VISUAL", "RESPOND" -> SubjectFigures.designBrief(
+                    "Notice an element first: line, colour, shape or texture.");
+            case "MUSIC" -> SubjectFigures.musicNotes("Beat, pitch and dynamics are things you can point to.");
+            case "DRAMA", "DANCE" -> SubjectFigures.moveSkill("Body and voice tell the story. Stay in role.");
+            case "MOVE" -> SubjectFigures.moveSkill("Eyes on the ball. Hands ready. Soft catch.");
+            case "HAUORA", "RELATE", "COMMUNITY" -> SubjectFigures.hauoraTaha(
+                    "Hauora is four taha together, not only ‘not being sick’.");
+            case "SAFETY" -> SubjectFigures.safetyFlags("Between the flags. Never swim alone.");
+            case "GREETINGS", "WORDS", "LISTEN", "READLANG", "TIKANGA" -> SubjectFigures.greetingKiaOra(
+                    "Kia ora is a friendly hello. Tēnā koe greets one person.");
+            default -> SubjectFigures.mapKey("Start with a picture of the idea, then the words.");
+        };
     }
 }

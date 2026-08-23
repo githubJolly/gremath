@@ -24,6 +24,8 @@ public class RegistrationForm {
     @NotBlank(message="Password is required")
     @Size(min=6, message="Password must be at least 6 characters")
     private @NotBlank(message="Password is required") @Size(min=6, message="Password must be at least 6 characters") String password;
+    @Email(message="Enter a valid parent email")
+    private String parentEmail;
 
     public String getUsername() {
         return this.username;
@@ -55,6 +57,14 @@ public class RegistrationForm {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getParentEmail() {
+        return this.parentEmail;
+    }
+
+    public void setParentEmail(String parentEmail) {
+        this.parentEmail = parentEmail;
     }
 }
 

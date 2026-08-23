@@ -46,6 +46,10 @@ public class PracticeAttempt {
     private Topic topic;
     private int score;
     private int totalQuestions;
+    private int starsEarned;
+    private int rbxEarned;
+    private String bonusMessage;
+    private String unlockedGoodie;
     private LocalDateTime takenAt = LocalDateTime.now();
     @OneToMany(mappedBy="attempt", cascade={CascadeType.ALL}, orphanRemoval=true)
     private List<AttemptAnswer> answers = new ArrayList<AttemptAnswer>();
@@ -116,6 +120,38 @@ public class PracticeAttempt {
             return 0;
         }
         return Math.round((float)this.score * 100.0f / (float)this.totalQuestions);
+    }
+
+    public int getStarsEarned() {
+        return this.starsEarned;
+    }
+
+    public void setStarsEarned(int starsEarned) {
+        this.starsEarned = starsEarned;
+    }
+
+    public int getRbxEarned() {
+        return this.rbxEarned;
+    }
+
+    public void setRbxEarned(int rbxEarned) {
+        this.rbxEarned = rbxEarned;
+    }
+
+    public String getBonusMessage() {
+        return this.bonusMessage;
+    }
+
+    public void setBonusMessage(String bonusMessage) {
+        this.bonusMessage = bonusMessage;
+    }
+
+    public String getUnlockedGoodie() {
+        return this.unlockedGoodie;
+    }
+
+    public void setUnlockedGoodie(String unlockedGoodie) {
+        this.unlockedGoodie = unlockedGoodie;
     }
 }
 

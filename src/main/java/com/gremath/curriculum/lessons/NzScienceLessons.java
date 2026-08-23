@@ -3,6 +3,7 @@ package com.gremath.curriculum.lessons;
 import com.gremath.curriculum.LessonHtml;
 import com.gremath.curriculum.NzLessonSpec;
 import com.gremath.curriculum.NzSubject;
+import com.gremath.curriculum.SubjectFigures;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,9 @@ public final class NzScienceLessons {
     }
 
     private static NzLessonSpec s(int year, int order, String title, String strand, String kind, String html) {
+        if (html != null && !html.contains("<svg")) {
+            html = insertFigure(html, figureFor(kind));
+        }
         return new NzLessonSpec(order, order + ". " + title, strand, html,
                 "nz-" + year + "-" + NzSubject.SCIENCE.slug() + "-" + order,
                 LessonHtml.strategy(strand.toLowerCase(),
@@ -256,5 +260,33 @@ public final class NzScienceLessons {
                 "Pick one action you could actually do this term, not ten slogans.",
                 "Place-based science, kaitiakitanga, and evidence-shaped action. Year " + y + ".",
                 "mātauranga, kaitiaki, biosecurity, hazard, restoration, socio-scientific");
+    }
+
+    private static String insertFigure(String html, String figure) {
+        if (figure == null || figure.isBlank()) {
+            return html;
+        }
+        String marker = "<h3>How to work it out</h3>";
+        int i = html.indexOf(marker);
+        if (i >= 0) {
+            return html.substring(0, i) + figure + html.substring(i);
+        }
+        return html + figure;
+    }
+
+    private static String figureFor(String kind) {
+        return switch (kind) {
+            case "INVESTIGATE" -> SubjectFigures.fairTest(
+                    "A fair test changes one thing. Everything else stays the same.");
+            case "LIVING" -> SubjectFigures.foodChain(
+                    "Arrows show energy flow — who eats whom — in an Aotearoa food chain.");
+            case "MATTER" -> SubjectFigures.statesOfMatter(
+                    "Particles pack tightly in a solid, slide in a liquid, and spread in a gas.");
+            case "FORCES" -> SubjectFigures.forceArrows(
+                    "A push and a pull are both forces. Arrows show direction.");
+            case "EARTH" -> SubjectFigures.dayNight(
+                    "Earth rotates. The side facing the Sun has day; the other side has night.");
+            default -> SubjectFigures.fairTest("Science starts with a picture of the test.");
+        };
     }
 }

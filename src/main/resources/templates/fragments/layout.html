@@ -4,11 +4,15 @@
 <head th:fragment="head(title)">
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="LetusLearn — New Zealand Curriculum lessons and practice for Years 1–10. Parents receive a progress email after every sheet, with scores by subject."/>
+    <meta name="theme-color" content="#ea580c"/>
     <title th:text="${title}">LetusLearn</title>
+    <link rel="icon" type="image/png" th:href="@{/img/letuslearn-logo.png}"/>
+    <link rel="apple-touch-icon" th:href="@{/img/letuslearn-logo.png}"/>
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" th:href="@{/css/style.css(v=20260820d)}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css(v=20260823d)}"/>
     <style>
         html, body, a, button, .btn, .year-pill, .subject-tile { pointer-events: auto !important; cursor: pointer; }
         .navbar { pointer-events: auto !important; backdrop-filter: none !important; }
@@ -17,18 +21,26 @@
 <body>
 <nav class="navbar" th:fragment="navbar">
     <a class="brand" th:href="@{/}">
-        <img class="brand-logo" th:src="@{/img/letuslearn-logo.png}" alt="LetusLearn logo"/>
+        <img class="brand-logo" th:src="@{/img/letuslearn-logo.png}" alt="LetusLearn"/>
         <span class="brand-text">LetusLearn</span>
     </a>
     <button class="nav-toggle" type="button" aria-label="Open menu" onclick="document.body.classList.toggle('nav-open')">☰</button>
     <div class="nav-links">
         <span class="nav-hi" sec:authorize="isAuthenticated()">
             Hi, <strong sec:authentication="name">student</strong>
+            <span class="nav-title" th:if="${navTitle}" th:text="${navTitle}">Rookie</span>
         </span>
+        <a class="nav-loot" sec:authorize="isAuthenticated()" th:href="@{/rewards}"
+           th:title="Goodies locker">
+            <span th:text="${navStars != null ? navStars : 0} + ' ★'">0 ★</span>
+            <span th:text="${navRbx != null ? navRbx : 0} + ' Rbx'">0 Rbx</span>
+            <span th:if="${navStreak != null and navStreak > 0}" th:text="${navStreak} + '🔥'">1🔥</span>
+        </a>
         <a th:href="@{/curriculum/nz}">Subjects</a>
+        <a th:href="@{/how-it-works}">How it works</a>
         <a th:href="@{/pricing}">Pricing</a>
         <a sec:authorize="isAuthenticated()" th:href="@{/dashboard}">Progress</a>
-        <a sec:authorize="isAuthenticated()" th:href="@{/games/murder-mystery}">Mystery Quiz</a>
+        <a sec:authorize="isAuthenticated()" th:href="@{/rewards}">Goodies</a>
         <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
             <button type="submit" class="btn-link-plain">Log out</button>
         </form>
@@ -41,13 +53,21 @@
     <div class="footer-inner">
         <div>
             <strong>LetusLearn</strong>
-            <p>Lessons and practice for every New Zealand Curriculum learning area, Years 1–10. Built for children, with a clear view for parents.</p>
+            <p>Lessons and practice for every New Zealand Curriculum learning area, Years 1–10. Built for children, with a live progress email for parents after every sheet.</p>
         </div>
         <div>
             <strong>Explore</strong>
             <a th:href="@{/curriculum/nz}">All years &amp; subjects</a>
+            <a th:href="@{/how-it-works}">How it works</a>
             <a th:href="@{/pricing}">Family pricing</a>
             <a th:href="@{/register}">2-day free trial</a>
+        </div>
+        <div>
+            <strong>Family</strong>
+            <a th:href="@{/about}">About</a>
+            <a th:href="@{/contact}">Contact</a>
+            <a th:href="@{/privacy}">Privacy</a>
+            <a th:href="@{/terms}">Terms</a>
         </div>
         <div>
             <strong>Curriculum</strong>

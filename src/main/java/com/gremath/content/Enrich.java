@@ -33,15 +33,9 @@ public final class Enrich {
      * lesson's trigger words and core relation, and deliberately never states the answer.
      */
     public static String questionHint(String practiceKey, String tag) {
-        boolean wordy = tag != null && tag.toLowerCase().contains("word");
-        String trigger = Enrich.triggerHint(practiceKey);
-        String formula = Enrich.formulaHint(practiceKey);
-        if (wordy) {
-            return "Read the wording for clues (" + trigger + "), turn the story into numbers/symbols in one line, "
-                    + "then set up: " + formula + ". Work the steps yourself \u2014 don't jump to the value.";
-        }
-        return "Spot the pattern (" + trigger + ") and apply the core relation: " + formula
-                + ". Solve in small steps and sanity-check the size of your result.";
+        return com.gremath.practice.HintBank.pick(practiceKey,
+                new com.gremath.practice.GeneratedQuestion("?", java.util.List.of("a"), 0, "", "EASY", tag),
+                0, com.gremath.practice.HintBank.newUsedSet());
     }
 
     public static String adaptStrategy(String lessonTitle, String practiceKey, String currentStrategy) {

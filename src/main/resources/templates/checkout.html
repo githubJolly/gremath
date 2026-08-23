@@ -25,7 +25,7 @@
         <form th:action="@{/billing/checkout}" method="post">
             <input type="hidden" name="plan" th:value="${plan}"/>
             <p class="muted">
-                Includes parent progress insights and curriculum pathways for Years 1–10.
+                Includes parent progress emails after every sheet, a subject dashboard, and curriculum pathways for Years 1–10.
                 New families receive a <strong th:text="${trialDays}">2</strong>-day free trial on signup before billing.
             </p>
             <button class="btn btn-success btn-block" type="submit" th:text="'Continue to Stripe - $' + ${amount} + '/month'">Continue to Stripe</button>

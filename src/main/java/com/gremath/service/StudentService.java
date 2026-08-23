@@ -37,6 +37,10 @@ public class StudentService {
         student.setUsername(form.getUsername());
         student.setFullName(form.getFullName());
         student.setEmail(form.getEmail());
+        String parent = form.getParentEmail() == null || form.getParentEmail().isBlank()
+                ? form.getEmail() : form.getParentEmail().trim();
+        student.setParentEmail(parent);
+        student.setParentNotifyEnabled(true);
         student.setPassword(this.passwordEncoder.encode((CharSequence)form.getPassword()));
         student.setRole("ROLE_STUDENT");
         student.setEmailVerified(false);
@@ -134,5 +138,15 @@ public class StudentService {
         student.setGreCatSubscribedUntil(until);
         this.studentRepository.save(student);
         return until;
+    }
+
+    public Student updateParentInbox(Student student, String parentEmail, boolean notifyEnabled) {
+        if (parentEmail != null && !parentEmail.isBlank()) {
+            student.setParentEmail(parentEmail.trim());
+        } else if (student.getEmail() != null) {
+            student.setParentEmail(student.getEmail());
+        }
+        student.setParentNotifyEnabled(notifyEnabled);
+        return this.studentRepository.save(student);
     }
 }

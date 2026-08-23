@@ -66,11 +66,83 @@ public final class LessonHtml {
         if (vocab != null && !vocab.isBlank()) {
             sb.append(Doc.key("<strong>Words to own:</strong> " + vocab));
         }
+        sb.append(examAsk(strand));
         sb.append(Doc.recap(recap));
         sb.append(Doc.reference("Original LetusLearn teaching organised to the New Zealand Curriculum "
                 + "year-by-year teaching sequence on <em>Tāhūrangi</em> (English and Mathematics &amp; Statistics "
-                + "Years 0–10, 2025). Official statements stay with the Ministry of Education."));
+                + "Years 0–10, 2025). Practice items are original and written in the styles used by "
+                + "<em>PAT Pāngarau</em> (NZCER), <em>NCEA Numeracy CAA 32406</em> (NZQA), and "
+                + "<em>Figure It Out</em> (Ministry of Education) — not copied from those publications."));
         return sb.toString();
+    }
+
+    /** Typical item styles from NZ assessments, rewritten as original LetusLearn prompts. */
+    public static String examAsk(String strand) {
+        String s = strand == null ? "" : strand.toLowerCase();
+        String[] items;
+        if (s.contains("rational") || s.contains("fraction")) {
+            items = new String[]{
+                    "PAT-style: match a shaded bar or number line to a fraction, decimal or percent.",
+                    "NCEA Numeracy: find a discount, unit price or GST from a shop table, then explain the calculation.",
+                    "Figure It Out: share a quantity in a ratio (part:part) and check the parts sum to the whole."
+            };
+        } else if (s.contains("operation")) {
+            items = new String[]{
+                    "PAT-style: evaluate a mixed expression (GEMA) or an integer jump on a number line.",
+                    "NCEA Numeracy: temperature change, account balance, or elapsed time across midday.",
+                    "Figure It Out: multi-step story — estimate first, then compute, then interpret a remainder."
+            };
+        } else if (s.contains("algebra") || s.contains("taurangi")) {
+            items = new String[]{
+                    "PAT-style: continue a growing pattern, then write the n-rule and test two terms.",
+                    "NCEA Numeracy: form a one-step equation from a ticket + fee story and solve it.",
+                    "Figure It Out: plot a table on a grid and say whether the points look linear."
+            };
+        } else if (s.contains("measure") || s.contains("ine")) {
+            items = new String[]{
+                    "PAT-style: read a scale or choose cm / m / cm² / cm³ for a labelled diagram.",
+                    "NCEA Numeracy: compound area (L-shape), timetable duration, or convert mixed units.",
+                    "Figure It Out: estimate first (finger ≈ 1 cm, pace ≈ 1 m), then calculate perimeter or volume."
+            };
+        } else if (s.contains("geometry") || s.contains("āhuahanga") || s.contains("ahuahanga")) {
+            items = new String[]{
+                    "PAT-style: classify a triangle or quadrilateral from marked properties, not from how it looks.",
+                    "NCEA Numeracy: find a missing angle on a diagram (triangle sum, straight line, or point).",
+                    "Figure It Out: describe a reflection, rotation or translation on a grid and name the image."
+            };
+        } else if (s.contains("statistic") || s.contains("tauanga")) {
+            items = new String[]{
+                    "PAT-style: read a bar, pictograph or table — including a key where 1 picture = 2.",
+                    "NCEA Numeracy: decide if a claim matches the graph; mention sample size or a misleading scale.",
+                    "Figure It Out: choose mean, median or mode and say why that average fits the question."
+            };
+        } else if (s.contains("probab") || s.contains("tūponotanga") || s.contains("tupono")) {
+            items = new String[]{
+                    "PAT-style: P(event) from a fair spinner, die or bag — favourable ÷ total.",
+                    "NCEA Numeracy: experimental relative frequency from a trial table, then compare with theoretical P.",
+                    "Figure It Out: list the sample space first; use a complement or a two-stage tree."
+            };
+        } else if (s.contains("number") || s.contains("tau")) {
+            items = new String[]{
+                    "PAT-style: expanded form, rounding, or compare two numbers from the left-most place.",
+                    "NCEA Numeracy: interpret a large figure (population, distance) or a negative in context.",
+                    "Figure It Out: primes, HCF/LCM or a factor tree that feeds a later fraction problem."
+            };
+        } else {
+            items = new String[]{
+                    "PAT-style: a short skill item with one clear answer.",
+                    "NCEA Numeracy: a real-life table or diagram, then explain your method.",
+                    "Figure It Out: a contextual investigation — show working, not only the final number."
+            };
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("<div class='callout c-exam'><span class='callout-title'>How assessments ask this</span>");
+        sb.append("<p>Original LetusLearn items, written in the same <em>kinds</em> of question used in ");
+        sb.append("PAT Pāngarau, NCEA Numeracy CAA, and Figure It Out. We do not reproduce those papers.</p><ul>");
+        for (String item : items) {
+            sb.append("<li>").append(item).append("</li>");
+        }
+        return sb.append("</ul></div>").toString();
     }
 
     public static String strategy(String strand, String[] steps, String trap) {

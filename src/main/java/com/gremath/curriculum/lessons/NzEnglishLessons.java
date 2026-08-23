@@ -3,6 +3,7 @@ package com.gremath.curriculum.lessons;
 import com.gremath.curriculum.LessonHtml;
 import com.gremath.curriculum.NzLessonSpec;
 import com.gremath.curriculum.NzSubject;
+import com.gremath.curriculum.SubjectFigures;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,9 @@ public final class NzEnglishLessons {
     }
 
     private static NzLessonSpec lesson(int year, int order, String title, String strand, String kind, String html, String strat) {
+        if (html != null && !html.contains("<svg")) {
+            html = insertFigure(html, figureFor(kind));
+        }
         return new NzLessonSpec(order, order + ". " + title, strand, html,
                 "nz-" + year + "-" + NzSubject.ENGLISH.slug() + "-" + order, strat, kind);
     }
@@ -367,5 +371,26 @@ public final class NzEnglishLessons {
         return LessonHtml.strategy("language",
                 new String[]{"Find subject and verb.", "Check stops and capitals.", "Check agreement/tense.", "Tighten one imprecise word."},
                 "naming a technique without saying what it does to meaning");
+    }
+
+    private static String insertFigure(String html, String figure) {
+        if (figure == null || figure.isBlank()) {
+            return html;
+        }
+        String marker = "<h3>How to work it out</h3>";
+        int i = html.indexOf(marker);
+        if (i >= 0) {
+            return html.substring(0, i) + figure + html.substring(i);
+        }
+        return html + figure;
+    }
+
+    private static String figureFor(String kind) {
+        return switch (kind) {
+            case "ORAL" -> SubjectFigures.speechTurn("Listen first. Then add a reason.");
+            case "READING" -> SubjectFigures.storyBook("Gist first. Then hunt evidence.");
+            case "WRITING" -> SubjectFigures.designBrief("Purpose, audience, then one idea per box.");
+            default -> SubjectFigures.storyBook("Language is a tool: check the sentence does the job.");
+        };
     }
 }

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Goodies shop')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container">
+    <div class="page-header">
+        <a class="muted" th:href="@{/dashboard}">&larr; Progress</a>
+        <h1>Goodies locker</h1>
+        <p class="muted">Earn stars and <strong>Rbx points</strong> on every practice sheet. Spend them here.
+            These are LetusLearn reward points — not real Roblox Robux.</p>
+    </div>
+
+    <div class="alert alert-success" th:if="${msg}" th:text="${msg}">Unlocked!</div>
+
+    <div class="loot-hero">
+        <div>
+            <div class="loot-big" th:text="${student.stars} + ' ★'">0 ★</div>
+            <div class="muted">Stars · Level <span th:text="${student.rewardLevel}">1</span></div>
+        </div>
+        <div>
+            <div class="loot-big rbx" th:text="${student.rbxPoints} + ' Rbx'">0 Rbx</div>
+            <div class="muted">Reward points in your wallet</div>
+        </div>
+        <div>
+            <div class="loot-big" th:text="${student.streakDays} + ' 🔥'">0 🔥</div>
+            <div class="muted">Day streak</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px;">
+        <h2 style="margin-top:0;">Equipped</h2>
+        <p style="margin:0;">Title: <strong th:text="${titleName}">—</strong>
+            · Hat: <strong th:text="${hatName}">—</strong>
+            · Pet: <strong th:text="${petName}">—</strong></p>
+    </div>
+
+    <h2>Locker</h2>
+    <div class="goodie-grid">
+        <div class="goodie-card" th:each="g : ${goodies}" th:classappend="${student.hasGoodie(g.id())} ? 'owned' : ''">
+            <div class="goodie-emoji" th:text="${g.emoji()}">🥝</div>
+            <strong th:text="${g.name()}">Name</strong>
+            <p class="muted" th:text="${g.blurb()}">Blurb</p>
+            <p class="muted" th:if="${g.starsNeeded() > 0}" th:text="'Needs ' + ${g.starsNeeded()} + ' stars'">Needs stars</p>
+            <p class="muted" th:if="${g.rbxCost() > 0}" th:text="${g.rbxCost()} + ' Rbx'">40 Rbx</p>
+            <form th:if="${student.hasGoodie(g.id())}" th:action="@{/rewards/equip}" method="post">
+                <input type="hidden" name="id" th:value="${g.id()}"/>
+                <button class="btn btn-outline" type="submit">Equip</button>
+            </form>
+            <form th:unless="${student.hasGoodie(g.id())}" th:action="@{/rewards/buy}" method="post">
+                <input type="hidden" name="id" th:value="${g.id()}"/>
+                <button class="btn btn-success" type="submit"
+                        th:disabled="${g.rbxCost() == 0 and g.starsNeeded() > student.stars}">
+                    <span th:if="${g.rbxCost() > 0}">Buy</span>
+                    <span th:unless="${g.rbxCost() > 0}">Locked</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

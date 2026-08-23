@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Privacy')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<div class="container legal">
+    <div class="page-header">
+        <h1>Privacy</h1>
+        <p class="muted">How LetusLearn handles family information.</p>
+    </div>
+    <div class="card">
+        <h2>What we store</h2>
+        <p>Account username, child display name, login email, optional parent inbox, password hash, subscription and trial dates, practice scores, and locker rewards. We do not store card numbers, expiry dates or CVV values — Stripe handles checkout.</p>
+        <h2>How we use it</h2>
+        <p>To run the tutor, mark sheets, show the family dashboard, send verification and parent-progress emails, and process subscriptions you start. We do not sell student data.</p>
+        <h2>Emails</h2>
+        <p>Verification goes to the account email. Progress reports go to the parent inbox you set (or the account email if you leave that blank). You can turn progress emails off on the Progress page.</p>
+        <h2>Retention and questions</h2>
+        <p>You can ask us to close an account and delete stored practice history by writing to us from the email on the account. See <a th:href="@{/contact}">Contact</a>.</p>
+        <p class="muted" style="margin-bottom:0;">Last updated 23 August 2026.</p>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

@@ -12,14 +12,24 @@ public class GeneratedQuestion {
     private final String explanation;
     private final String difficulty;
     private final String tag;
+    private final String hint;
 
     public GeneratedQuestion(String text, List<String> options, int correctOption, String explanation, String difficulty, String tag) {
+        this(text, options, correctOption, explanation, difficulty, tag, null);
+    }
+
+    public GeneratedQuestion(String text, List<String> options, int correctOption, String explanation, String difficulty, String tag, String hint) {
         this.text = text;
         this.options = options;
         this.correctOption = correctOption;
         this.explanation = explanation;
         this.difficulty = difficulty;
         this.tag = tag;
+        this.hint = hint;
+    }
+
+    public GeneratedQuestion withHint(String hint) {
+        return new GeneratedQuestion(text, options, correctOption, explanation, difficulty, tag, hint);
     }
 
     public String getText() {
@@ -44,6 +54,10 @@ public class GeneratedQuestion {
 
     public String getTag() {
         return this.tag;
+    }
+
+    public String getHint() {
+        return this.hint;
     }
 }
 

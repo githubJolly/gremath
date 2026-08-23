@@ -7,7 +7,7 @@
 <div class="container">
     <div class="page-header" style="text-align:center;">
         <h1>Simple family pricing</h1>
-        <p class="muted">Every year, every subject, plus a parent progress dashboard. Includes a 2-day free trial.</p>
+        <p class="muted">Every year, every subject, a parent dashboard, and a progress email after every sheet. Includes a 2-day free trial.</p>
     </div>
 
     <div class="alert alert-info" th:if="${required != null}">
@@ -30,7 +30,8 @@
         <div class="amount">$10<span>/month</span></div>
         <ul class="muted" style="text-align:left; margin:12px auto 20px; max-width:340px; padding-left:18px;">
             <li><strong th:text="${trialDays}">2</strong>-day free trial on signup</li>
-            <li>Parent focus areas (where to practise more)</li>
+            <li>Parent email after every sheet, with averages by subject</li>
+            <li>Focus areas (where to practise more) on the family dashboard</li>
             <li>Lessons, practice sheets, and score history</li>
             <li>Kid-friendly layout for every year level</li>
         </ul>

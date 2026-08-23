@@ -14,7 +14,9 @@ import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class DashboardController {
@@ -78,5 +80,16 @@ public class DashboardController {
         model.addAttribute("selectedYear", selectedYear);
         model.addAttribute("subjects", NzCurriculumMap.cardsForYear(selectedYear));
         return "dashboard";
+    }
+
+    @PostMapping("/dashboard/parent-inbox")
+    public String updateParentInbox(Principal principal,
+                                    @RequestParam(name = "parentEmail", required = false) String parentEmail,
+                                    @RequestParam(name = "parentNotifyEnabled", required = false) String notifyFlag,
+                                    RedirectAttributes redirectAttributes) {
+        Student student = this.studentService.getByUsername(principal.getName());
+        this.studentService.updateParentInbox(student, parentEmail, notifyFlag != null);
+        redirectAttributes.addFlashAttribute("parentInboxSaved", true);
+        return "redirect:/dashboard";
     }
 }

@@ -1,6 +1,7 @@
 package com.gremath.curriculum.lessons;
 
 import com.gremath.curriculum.LessonHtml;
+import com.gremath.curriculum.MathFigures;
 import com.gremath.curriculum.NzLessonSpec;
 import com.gremath.curriculum.NzSubject;
 
@@ -67,7 +68,8 @@ public final class NzMathLessons {
                         "HCF: shared primes with the smaller exponents. LCM: all primes with the larger exponents.",
                         "Check by multiplying the factors back."},
                 "Is 51 prime?",
-                "Digit sum 6 is divisible by 3, so 51 = 3 × 17. Composite.",
+                MathFigures.factorTree(51, 3, 17, "A factor tree splits 51 until both branches are prime.")
+                        + "<p>Digit sum 6 is divisible by 3, so 51 = 3 × 17. Composite — not prime.</p>",
                 "HCF and LCM of 12 and 18",
                 "12 = 2²×3, 18 = 2×3². HCF = 2×3 = 6. LCM = 2²×3² = 36. Check: 6 divides both; 36 is a multiple of both.",
                 LessonHtml.table(new String[]{"Rule", "Test"},
@@ -189,8 +191,56 @@ public final class NzMathLessons {
 
     private static NzLessonSpec spec(int year, int order, String title, String strand, String kind,
                                      String html, String strategy) {
+        if (html != null && !html.contains("<svg")) {
+            html = insertFigure(html, figureFor(year, kind));
+        }
         return new NzLessonSpec(order, order + ". " + title, strand, html,
                 practiceKey(year, order), strategy, kind);
+    }
+
+    private static String insertFigure(String html, String figure) {
+        if (figure == null || figure.isBlank()) {
+            return html;
+        }
+        String marker = "<h3>How to work it out</h3>";
+        int i = html.indexOf(marker);
+        if (i >= 0) {
+            return html.substring(0, i) + figure + html.substring(i);
+        }
+        return html + figure;
+    }
+
+    private static String figureFor(int year, String kind) {
+        return switch (kind) {
+            case "NUMBER" -> year <= 3
+                    ? MathFigures.numberLine(0, year == 1 ? 20 : 20, year == 1 ? 12 : 15,
+                    year == 1 ? "Numbers grow to the right. 12 sits past 8."
+                            : "A number line shows order. Further right is larger.")
+                    : year <= 6
+                    ? MathFigures.placeValueChart(year, (year * 2) % 10, 4, 7,
+                    "Each house is worth ten times the house on its right.")
+                    : MathFigures.integerJump(3, -7, "Integers: adding a negative is a jump left.");
+            case "OPS" -> year <= 4
+                    ? MathFigures.array(Math.min(year + 1, 5), 4, "Equal rows are multiplication. Count the array.")
+                    : MathFigures.integerJump(2, year >= 7 ? -6 : 5,
+                    year >= 7 ? "Directed jumps: left for negatives, right for positives."
+                            : "Count on in equal jumps. The landing points are multiples.");
+            case "FRACTION" -> MathFigures.fractionBar(year <= 2 ? 1 : 2, year <= 2 ? 2 : 4,
+                    year <= 2 ? "A half is one of two matching parts."
+                            : "Shaded parts over equal parts — that is the fraction.");
+            case "ALGEBRA" -> year <= 4
+                    ? MathFigures.numberLine(0, 12, 8, "A missing number keeps both sides of = in balance.")
+                    : MathFigures.coordinatePoint(2, Math.min(year - 2, 8),
+                    "Ordered pair: along the x-axis first, then up.");
+            case "MEASURE" -> measureFigure(year);
+            case "GEOMETRY" -> MathFigures.triangleAngles(year <= 3 ? 60 : 70, year <= 3 ? 60 : 50, "?",
+                    "Do not trust the sketch. Use a named fact (triangle sum is 180°).");
+            case "DATA" -> MathFigures.barChart("Class votes",
+                    new String[]{"A", "B", "C"}, new int[]{6, 4, 2});
+            case "CHANCE" -> MathFigures.spinner(new String[]{"R", "B", "G", "Y"}, 0,
+                    "Equal sectors: each colour has the same chance if the spinner is fair.");
+            default -> MathFigures.numberLine(0, 10, 5, "A picture of the idea before the numbers.");
+        };
     }
 
     public static String practiceKey(int year, int order) {
@@ -326,7 +376,8 @@ public final class NzMathLessons {
                     "Factor pairs of 24",
                     "1×24, 2×12, 3×8, 4×6 (and the reverses). 5 does not divide 24 exactly, so 5 is not a factor.",
                     "Order 3, −1, 0, −4",
-                    "On a number line: −4, −1, 0, 3. −4 is less than −1 because it is further left (colder, or more in debt).",
+                    MathFigures.numberLine(-5, 4, -4, "Further left is smaller: −4, −1, 0, 3.")
+                            + "<p>−4 is less than −1 because it is further left (colder, or more in debt).</p>",
                     LessonHtml.table(new String[]{"Number", "In words"},
                             new String[][]{{"250,000", "two hundred and fifty thousand"}, {"1,000,000", "one million"}, {"−5", "negative five"}}),
                     "When comparing negatives, the one with the larger numeral is not larger: −9 is less than −2.",
@@ -348,7 +399,8 @@ public final class NzMathLessons {
                     "Evaluate 6² and 3³",
                     "6² = 6 × 6 = 36 (a square number). 3³ = 3 × 3 × 3 = 27 (a cube number). 6 × 2 = 12 is not 6².",
                     "Count back in 2s from 3 through 0",
-                    "3, 1, −1, −3, … After 1, subtract 2 to get −1. Zero is crossed, not avoided.",
+                    MathFigures.numberLine(-4, 4, -1, "Count back in 2s: 3, 1, −1, −3. Zero is crossed, not skipped.")
+                            + "<p>After 1, subtract 2 to get −1.</p>",
                     LessonHtml.table(new String[]{"n", "n²", "n³"},
                             new String[][]{{"1", "1", "1"}, {"4", "16", "64"}, {"5", "25", "125"}, {"12", "144", "—"}}),
                     "6² is not 6 × 2. The small 2 means 'use 6 as a factor twice'.",
@@ -360,6 +412,7 @@ public final class NzMathLessons {
                             "Identify primes to 100, and find HCF and LCM of small numbers.",
                             "Use divisibility tests for 2, 3, 4, 5, 6, 8, 9 and 10."},
                     LessonHtml.p("Each place value is a power of 10: 10,000 = 10⁴. Expanded form can be written 34,506 = 3×10⁴ + 4×10³ + 5×10² + 6. Exponent notation also shortens repeated multiplication: 5² means 5×5.")
+                            + MathFigures.placeValueChart(3, 4, 5, 6, "3,456 = 3 thousands + 4 hundreds + 5 tens + 6 ones")
                             + LessonHtml.p("Whole numbers greater than 1 are prime (exactly two distinct factors: 1 and itself) or composite (more than two factors). 1 is neither. HCF is the largest factor shared by two numbers; LCM is the smallest common multiple.")
                             + LessonHtml.p("Divisibility rules save time: a number is divisible by 3 if the digit sum is; by 9 if the digit sum is; by 4 if the last two digits form a multiple of 4. These rules feed prime factorisation next year."),
                     "Bus route numbers, census population figures, and scientific powers of ten (10³ metres = 1 km) all sit in this Phase 3 number work.",
@@ -474,7 +527,9 @@ public final class NzMathLessons {
                     "Ten-dollar notes make 2s, 5s and 10s facts visible when you count a kete of play money.",
                     new String[]{"Choose + − × or ÷ from the story.", "Use a known fact or place-value jump.", "Write the number sentence.", "Check with the inverse."},
                     "32 + 20", "3 tens + 2 tens = 5 tens, ones unchanged: 52. Derived from 3 + 2 = 5.",
-                    "6 bags of 5 apples", "6 × 5 = 30. Division check: 30 ÷ 5 = 6 bags.",
+                    "6 bags of 5 apples",
+                    MathFigures.array(6, 5, "6 rows of 5: an array for 6 × 5 = 30.")
+                            + "<p>6 × 5 = 30. Division check: 30 ÷ 5 = 6 bags.</p>",
                     null,
                     "32 + 8 is not 40 if you add 8 to the tens by mistake. Ones must make a ten first (regrouping begins here).",
                     "Arrays (rows and columns) show why 3 × 4 = 4 × 3.",
@@ -554,7 +609,9 @@ public final class NzMathLessons {
                             + LessonHtml.p("327 ÷ 15 = 21.8 or 21 4/5. Rounding and benchmarks (14.7 × 5 sits between 70 and 75) check reasonableness."),
                     "A temperature drop from 3 °C to −4 °C is a change of 7 degrees — integer subtraction in a weather story.",
                     new String[]{"Locate both integers on a line.", "Translate subtract-negative as add-positive.", "Apply GEMA.", "Estimate with rounding."},
-                    "3 + (−7)", "Start at 3, jump 7 left: −4. Check: −4 is the number 7 below 3.",
+                    "3 + (−7)",
+                    MathFigures.integerJump(3, -7, "Start at 3 (blue). Adding −7 is a jump of 7 left to −4 (orange).")
+                            + "<p>Start at 3, jump 7 left: −4. Check: −4 is the number 7 below 3.</p>",
                     "5s + 3 = 18 (preview of algebra)", "This is an equation. Operations lesson still: inverse of +3 is −3, inverse of ×5 is ÷5. (See algebra lesson.)",
                     null,
                     "−3 − 5 is −8, not 2. Both jumps go left if you subtract a positive from a negative.",
@@ -627,8 +684,12 @@ public final class NzMathLessons {
                             + LessonHtml.p("Folding paper is a proof: one fold makes halves; folding again makes quarters."),
                     "Quartered oranges at a marae kai table only work as quarters if the pieces are equal — fairness is the fraction.",
                     new String[]{"Name the whole.", "Split into 2 or 4 matching parts.", "Count the parts you want.", "Check by recombining."},
-                    "Quarter of 12", "12 ÷ 4 = 3. Each quarter is 3.",
-                    "Two quarters of a sandwich", "Two of four equal pieces is the same as one half.",
+                    "Quarter of 12",
+                    MathFigures.fractionBar(1, 4, "One of four equal parts of a 12-item set is 3.")
+                            + "<p>12 ÷ 4 = 3. Each quarter is 3.</p>",
+                    "Two quarters of a sandwich",
+                    MathFigures.fractionBar(2, 4, "Two quarters of the same whole is a half.")
+                            + "<p>Two of four equal pieces is the same as one half.</p>",
                     LessonHtml.table(new String[]{"Fraction", "Equal parts", "Name"},
                             new String[][]{{"1/2", "2", "half"}, {"1/4", "4", "quarter"}, {"2/4", "4", "two quarters = half"}}),
                     "A 'quarter' that is bigger than the other pieces is not a quarter.",
@@ -646,7 +707,9 @@ public final class NzMathLessons {
                     "Sharing a pavlova into thirds at a celebration only works if the cuts are equal — denominator as equal parts.",
                     new String[]{"Draw the whole and equal parts.", "Label numerator and denominator.", "Compare using same-whole pictures or number lines.", "Add same-denominator fractions by combining numerators."},
                     "Which is larger, 1/3 or 1/4 of the same bar?",
-                    "Thirds are larger pieces than quarters. 1/3 &gt; 1/4.",
+                    MathFigures.fractionCompare(1, 3, 1, 4, "1/3 shaded", "1/4 shaded",
+                            "Same-length bars. Thirds are larger pieces than quarters.")
+                            + "<p>Thirds are larger pieces than quarters. 1/3 &gt; 1/4.</p>",
                     "If 1/4 of a set is 3, what is the whole?",
                     "Four equal groups of 3: 4 × 3 = 12.",
                     null,
@@ -715,7 +778,9 @@ public final class NzMathLessons {
                             + LessonHtml.p("NZ currency answers round to 2 d.p. Percentage discounts apply to whole-dollar or cent amounts as stated."),
                     "Three red balls for every seven blue is a ratio in a PE equipment shed — part:part, not automatically part:whole unless you add.",
                     new String[]{"Simplify fractions first when you can.", "For ×, multiply across; for ÷ by a unit fraction, multiply by the reciprocal.", "Convert ratio to a total of parts.", "Round money last."},
-                    "2/3 × 5", "10/3 = 3 1/3.",
+                    "2/3 × 5",
+                    MathFigures.fractionBar(2, 3, "2/3 of one whole. Five of these make 10/3.")
+                            + "<p>2/3 × 5 = 10/3 = 3 1/3.</p>",
                     "3 red : 7 blue, 18 red. How many blue?",
                     "18 is 6×3, so blue is 6×7 = 42.",
                     null,
@@ -872,7 +937,8 @@ public final class NzMathLessons {
                     "Rule: add 1.5 each time, start 3. Next three terms?",
                     "3, 4.5, 6, 7.5, 9.",
                     "Plot (2, 5) from y = 2x+1",
-                    "x=2, y=5. From origin: 2 along, 5 up.",
+                    MathFigures.coordinatePoint(2, 5, "From the origin: 2 along the x-axis, then 5 up.")
+                            + "<p>x = 2, y = 5. Ordered pair (2, 5) is not the same as (5, 2).</p>",
                     null,
                     "(2,5) is not the same as (5,2). Order in an ordered pair is the definition.",
                     "If points are not collinear, the rule is not a constant difference.",
@@ -905,7 +971,9 @@ public final class NzMathLessons {
                             + LessonHtml.p("Like terms share the same letter and power: 3x and 5x combine to 8x; 3x and 5y do not."),
                     "Formula for a rectangle A=bh is algebra in measurement — the same letters you solve for in equations.",
                     new String[]{"Name what the letter stands for.", "Do the inverse of the last operation first.", "Simplify like terms before solving if needed.", "Substitute back to check."},
-                    "5s+3=18", "5s=15, s=3. Check: 15+3=18.",
+                    "5s+3=18",
+                    MathFigures.numberLine(0, 18, 3, "s = 3 sits on the number line. Check: 5×3 + 3 = 18.")
+                            + "<p>5s = 15, so s = 3. Substitute back: 15 + 3 = 18.</p>",
                     "Simplify 3x+2x+4", "5x+4. The 4 is a constant, not an x term.",
                     LessonHtml.table(new String[]{"Notation", "Meaning"},
                             new String[][]{{"3b", "b+b+b or 3×b"}, {"b", "1×b"}, {"b/2", "b÷2"}}),
@@ -923,7 +991,9 @@ public final class NzMathLessons {
                     "A phone plan $12 plus $0.50 per extra gigabyte is y=0.5x+12 — a linear model of a real bill.",
                     new String[]{"Define the unknown.", "Write the equation or inequality.", "Solve with inverses (flip the inequality if you multiply/divide by a negative).", "Graph or check."},
                     "t−3 ≥ −5", "t ≥ −2. Closed circle at −2, shade right.",
-                    "y=2x+1 when x=4", "y=9. Point (4, 9) is on the line.",
+                    "y=2x+1 when x=4",
+                    MathFigures.coordinatePoint(4, 9, "The point (4, 9) sits on the line y = 2x + 1.")
+                            + "<p>y = 2×4 + 1 = 9.</p>",
                     null,
                     "Multiplying both sides of an inequality by a negative reverses the sign. Forgetting that is a classic error.",
                     "Gradient is rise over run, not run over rise.",
@@ -1069,7 +1139,22 @@ public final class NzMathLessons {
         String[] steps = pack[4];
         String warn = pack[6][0], tip = pack[6][1], recap = pack[6][2], vocab = pack[6][3];
         return LessonHtml.teach(LessonHtml.phaseLabel(y), "Measurement | Ine", goals, meaning, aotearoa, steps,
-                pack[5][0], pack[5][1], pack[5][2], pack[5][3], null, warn, tip, recap, vocab);
+                pack[5][0], pack[5][1], pack[5][2], pack[5][3], measureFigure(y), warn, tip, recap, vocab);
+    }
+
+    private static String measureFigure(int y) {
+        return switch (y) {
+            case 1 -> MathFigures.rectangle(8, 3, "Compare length by lining up the same starting edge.");
+            case 2, 3 -> MathFigures.rectangle(6, 4, "A 6 cm by 4 cm rectangle. Perimeter adds the four sides.");
+            case 4 -> MathFigures.rectangle(8, 5, "Area is the grass (8 × 5). Perimeter is the fence.");
+            case 5 -> MathFigures.rightTriangle(8, 6, null, "Compare this angle with a square corner: acute, right or obtuse?");
+            case 6 -> MathFigures.rightTriangle(10, 6, null, "Right triangle: area is half of the 10 cm by 6 cm rectangle.");
+            case 7 -> MathFigures.lShape(8, 6, 3, 2, "Compound shape: add two rectangles, or subtract a cut-out.")
+                    + MathFigures.circle(10, "Every circle: C = πd and A = πr². Diameter is twice the radius.");
+            case 8 -> MathFigures.pythagoras345("Pythagoras: 3² + 4² = 5². The square on the hypotenuse is 25.");
+            case 9 -> MathFigures.rightTriangle(4, 4, "hyp", "SOH CAH TOA: label opposite, adjacent and hypotenuse from the marked angle.");
+            default -> MathFigures.circle(6, "Cylinder volume uses the circle area πr², then multiply by height.");
+        };
     }
 
     private static String geometry(int y) {
@@ -1165,9 +1250,11 @@ public final class NzMathLessons {
                             + LessonHtml.p("Co-interior, corresponding and alternate angles with parallel lines appear as you meet transversals."),
                     "A truss on a farm shed is a triangle because triangles are rigid — angle sum still 180° on each triangular face.",
                     new String[]{"Mark all given information.", "Write the fact you use (e.g. 'angles on a line').", "Calculate.", "State the unknown with a reason."},
-                    "Triangle angles 70° and 50°, third?", "180−120=60°.",
+                    "Triangle angles 70° and 50°, third?",
+                    MathFigures.triangleAngles(70, 50, "?", "Mark the two known angles. The third is 180° − 120°.")
+                            + "<p>180 − 70 − 50 = 60°.</p>",
                     "Point angles 90°, 90° and 120°, remaining?", "360−300=60°.",
-                    null,
+                    MathFigures.anglesOnLine(125, "Angles on a straight line sum to 180°. If one is 125°, the adjacent is 55°."),
                     "Trusting a drawing that 'looks like' 90° without a right-angle mark.",
                     "Every step should name a fact. That is Year 7 reasoning.",
                     "Angle chains, grid transformations, reasons written down.",
@@ -1247,7 +1334,9 @@ public final class NzMathLessons {
                             + LessonHtml.p("After the display: which has most, least, and what that might mean without inventing extra people."),
                     "Favourite kai, travel to kura, or birds in the school grounds are local investigative questions.",
                     new String[]{"Ask a clear question.", "Sort and tally.", "Title and labels.", "Read most/least."},
-                    "Apples 6, bananas 4, oranges 2", "Apples most; 12 pieces in all.",
+                    "Apples 6, bananas 4, oranges 2",
+                    MathFigures.barChart("Favourite fruit", new String[]{"Apple", "Banana", "Orange"}, new int[]{6, 4, 2})
+                            + "<p>Apples most; 12 pieces in all.</p>",
                     "Pictograph with 5 bike faces", "5 children biked if 1 face = 1 child.",
                     null, "Unequal picture sizes cheat the graph.", "Title first — it is the question.",
                     "Sort, count, display, then say what it shows.", "sort, tally, most, least, title, pictograph");
@@ -1300,7 +1389,9 @@ public final class NzMathLessons {
                             + LessonHtml.p("Media graphs: check scale, missing 0, 3-D junk, and whether the title matches the data."),
                     "Graphing a week's rainfall or a science plant's height is a time-series in the NZC Year 6 sequence.",
                     new String[]{"List the values.", "Mean: add then divide by how many.", "Range: biggest minus smallest.", "For time-series, time on x, join points if appropriate."},
-                    "Mean of 4, 6, 8", "18/3=6. Range 8−4=4.",
+                    "Mean of 4, 6, 8",
+                    MathFigures.barChart("Scores", new String[]{"A", "B", "C"}, new int[]{4, 6, 8})
+                            + "<p>Mean = 18 ÷ 3 = 6. Range = 8 − 4 = 4.</p>",
                     "Does a time graph trend up?", "If later points sit generally higher than earlier, yes — still describe wiggles.",
                     null, "Averaging two means of different group sizes without weighting.", "Mean is not always a data value. Range uses only two points — it can hide a cluster.",
                     "Mean, range, time-series, and graph choice.", "mean, range, time-series, trend, visualisation");
@@ -1312,7 +1403,8 @@ public final class NzMathLessons {
                     "Aotearoa NZ's census is a population study; your class survey is a sample. Knowing the difference is citizenship as well as statistics.",
                     new String[]{"Write an investigative question.", "Plan who, what, how.", "Display and calculate.", "Conclude with context and limitations."},
                     "Ordered 2, 3, 3, 5, 9. Median? Mode? Mean?",
-                    "Median 3, mode 3, mean 4.4. The 9 pulls the mean up.",
+                    MathFigures.barChart("Five scores", new String[]{"2", "3", "3", "5", "9"}, new int[]{2, 3, 3, 5, 9})
+                            + "<p>Median 3, mode 3, mean 4.4. The 9 pulls the mean up.</p>",
                     "Why might asking only the basketball team about sport time be biased?",
                     "They likely train more than a mixed sample of the year group.",
                     null, "Reporting a mean of 4.44444… people. Round to a sensible degree.", "Match the average to the question: typical wage often uses median.",
@@ -1404,7 +1496,9 @@ public final class NzMathLessons {
                     "A carnival spinner with unequal slices is a warning: count area, not number of colour names if slices differ.",
                     new String[]{"List sample space.", "Check equally likely.", "Count favourable.", "Write the probability as a fraction in simplest form if asked."},
                     "P(4 on a fair die)", "1/6.",
-                    "P(even)", "3/6=1/2.",
+                    "P(even)",
+                    MathFigures.spinner(new String[]{"1", "2", "3", "4", "5", "6"}, 3, "A fair spinner (or die) has equal sectors. Even faces are 2, 4 and 6.")
+                            + "<p>3/6 = 1/2.</p>",
                     null, "Writing P=4 because the face says 4. Probability is a fraction of outcomes, not the label.", "Simplest form: 2/6=1/3.",
                     "Sample space and equally likely fractions.", "sample space, event, equally likely, favourable");
             case 6 -> LessonHtml.teach(LessonHtml.phaseLabel(y), "Probability | Tūponotanga",
@@ -1426,7 +1520,9 @@ public final class NzMathLessons {
                     "Designing a kauwae or classroom spinner that looks fair but isn't is a powerful Year 7 task — ethics of chance.",
                     new String[]{"Find P(A).", "Use complement if 'not A' is easier.", "Compare experimental with theoretical.", "Judge fairness from the model, not from one winner."},
                     "P(not a 6) on a die", "5/6.",
-                    "A spinner 3/4 red, P(not red)", "1/4.",
+                    "A spinner 3/4 red, P(not red)",
+                    MathFigures.spinner(new String[]{"R", "R", "R", "B"}, 3, "Three equal red sectors and one blue. P(not red) = 1/4.")
+                            + "<p>Complement: 1 − 3/4 = 1/4.</p>",
                     null, "Using 1−P(A) when other outcomes besides A and not-A exist (rain, snow, sun). Complements must partition the space.", "Fairness is about the model. One unlucky game does not prove unfairness.",
                     "Complements, fairness, and longer experiments.", "complement, fair game, relative frequency, variation");
             case 8 -> LessonHtml.teach(LessonHtml.phaseLabel(y), "Probability | Tūponotanga",
@@ -1448,7 +1544,9 @@ public final class NzMathLessons {
                             + LessonHtml.p("Always check the second-stage fractions add to 1 on each fork."),
                     "Raffle tickets drawn without putting names back is without replacement — a school-fair tree diagram.",
                     new String[]{"Draw stage 1 branches.", "From each, draw stage 2 with the correct conditional fractions.", "Multiply along, add the winning paths.", "Check a complete set of paths sums to 1."},
-                    "Two fair coins, P(exactly one head)", "HT or TH: 1/4+1/4=1/2.",
+                    "Two fair coins, P(exactly one head)",
+                    MathFigures.coinTree("Multiply along a path; add the two one-head paths HT and TH.")
+                            + "<p>HT or TH: 1/4 + 1/4 = 1/2.</p>",
                     "Bag 3 red 2 blue, two draws without replacement, P(two red)",
                     "(3/5)×(2/4)=6/20=3/10.",
                     null, "Using 3/5 twice when the first red was not replaced.", "Label each branch with a probability, not only a colour.",

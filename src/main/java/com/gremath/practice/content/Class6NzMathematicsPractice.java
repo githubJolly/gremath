@@ -1,5 +1,6 @@
 package com.gremath.practice.content;
 
+import com.gremath.curriculum.MathFigures;
 import com.gremath.practice.GeneratedQuestion;
 import com.gremath.practice.LessonPractice;
 import com.gremath.practice.PracticeRegistry;
@@ -99,6 +100,7 @@ public final class Class6NzMathematicsPractice {
                 new GeneratedQuestion("A school rounded its roll of 4,486 students to the nearest hundred for planning. Which value should be used?", List.of("4,500", "4,400", "4,490", "5,000"), 0,
                         "Tens digit is 8, so round up to 4,500.", "EASY", WORD)
         );
+        lp.concept(Year67IllustratedBank.c6Place());
         return lp.sheets(20, 10, 20);
     }
 
@@ -176,6 +178,7 @@ public final class Class6NzMathematicsPractice {
                 new GeneratedQuestion("A farmer packs 368 apples equally into 8 crates. How many apples per crate?", List.of("46", "45", "48", "44"), 0,
                         "368 / 8 = 46.", "MEDIUM", WORD)
         );
+        lp.concept(Year67IllustratedBank.c6Ops());
         return lp.sheets(20, 10, 20);
     }
 
@@ -209,8 +212,10 @@ public final class Class6NzMathematicsPractice {
                 rng -> {
                     int num = QBuilder.pick(rng, 1, 2, 3, 4);
                     int den = 4;
-                    String bar = "[" + "=".repeat(num) + ".".repeat(den - num) + "]";
-                    return QBuilder.build(rng, "The shaded bar " + bar + " represents which fraction?", num + "/" + den,
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "The shaded bar represents which fraction?",
+                                    MathFigures.fractionBar(num, den, num + " of " + den + " equal parts")),
+                            num + "/" + den,
                             "Count shaded parts over total equal parts.",
                             "MEDIUM", VISUAL, den + "/" + num, (num + 1) + "/" + den, num + "/" + (den + 1));
                 }
@@ -245,6 +250,7 @@ public final class Class6NzMathematicsPractice {
                 new GeneratedQuestion("A bottle is 3/5 full and holds 1.5 L now. What is full capacity?", List.of("2.5 L", "2 L", "3 L", "1.8 L"), 0,
                         "If 3/5 is 1.5, then 1/5 is 0.5 and 5/5 is 2.5.", "HARD", COMPLEX)
         );
+        lp.concept(Year67IllustratedBank.c6Fdp());
         return lp.sheets(20, 10, 20);
     }
 
@@ -313,6 +319,7 @@ public final class Class6NzMathematicsPractice {
                 new GeneratedQuestion("Point (x, y) follows y = x + 4. If x = 7, which point fits?", List.of("(7, 11)", "(11, 7)", "(7, 4)", "(3, 7)"), 0,
                         "y = 7 + 4 = 11.", "MEDIUM", WORD)
         );
+        lp.concept(Year67IllustratedBank.c6Alg());
         return lp.sheets(20, 10, 20);
     }
 
@@ -370,6 +377,7 @@ public final class Class6NzMathematicsPractice {
                 new GeneratedQuestion("A designer folds a shape and it matches perfectly along one line only. How many lines of symmetry does it have?", List.of("1", "2", "0", "4"), 0,
                         "Perfect matching on one fold means one line of symmetry.", "EASY", WORD)
         );
+        lp.concept(Year67IllustratedBank.c6Geo());
         return lp.sheets(20, 10, 20);
     }
 
@@ -391,8 +399,11 @@ public final class Class6NzMathematicsPractice {
                 rng -> {
                     int length = QBuilder.range(rng, 4, 25);
                     int width = QBuilder.range(rng, 3, 20);
-                    return QBuilder.build(rng, "Find area of rectangle " + length + " cm by " + width + " cm.", s(length * width) + " cm2",
-                            "Area = length x width.",
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "What is the area of this rectangle?",
+                                    MathFigures.rectangle(length, width, length + " cm by " + width + " cm")),
+                            s(length * width) + " cm2",
+                            "Area = length × width = " + length + " × " + width + ".",
                             "MEDIUM", VISUAL, s(2 * (length + width)) + " cm2", s(length + width) + " cm2", s(length * width) + " cm");
                 },
                 rng -> {
@@ -438,6 +449,7 @@ public final class Class6NzMathematicsPractice {
                 new GeneratedQuestion("A movie starts at 14:35 and ends at 16:05. Duration is:", List.of("1 h 30 min", "1 h 40 min", "2 h 30 min", "90 h"), 0,
                         "From 14:35 to 15:35 is 1 hour, then 30 minutes more.", "EASY", WORD)
         );
+        lp.concept(Year67IllustratedBank.c6Meas());
         return lp.sheets(20, 10, 20);
     }
 
@@ -510,6 +522,7 @@ public final class Class6NzMathematicsPractice {
                 new GeneratedQuestion("Temperatures over five days are 18, 20, 22, 17, 23. Mean temperature is:", List.of("20", "19", "21", "18"), 0,
                         "Sum is 100, divide by 5 gives 20.", "MEDIUM", WORD)
         );
+        lp.concept(Year67IllustratedBank.c6Data());
         return lp.sheets(20, 10, 20);
     }
 
@@ -538,6 +551,7 @@ public final class Class6NzMathematicsPractice {
                         "10/40", "Favourable tickets over total tickets (simplifies to 1/4).", "MEDIUM", WORD,
                         "10/30", "40/10", "1/10")
         );
+        lp.concept(Year67IllustratedBank.c6Prob());
         return lp.sheets(10, 6, 12);
     }
 }

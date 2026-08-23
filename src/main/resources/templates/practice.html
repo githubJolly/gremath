@@ -15,7 +15,7 @@
         <div class="question" th:each="question, qStat : ${topic.questions}">
             <div class="q-text">
                 <span th:text="${qStat.count} + '. '">1. </span>
-                <span th:text="${question.text}">Question?</span>
+                <span th:utext="${question.text}">Question?</span>
                 <span class="tag" th:text="${question.difficulty}" style="float:right;">MEDIUM</span>
             </div>
             <label class="option" th:each="option, oStat : ${question.options}">

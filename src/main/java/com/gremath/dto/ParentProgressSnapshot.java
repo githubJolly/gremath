@@ -10,9 +10,16 @@ public class ParentProgressSnapshot {
     private final String summary;
     private final List<FocusArea> needsFocus;
     private final List<FocusArea> goingWell;
+    private final List<SubjectScore> subjectScores;
 
     public ParentProgressSnapshot(int overallPercent, int practiceSessions, int strongAreas, int focusAreasCount,
                                   String summary, List<FocusArea> needsFocus, List<FocusArea> goingWell) {
+        this(overallPercent, practiceSessions, strongAreas, focusAreasCount, summary, needsFocus, goingWell, List.of());
+    }
+
+    public ParentProgressSnapshot(int overallPercent, int practiceSessions, int strongAreas, int focusAreasCount,
+                                  String summary, List<FocusArea> needsFocus, List<FocusArea> goingWell,
+                                  List<SubjectScore> subjectScores) {
         this.overallPercent = overallPercent;
         this.practiceSessions = practiceSessions;
         this.strongAreas = strongAreas;
@@ -20,6 +27,7 @@ public class ParentProgressSnapshot {
         this.summary = summary;
         this.needsFocus = needsFocus;
         this.goingWell = goingWell;
+        this.subjectScores = subjectScores == null ? List.of() : subjectScores;
     }
 
     public int getOverallPercent() {
@@ -48,5 +56,9 @@ public class ParentProgressSnapshot {
 
     public List<FocusArea> getGoingWell() {
         return goingWell;
+    }
+
+    public List<SubjectScore> getSubjectScores() {
+        return subjectScores;
     }
 }

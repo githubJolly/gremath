@@ -19,15 +19,22 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Service
 public class SheetPracticeService {
     private final SheetService sheetService;
     private final SheetAttemptRepository attemptRepository;
+    private final RewardService rewardService;
+    private final ParentNotifyService parentNotifyService;
 
-    public SheetPracticeService(SheetService sheetService, SheetAttemptRepository attemptRepository) {
+    public SheetPracticeService(SheetService sheetService, SheetAttemptRepository attemptRepository,
+                                RewardService rewardService, ParentNotifyService parentNotifyService) {
         this.sheetService = sheetService;
         this.attemptRepository = attemptRepository;
+        this.rewardService = rewardService;
+        this.parentNotifyService = parentNotifyService;
     }
 
     @Transactional
@@ -61,7 +68,30 @@ public class SheetPracticeService {
         }
         attempt.setScore(score);
         attempt.setTotalQuestions(questions.size());
-        return (SheetAttempt)this.attemptRepository.save(attempt);
+        var payout = this.rewardService.award(student, score, questions.size());
+        attempt.setStarsEarned(payout.starsEarned());
+        attempt.setRbxEarned(payout.rbxEarned());
+        attempt.setBonusMessage(payout.message());
+        attempt.setUnlockedGoodie(payout.unlockedGoodie());
+        SheetAttempt saved = this.attemptRepository.save(attempt);
+        Runnable notify = () -> {
+            try {
+                this.parentNotifyService.notifyAfterSheet(student, saved);
+            } catch (Exception ignored) {
+                // Practice must still succeed if email is down.
+            }
+        };
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    notify.run();
+                }
+            });
+        } else {
+            notify.run();
+        }
+        return saved;
     }
 
     @Transactional(readOnly=true)

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('About LetusLearn')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<div class="container legal">
+    <div class="page-header">
+        <h1>About LetusLearn</h1>
+        <p class="muted">A family tutor for the New Zealand Curriculum — lessons first, then practice, then a clear parent view.</p>
+    </div>
+    <div class="card">
+        <p>LetusLearn is built for households who want more than a worksheet dump. Children open a year and subject, read a full lesson with worked examples, then sit an auto-marked practice sheet. Parents see the result immediately on the family dashboard and receive an email with the latest score plus averages by subject.</p>
+        <p>Teaching is original. We organise lessons to the year-by-year sequences on Tāhūrangi (English and Mathematics &amp; Statistics Years 0–10, 2025, and the eight learning areas through Year 10). Official curriculum statements stay with the Ministry of Education.</p>
+        <p>Rbx points and locker titles are in-app rewards only. They are not Roblox Robux and have no cash value.</p>
+        <p style="margin-bottom:0;"><a class="btn" th:href="@{/register}">Start a 2-day family trial</a>
+            <a class="btn btn-outline" th:href="@{/contact}">Contact us</a></p>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

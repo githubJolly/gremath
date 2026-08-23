@@ -18,10 +18,20 @@
         <div th:unless="${attempt.percentage >= 60}">Keep practising &mdash; review the explanations below.</div>
     </div>
 
+    <div class="loot-drop" th:if="${attempt.rbxEarned > 0 or attempt.starsEarned > 0}">
+        <div class="loot-row">
+            <span class="loot-chip star" th:text="'+' + ${attempt.starsEarned} + ' ★'">+1 ★</span>
+            <span class="loot-chip rbx" th:text="'+' + ${attempt.rbxEarned} + ' Rbx'">+20 Rbx</span>
+        </div>
+        <p th:if="${attempt.bonusMessage}" th:text="${attempt.bonusMessage}">Nice streak.</p>
+        <p class="loot-unlock" th:if="${attempt.unlockedGoodie}" th:text="'New goodie: ' + ${attempt.unlockedGoodie}">New drop</p>
+        <a class="btn btn-success" th:href="@{/rewards}">Open goodies locker</a>
+    </div>
+
     <div class="question" th:each="ans, aStat : ${attempt.answers}">
         <div class="q-text">
             <span th:text="${aStat.count} + '. '">1. </span>
-            <span th:text="${ans.question.text}">Question?</span>
+            <span th:utext="${ans.question.text}">Question?</span>
             <span class="tag" th:classappend="${ans.correct} ? 'tag-correct' : 'tag-wrong'"
                   th:text="${ans.correct} ? 'Correct' : 'Wrong'" style="float:right;">Correct</span>
         </div>

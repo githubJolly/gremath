@@ -47,6 +47,21 @@ public class Student {
     /** End date of complimentary NZ curriculum trial (inclusive). */
     private LocalDate nzTrialUntil;
     private boolean nzTrialUsed;
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private int stars = 0;
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private int rbxPoints = 0;
+    @Column(nullable = false, columnDefinition = "int default 0")
+    private int streakDays = 0;
+    private LocalDate lastPracticeDate;
+    @Column(length = 2000)
+    private String unlockedGoodies = "";
+    private String equippedTitle;
+    private String equippedPet;
+    private String equippedHat;
+    private String parentEmail;
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    private boolean parentNotifyEnabled = true;
 
     public Long getId() {
         return this.id;
@@ -176,6 +191,118 @@ public class Student {
 
     public boolean hasPaidNzSubscription() {
         return this.class6NzSubscribedUntil != null && !this.class6NzSubscribedUntil.isBefore(LocalDate.now());
+    }
+
+    public int getStars() {
+        return this.stars;
+    }
+
+    public void setStars(int stars) {
+        this.stars = stars;
+    }
+
+    public int getRbxPoints() {
+        return this.rbxPoints;
+    }
+
+    public void setRbxPoints(int rbxPoints) {
+        this.rbxPoints = rbxPoints;
+    }
+
+    public int getStreakDays() {
+        return this.streakDays;
+    }
+
+    public void setStreakDays(int streakDays) {
+        this.streakDays = streakDays;
+    }
+
+    public LocalDate getLastPracticeDate() {
+        return this.lastPracticeDate;
+    }
+
+    public void setLastPracticeDate(LocalDate lastPracticeDate) {
+        this.lastPracticeDate = lastPracticeDate;
+    }
+
+    public String getUnlockedGoodies() {
+        return this.unlockedGoodies == null ? "" : this.unlockedGoodies;
+    }
+
+    public void setUnlockedGoodies(String unlockedGoodies) {
+        this.unlockedGoodies = unlockedGoodies;
+    }
+
+    public String getEquippedTitle() {
+        return this.equippedTitle;
+    }
+
+    public void setEquippedTitle(String equippedTitle) {
+        this.equippedTitle = equippedTitle;
+    }
+
+    public String getEquippedPet() {
+        return this.equippedPet;
+    }
+
+    public void setEquippedPet(String equippedPet) {
+        this.equippedPet = equippedPet;
+    }
+
+    public String getEquippedHat() {
+        return this.equippedHat;
+    }
+
+    public void setEquippedHat(String equippedHat) {
+        this.equippedHat = equippedHat;
+    }
+
+    public int getRewardLevel() {
+        return 1 + this.stars / 8;
+    }
+
+    public boolean hasGoodie(String id) {
+        if (id == null || getUnlockedGoodies().isBlank()) {
+            return false;
+        }
+        for (String part : getUnlockedGoodies().split(",")) {
+            if (id.equals(part.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getParentEmail() {
+        return this.parentEmail;
+    }
+
+    public void setParentEmail(String parentEmail) {
+        this.parentEmail = parentEmail;
+    }
+
+    public boolean isParentNotifyEnabled() {
+        return this.parentNotifyEnabled;
+    }
+
+    public void setParentNotifyEnabled(boolean parentNotifyEnabled) {
+        this.parentNotifyEnabled = parentNotifyEnabled;
+    }
+
+    /** Address that should receive progress reports (parent inbox, or the account email). */
+    public String progressEmail() {
+        if (this.parentEmail != null && !this.parentEmail.isBlank()) {
+            return this.parentEmail.trim();
+        }
+        return this.email;
+    }
+
+    public void addGoodie(String id) {
+        if (id == null || id.isBlank() || hasGoodie(id)) {
+            return;
+        }
+        String current = getUnlockedGoodies();
+        this.unlockedGoodies = current.isBlank() ? id : current + "," + id;
     }
 }
 

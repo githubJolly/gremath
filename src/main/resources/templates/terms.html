@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Terms of use')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<div class="container legal">
+    <div class="page-header">
+        <h1>Terms of use</h1>
+        <p class="muted">A short, plain-language agreement for families using LetusLearn.</p>
+    </div>
+    <div class="card">
+        <h2>The service</h2>
+        <p>LetusLearn provides original lessons and practice organised to New Zealand Curriculum learning areas for Years 1–10. It is a study aid, not an official Ministry product and not a substitute for school.</p>
+        <h2>Accounts and trial</h2>
+        <p>New families receive a complimentary 2-day trial. After that, continued access to lessons and sheets needs an active $10/month family subscription. One login is intended for one household.</p>
+        <h2>Acceptable use</h2>
+        <p>Do not share accounts commercially, scrape the question banks, or use the site to harm other users. Rbx points and locker items have no cash value and are not Roblox Robux.</p>
+        <h2>Payments</h2>
+        <p>Subscriptions are billed through Stripe. You can cancel future billing from Stripe’s customer portal or by contacting us. Access continues until the paid period ends.</p>
+        <h2>Liability</h2>
+        <p>Content is provided in good faith. We are not liable for exam outcomes or school placement decisions. If the service is interrupted, we will restore access as soon as we reasonably can.</p>
+        <p class="muted" style="margin-bottom:0;">Last updated 23 August 2026. Questions: <a th:href="@{/contact}">contact us</a>.</p>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

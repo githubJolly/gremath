@@ -80,10 +80,12 @@ public class LessonPracticeController {
         List<String> difficulties = new java.util.ArrayList<String>();
         List<String> tags = new java.util.ArrayList<String>();
         List<String> hints = new java.util.ArrayList<String>();
+        java.util.Set<String> usedHints = com.gremath.practice.HintBank.newUsedSet();
+        int hintIndex = 0;
         for (GeneratedQuestion q : questions) {
             difficulties.add(q.getDifficulty());
             tags.add(q.getTag());
-            hints.add(Enrich.questionHint(practiceKey, q.getTag()));
+            hints.add(com.gremath.practice.HintBank.pick(practiceKey, q, hintIndex++, usedHints));
         }
         String sheetStrategy = lesson != null
                 ? Enrich.sheetStrategy(lesson.getTitle(), lesson.getPracticeKey(), lesson.getWordStrategy(),

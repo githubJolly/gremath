@@ -2,6 +2,7 @@ package com.gremath.service;
 
 import com.gremath.dto.FocusArea;
 import com.gremath.dto.ParentProgressSnapshot;
+import com.gremath.dto.SubjectScore;
 import com.gremath.model.SheetAttempt;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class ParentProgressService {
             return new ParentProgressSnapshot(
                     0, 0, 0, 0,
                     "No practice yet. After your child completes a few sheets, you will see clear focus areas here.",
-                    List.of(), List.of()
+                    List.of(), List.of(), List.of()
             );
         }
 
@@ -79,7 +80,56 @@ public class ParentProgressService {
                 needsFocus.size(),
                 summary,
                 needsFocus,
-                goingWell
+                goingWell,
+                subjectScores(sheetHistory)
         );
+    }
+
+    public static String subjectLabel(String topicSlug) {
+        String s = topicSlug == null ? "" : topicSlug.toLowerCase();
+        if (s.contains("mathematics") || s.contains("math")) {
+            return "Mathematics";
+        }
+        if (s.contains("english")) {
+            return "English";
+        }
+        if (s.contains("social")) {
+            return "Social Sciences";
+        }
+        if (s.contains("science")) {
+            return "Science";
+        }
+        if (s.contains("technolog")) {
+            return "Technology";
+        }
+        if (s.contains("arts")) {
+            return "The Arts";
+        }
+        if (s.contains("health") || s.contains("hpe")) {
+            return "Health and PE";
+        }
+        if (s.contains("language")) {
+            return "Learning Languages";
+        }
+        return "Other";
+    }
+
+    private static List<SubjectScore> subjectScores(List<SheetAttempt> sheetHistory) {
+        Map<String, List<SheetAttempt>> bySubject = new HashMap<>();
+        for (SheetAttempt attempt : sheetHistory) {
+            bySubject.computeIfAbsent(subjectLabel(attempt.getTopicSlug()), k -> new ArrayList<>()).add(attempt);
+        }
+        List<SubjectScore> out = new ArrayList<>();
+        for (Map.Entry<String, List<SheetAttempt>> entry : bySubject.entrySet()) {
+            List<SheetAttempt> attempts = entry.getValue();
+            int avg = (int) Math.round(attempts.stream().mapToInt(SheetAttempt::getPercentage).average().orElse(0));
+            SheetAttempt latest = attempts.stream()
+                    .max(Comparator.comparing(SheetAttempt::getTakenAt, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .orElse(attempts.get(0));
+            out.add(new SubjectScore(entry.getKey(), avg, attempts.size(),
+                    latest.getLessonTitle() == null ? "Lesson" : latest.getLessonTitle()));
+        }
+        out.sort(Comparator.comparing(SubjectScore::getSubject));
+        return out;
     }
 }

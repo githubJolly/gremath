@@ -13,6 +13,7 @@ import com.gremath.practice.QuestionTemplate;
 import com.gremath.practice.SheetRef;
 import com.gremath.practice.SheetType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -54,19 +55,42 @@ public class SheetService {
         }
         int target = lp.getQuestionsPerSheet();
         Random rng = new Random(this.seed(key, type, number));
+        ArrayList<QuestionTemplate> pool = new ArrayList<QuestionTemplate>(templates);
+        Collections.shuffle(pool, rng);
         ArrayList<GeneratedQuestion> out = new ArrayList<GeneratedQuestion>();
-        HashSet<String> seenText = new HashSet<String>();
+        HashSet<String> seenExact = new HashSet<String>();
+        HashSet<String> seenShape = new HashSet<String>();
         int index = 0;
-        int safetyLimit = target * 25;
+        int safetyLimit = target * 40;
         for (int safety = 0; out.size() < target && safety < safetyLimit; ++safety) {
-            QuestionTemplate template = templates.get(index % templates.size());
+            QuestionTemplate template = pool.get(index % pool.size());
             GeneratedQuestion q = template.generate(rng);
-            if (seenText.add(q.getText())) {
+            String shape = fingerprint(q.getText());
+            boolean uniqueExact = seenExact.add(q.getText());
+            boolean uniqueShape = shape.length() < 12 || seenShape.size() >= pool.size() || seenShape.add(shape);
+            if (uniqueExact && uniqueShape) {
                 out.add(q);
             }
             ++index;
+            if (index % pool.size() == 0) {
+                Collections.shuffle(pool, rng);
+            }
         }
         return out;
+    }
+
+    /** Same wording with different numbers counts as the same question shape. */
+    public static String fingerprint(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text.replaceAll("(?is)<svg.*?</svg>", " ")
+                .replaceAll("<[^>]+>", " ")
+                .replaceAll("\\d+", "#")
+                .replaceAll("[^a-zA-Z# ]", " ")
+                .replaceAll("\\s+", " ")
+                .trim()
+                .toLowerCase();
     }
 
     public String lessonTitle(String key) {

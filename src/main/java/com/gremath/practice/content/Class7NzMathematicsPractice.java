@@ -1,5 +1,6 @@
 package com.gremath.practice.content;
 
+import com.gremath.curriculum.MathFigures;
 import com.gremath.practice.GeneratedQuestion;
 import com.gremath.practice.LessonPractice;
 import com.gremath.practice.PracticeRegistry;
@@ -52,9 +53,12 @@ public final class Class7NzMathematicsPractice {
                 rng -> {
                     int e = QBuilder.range(rng, 2, 5);
                     int val = (int) Math.pow(10, e);
-                    return QBuilder.build(rng, "What is 10^" + e + "?", s(val),
+                    return QBuilder.build(rng, QBuilder.pick(rng,
+                                    "What is 10^" + e + "?",
+                                    "10 to the power of " + e + " equals…"), s(val),
                             "10^" + e + " means " + e + " tens multiplied: " + val + ".",
-                            "EASY", SKILL, s(10 * e), s(val * 10), s(val / 10));
+                            "EASY", SKILL, s(10 * e), s(val * 10), s(val / 10))
+                            .withHint("Count zeros after 1. 10^" + e + " is not 10 × " + e + ".");
                 },
                 rng -> {
                     int n = QBuilder.pick(rng, 4, 5, 6, 7, 8, 9, 10, 11, 12);
@@ -102,6 +106,7 @@ public final class Class7NzMathematicsPractice {
                 new GeneratedQuestion("A square photo has area 64 cm². Side length is:", List.of("8 cm", "16 cm", "32 cm", "4 cm"), 0, "√64 = 8.", "EASY", WORD),
                 new GeneratedQuestion("Which power of 10 matches one million?", List.of("10^6", "10^5", "10^7", "10^4"), 0, "1,000,000 = 10^6.", "MEDIUM", WORD)
         );
+        lp.concept(Year67IllustratedBank.c7Exp());
         return lp.sheets(20, 10, 20);
     }
 
@@ -164,6 +169,7 @@ public final class Class7NzMathematicsPractice {
                 new GeneratedQuestion("LCM of 6 and 8 is:", List.of("24", "48", "14", "2"), 0, "LCM(6,8)=24.", "EASY", WORD),
                 new GeneratedQuestion("Which is divisible by 9?", List.of("729", "728", "730", "731"), 0, "7+2+9=18, divisible by 9.", "MEDIUM", WORD)
         );
+        lp.concept(Year67IllustratedBank.c7Primes());
         return lp.sheets(20, 10, 20);
     }
 
@@ -226,6 +232,7 @@ public final class Class7NzMathematicsPractice {
                 new GeneratedQuestion("From −3°C to 5°C, temperature rose by:", List.of("8°C", "2°C", "−8°C", "15°C"), 0, "5 − (−3) = 8.", "MEDIUM", WORD),
                 new GeneratedQuestion("Evaluate (2 + 3) × 4.", List.of("20", "14", "9", "24"), 0, "Brackets first: 5×4 = 20.", "EASY", WORD)
         );
+        lp.concept(Year67IllustratedBank.c7Int());
         return lp.sheets(20, 10, 20);
     }
 
@@ -236,8 +243,11 @@ public final class Class7NzMathematicsPractice {
                     int den = QBuilder.pick(rng, 2, 4, 5, 10, 20, 25);
                     int num = QBuilder.range(rng, 1, den - 1);
                     int pct = num * 100 / den;
-                    return QBuilder.build(rng, "Convert " + num + "/" + den + " to a percent.", pct + "%",
-                            "Multiply fraction by 100%.",
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "This bar shows " + num + "/" + den + ". What percent is shaded?",
+                                    MathFigures.fractionBar(num, den, num + " of " + den + " equal parts")),
+                            pct + "%",
+                            "Multiply the fraction by 100%: " + num + "/" + den + " = " + pct + "%.",
                             "EASY", SKILL, (pct + 10) + "%", num + "%", (100 / den) + "%");
                 },
                 rng -> {
@@ -290,6 +300,7 @@ public final class Class7NzMathematicsPractice {
                 new GeneratedQuestion("25% of $60 is:", List.of("$15", "$25", "$20", "$10"), 0, "0.25×60=15.", "EASY", WORD),
                 new GeneratedQuestion("Pay $50 for a $37.40 item. Change is:", List.of("$12.60", "$13.60", "$12.40", "$87.40"), 0, "50−37.40=12.60.", "MEDIUM", WORD)
         );
+        lp.concept(Year67IllustratedBank.c7Fdp());
         return lp.sheets(20, 10, 20);
     }
 
@@ -358,6 +369,7 @@ public final class Class7NzMathematicsPractice {
                 new GeneratedQuestion("If y = 3x + 1 and x = 4, y is:", List.of("13", "12", "7", "16"), 0, "3×4+1=13.", "EASY", WORD),
                 new GeneratedQuestion("Solve x − 8 = 11.", List.of("x = 19", "x = 3", "x = −3", "x = 88"), 0, "Add 8: x=19.", "EASY", WORD)
         );
+        lp.concept(Year67IllustratedBank.c7Alg());
         return lp.sheets(20, 10, 20);
     }
 
@@ -373,15 +385,21 @@ public final class Class7NzMathematicsPractice {
                 rng -> {
                     int l = QBuilder.range(rng, 4, 20);
                     int w = QBuilder.range(rng, 3, 15);
-                    return QBuilder.build(rng, "Perimeter of " + l + " cm by " + w + " cm rectangle?", s(2 * (l + w)) + " cm",
-                            "P = 2(l+w).",
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "What is the perimeter of this rectangle?",
+                                    MathFigures.rectangle(l, w, l + " cm by " + w + " cm")),
+                            s(2 * (l + w)) + " cm",
+                            "P = 2(l + w) = 2(" + l + " + " + w + ") = " + (2 * (l + w)) + " cm.",
                             "EASY", SKILL, s(l * w) + " cm", s(l + w) + " cm", s(2 * l * w) + " cm");
                 },
                 rng -> {
                     int b = QBuilder.range(rng, 4, 20);
                     int h = QBuilder.range(rng, 3, 16);
-                    return QBuilder.build(rng, "Area of right triangle base " + b + " cm, height " + h + " cm?", s(b * h / 2) + " cm²",
-                            "Area = ½bh.",
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "What is the area of this right triangle?",
+                                    MathFigures.rightTriangle(b, h, null, "Right angle marked. Area = ½ × base × height.")),
+                            s(b * h / 2) + " cm²",
+                            "Area = ½ × " + b + " × " + h + " = " + (b * h / 2) + " cm².",
                             "MEDIUM", SKILL, s(b * h) + " cm²", s(b + h) + " cm²", s(2 * (b + h)) + " cm²");
                 },
                 rng -> {
@@ -421,6 +439,7 @@ public final class Class7NzMathematicsPractice {
                 new GeneratedQuestion("Movie 14:20 to 16:05 lasts:", List.of("1 h 45 min", "1 h 30 min", "2 h 15 min", "105 h"), 0, "From 14:20 to 16:05 is 105 min = 1 h 45 min.", "MEDIUM", WORD),
                 new GeneratedQuestion("Perimeter of square side 9 cm:", List.of("36 cm", "81 cm", "18 cm", "27 cm"), 0, "4×9=36.", "EASY", WORD)
         );
+        lp.concept(Year67IllustratedBank.c7Meas());
         return lp.sheets(20, 10, 20);
     }
 
@@ -435,8 +454,11 @@ public final class Class7NzMathematicsPractice {
                         c = 40;
                         b = 180 - a - c;
                     }
-                    return QBuilder.build(rng, "Triangle angles " + a + "° and " + b + "°. Third angle?", c + "°",
-                            "Angles in a triangle sum to 180°.",
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "Find the missing angle in this triangle.",
+                                    MathFigures.triangleAngles(a, b, "?", "Triangle angle sum is 180°.")),
+                            c + "°",
+                            "Angles in a triangle sum to 180°: 180 − " + a + " − " + b + " = " + c + "°.",
                             "MEDIUM", SKILL, (a + b) + "°", (180 - a) + "°", (90 - c) + "°");
                 },
                 rng -> {
@@ -448,8 +470,11 @@ public final class Class7NzMathematicsPractice {
                 },
                 rng -> {
                     int onLine = QBuilder.range(rng, 40, 140);
-                    return QBuilder.build(rng, "Angles on a straight line: one is " + onLine + "°. Other?", (180 - onLine) + "°",
-                            "Straight line sums to 180°.",
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "The diagram shows a straight line. What is the unmarked angle?",
+                                    MathFigures.anglesOnLine(onLine, "Adjacent angles on a straight line add to 180°.")),
+                            (180 - onLine) + "°",
+                            "Straight line sums to 180°: 180 − " + onLine + " = " + (180 - onLine) + "°.",
                             "EASY", SKILL, (360 - onLine) + "°", (90 - onLine) + "°", onLine + "°");
                 },
                 rng -> QBuilder.build(rng, "Equilateral triangle each angle is:", "60°",
@@ -476,6 +501,7 @@ public final class Class7NzMathematicsPractice {
                 new GeneratedQuestion("Clock hand from 3 to 6 turns:", List.of("90°", "60°", "180°", "30°"), 0, "3 hour marks × 30° = 90°.", "MEDIUM", WORD),
                 new GeneratedQuestion("Triangle angles 50°, 60°, ?:", List.of("70°", "80°", "90°", "100°"), 0, "180−110=70.", "EASY", WORD)
         );
+        lp.concept(Year67IllustratedBank.c7Geo());
         return lp.sheets(20, 10, 20);
     }
 
@@ -502,8 +528,15 @@ public final class Class7NzMathematicsPractice {
                 rng -> {
                     int fav = QBuilder.range(rng, 1, 8);
                     int total = QBuilder.range(rng, fav + 2, 12);
-                    return QBuilder.build(rng, "Fair spinner: " + fav + " of " + total + " equal sections win. P(win)?", fav + "/" + total,
-                            "Theoretical probability = favourable ÷ total.",
+                    String[] labels = new String[total];
+                    for (int i = 0; i < total; i++) {
+                        labels[i] = i < fav ? "W" : "L";
+                    }
+                    return QBuilder.build(rng, MathFigures.ask(
+                                    "A fair spinner. What is P(landing on W)?",
+                                    MathFigures.spinner(labels, 0, fav + " winning sectors out of " + total)),
+                            fav + "/" + total,
+                            "Theoretical probability = favourable ÷ total = " + fav + "/" + total + ".",
                             "EASY", SKILL, (total - fav) + "/" + total, fav + "/" + (total + 1), s(fav) + "/" + (total - 1));
                 },
                 rng -> {
@@ -538,6 +571,7 @@ public final class Class7NzMathematicsPractice {
                 new GeneratedQuestion("Die fair. P(rolling a 4)?", List.of("1/6", "4/6", "1/4", "1/2"), 0, "One favourable of six faces.", "EASY", WORD),
                 new GeneratedQuestion("P(rain)=0.3. P(not rain)?", List.of("0.7", "0.3", "1.3", "0"), 0, "Complement 1−0.3=0.7.", "MEDIUM", WORD)
         );
+        lp.concept(Year67IllustratedBank.c7Stats());
         return lp.sheets(20, 10, 20);
     }
 }

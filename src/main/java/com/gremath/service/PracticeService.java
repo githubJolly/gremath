@@ -21,9 +21,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class PracticeService {
     private final PracticeAttemptRepository attemptRepository;
+    private final RewardService rewardService;
 
-    public PracticeService(PracticeAttemptRepository attemptRepository) {
+    public PracticeService(PracticeAttemptRepository attemptRepository, RewardService rewardService) {
         this.attemptRepository = attemptRepository;
+        this.rewardService = rewardService;
     }
 
     @Transactional
@@ -48,6 +50,11 @@ public class PracticeService {
         }
         attempt.setScore(score);
         attempt.setTotalQuestions(questions.size());
+        var payout = this.rewardService.award(student, score, questions.size());
+        attempt.setStarsEarned(payout.starsEarned());
+        attempt.setRbxEarned(payout.rbxEarned());
+        attempt.setBonusMessage(payout.message());
+        attempt.setUnlockedGoodie(payout.unlockedGoodie());
         return (PracticeAttempt)this.attemptRepository.save(attempt);
     }
 

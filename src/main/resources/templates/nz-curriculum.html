@@ -20,7 +20,7 @@
     <div class="year-picker" style="margin-bottom:28px;">
         <a th:each="y : ${years}"
            class="year-pill"
-           th:classappend="'y' + y + (y == selectedYear ? ' active' : '')"
+           th:classappend="${'y' + y + (y == selectedYear ? ' active' : '')}"
            th:href="@{/curriculum/nz(year=${y})}"
            th:text="${y}">1</a>
     </div>
@@ -32,7 +32,7 @@
            th:href="${hasAccess} ? ${s.href} : @{/register}">
             <div class="emoji" th:text="${s.emoji}">🔢</div>
             <span class="badge" th:classappend="${s.featured} ? ' badge-featured' : ' badge-class6'"
-                  th:text="${s.featured} ? 'Featured · ' + ${s.lessonCount} + ' lessons' : (s.lessonCount + ' detailed lessons')">Ready</span>
+                  th:text="${s.featured} ? 'Featured · ' + s.lessonCount + ' lessons' : s.lessonCount + ' detailed lessons'">Ready</span>
             <h3 th:text="${s.subject}">Subject</h3>
             <p class="muted" style="font-size:0.82rem; margin:0 0 8px;" th:text="${s.phaseLabel}">Phase</p>
             <p th:text="${s.blurb}">Blurb</p>

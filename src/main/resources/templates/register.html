@@ -24,9 +24,15 @@
                 <div class="field-error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
             </div>
             <div class="form-group">
-                <label for="email">Email</label>
+                <label for="email">Account email</label>
                 <input type="email" id="email" th:field="*{email}"/>
                 <div class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+            <div class="form-group">
+                <label for="parentEmail">Parent / guardian email</label>
+                <input type="email" id="parentEmail" th:field="*{parentEmail}" placeholder="Where progress reports should go"/>
+                <p class="muted" style="margin:6px 0 0; font-size:0.85rem;">Leave blank to use the account email. We send a subject-by-subject update after every practice sheet.</p>
+                <div class="field-error" th:if="${#fields.hasErrors('parentEmail')}" th:errors="*{parentEmail}"></div>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>

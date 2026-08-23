@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Page not found')}">
+    <title>LetusLearn</title>
+</head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<div class="container container-narrow">
+    <div class="card auth-card" style="text-align:center;">
+        <p class="muted" style="margin-top:0;" th:text="${status} ?: '404'">404</p>
+        <h1 th:text="${status == 404} ? 'That page is not here' : 'Something went wrong'">That page is not here</h1>
+        <p class="muted">The link may be out of date. You can go back to the home page or browse subjects.</p>
+        <p>
+            <a class="btn" th:href="@{/}">Home</a>
+            <a class="btn btn-outline" th:href="@{/curriculum/nz}">Subjects</a>
+        </p>
+    </div>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

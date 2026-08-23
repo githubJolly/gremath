@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('How LetusLearn works')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<div class="container">
+    <div class="page-header" style="text-align:center;">
+        <h1>How LetusLearn works</h1>
+        <p class="muted">Three steps for the child. A live subject report for the parent.</p>
+    </div>
+    <div class="how-grid">
+        <div class="how-card">
+            <div class="how-num">1</div>
+            <h3>Choose year and subject</h3>
+            <p class="muted">Years 1–10 and all eight NZ learning areas. Lessons match the year, not a one-size bank.</p>
+        </div>
+        <div class="how-card">
+            <div class="how-num">2</div>
+            <h3>Learn, then sit the sheets</h3>
+            <p class="muted">Goals, worked examples and common mistakes first. Then concept and word sheets with hints that never give the answer away.</p>
+        </div>
+        <div class="how-card">
+            <div class="how-num">3</div>
+            <h3>Parents see the picture</h3>
+            <p class="muted">After every sheet we email the parent inbox: latest score, average by subject, what needs another look, and what is going well.</p>
+        </div>
+    </div>
+    <div class="card" style="margin-top:28px;">
+        <h2 style="margin-top:0;">What arrives in the parent email</h2>
+        <ul class="legal-list">
+            <li>The lesson just finished, sheet type, score and percentage.</li>
+            <li>A running average for Mathematics, English, Science, Social Sciences, Technology, The Arts, Health &amp; PE, and Languages — whichever the child has practised.</li>
+            <li>Up to five focus areas below 70%, with a short next-step line.</li>
+            <li>A link back to the family dashboard.</li>
+        </ul>
+        <p class="muted" style="margin-bottom:0;">You can change the parent inbox or pause emails from the Progress page after you log in.</p>
+    </div>
+    <p style="text-align:center; margin-top:28px;">
+        <a class="btn" th:href="@{/register}">Create a family account</a>
+        <a class="btn btn-outline" th:href="@{/curriculum/nz}">Browse subjects</a>
+    </p>
+</div>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

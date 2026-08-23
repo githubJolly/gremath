@@ -72,6 +72,146 @@ class NzCurriculumCatalogTest {
     }
 
     @Test
+    void year7MathLessonsIncludeDiagramsAndExamStyles() {
+        for (NzLessonSpec spec : NzCurriculumCatalog.lessons(7, NzSubject.MATHEMATICS)) {
+            String html = spec.contentHtml();
+            assertTrue(html.contains("<svg"), "Missing diagram: " + spec.title());
+            assertTrue(html.contains("How assessments ask this"), "Missing exam styles: " + spec.title());
+        }
+    }
+
+    @Test
+    void everyYearMathLessonIncludesADiagram() {
+        for (int year : NzCurriculumCatalog.years()) {
+            for (NzLessonSpec spec : NzCurriculumCatalog.lessons(year, NzSubject.MATHEMATICS)) {
+                assertTrue(spec.contentHtml().contains("<svg"),
+                        "Year " + year + " " + spec.title() + " needs a diagram");
+            }
+        }
+    }
+
+    @Test
+    void practiceSheetHintsAndStemsAreVaried() {
+        PracticeRegistry registry = new PracticeRegistry();
+        var lp = registry.get("nz-3-mathematics-1");
+        com.gremath.practice.SheetService sheets = new com.gremath.practice.SheetService(registry);
+        var questions = sheets.buildSheet("nz-3-mathematics-1", SheetType.CONCEPT, 2);
+        assertTrue(questions.size() >= 8, "sheet too short: " + questions.size());
+        java.util.Set<String> shapes = new java.util.HashSet<>();
+        for (var q : questions) {
+            shapes.add(com.gremath.practice.SheetService.fingerprint(q.getText()));
+        }
+        assertTrue(shapes.size() >= Math.min(6, questions.size() - 1),
+                "stems too repetitive: " + shapes.size() + " unique of " + questions.size());
+        java.util.Set<String> hints = com.gremath.practice.HintBank.newUsedSet();
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        int uniqueHints = 0;
+        for (int i = 0; i < questions.size(); i++) {
+            String h = com.gremath.practice.HintBank.pick(lp.getKey(), questions.get(i), i, hints);
+            if (seen.add(h)) {
+                uniqueHints++;
+            }
+        }
+        assertTrue(uniqueHints >= Math.min(8, questions.size()),
+                "hints reused too often: " + uniqueHints + " unique");
+    }
+
+    @Test
+    void illustratedPracticeQuestionsRenderSvg() {
+        PracticeRegistry registry = new PracticeRegistry();
+        java.util.Random rng = new java.util.Random(7);
+        var q = registry.get("c7nz-geometry").templates(SheetType.CONCEPT).get(0).generate(rng);
+        assertTrue(q.getText().contains("<svg"), "Year 7 geometry practice should include a diagram");
+    }
+
+    @Test
+    void year6And7MathBanksEachHaveAnIllustratedStem() {
+        PracticeRegistry registry = new PracticeRegistry();
+        java.util.Random rng = new java.util.Random(11);
+        String[] keys = {
+                "c6nz-place-value", "c6nz-operations", "c6nz-fdp", "c6nz-patterns",
+                "c6nz-geometry", "c6nz-measurement", "c6nz-data-chance", "c6nz-probability",
+                "c7nz-exponents", "c7nz-primes-hcf", "c7nz-integers", "c7nz-fdp-finance",
+                "c7nz-algebra", "c7nz-measurement", "c7nz-geometry", "c7nz-stats-prob"
+        };
+        for (String key : keys) {
+            boolean anySvg = false;
+            for (var template : registry.get(key).templates(SheetType.CONCEPT)) {
+                if (template.generate(rng).getText().contains("<svg")) {
+                    anySvg = true;
+                    break;
+                }
+            }
+            assertTrue(anySvg, key + " needs at least one illustrated stem");
+        }
+    }
+
+    @Test
+    void remainingSubjectsHaveDiagramsAndVariedPractice() {
+        for (NzSubject subject : new NzSubject[]{
+                NzSubject.ENGLISH, NzSubject.TECHNOLOGY, NzSubject.THE_ARTS,
+                NzSubject.HEALTH_PE, NzSubject.LEARNING_LANGUAGES}) {
+            for (NzLessonSpec spec : NzCurriculumCatalog.lessons(4, subject)) {
+                assertTrue(spec.contentHtml().contains("<svg"),
+                        "Year 4 " + subject + " " + spec.title() + " needs a diagram");
+            }
+        }
+        PracticeRegistry registry = new PracticeRegistry();
+        com.gremath.practice.SheetService sheets = new com.gremath.practice.SheetService(registry);
+        for (String key : new String[]{"nz-4-english-2", "nz-5-the-arts-2", "nz-3-health-pe-1", "nz-6-learning-languages-1"}) {
+            var questions = sheets.buildSheet(key, SheetType.CONCEPT, 1);
+            assertTrue(questions.size() >= 8, key + " too short");
+            java.util.Set<String> shapes = new java.util.HashSet<>();
+            for (var q : questions) {
+                shapes.add(com.gremath.practice.SheetService.fingerprint(q.getText()));
+            }
+            assertTrue(shapes.size() >= Math.min(6, questions.size() - 1),
+                    key + " stems too repetitive: " + shapes.size());
+        }
+    }
+
+    @Test
+    void scienceAndSocialLessonsIncludeDiagrams() {
+        for (int year : NzCurriculumCatalog.years()) {
+            for (NzLessonSpec spec : NzCurriculumCatalog.lessons(year, NzSubject.SCIENCE)) {
+                assertTrue(spec.contentHtml().contains("<svg"),
+                        "Year " + year + " science " + spec.title() + " needs a diagram");
+            }
+            for (NzLessonSpec spec : NzCurriculumCatalog.lessons(year, NzSubject.SOCIAL_SCIENCES)) {
+                assertTrue(spec.contentHtml().contains("<svg"),
+                        "Year " + year + " social " + spec.title() + " needs a diagram");
+            }
+        }
+    }
+
+    @Test
+    void scienceAndSocialSheetsHaveVariedStemsAndHints() {
+        PracticeRegistry registry = new PracticeRegistry();
+        com.gremath.practice.SheetService sheets = new com.gremath.practice.SheetService(registry);
+        for (String key : new String[]{"nz-4-science-1", "nz-5-social-sciences-2"}) {
+            var questions = sheets.buildSheet(key, SheetType.CONCEPT, 2);
+            assertTrue(questions.size() >= 8, key + " sheet too short: " + questions.size());
+            java.util.Set<String> shapes = new java.util.HashSet<>();
+            for (var q : questions) {
+                shapes.add(com.gremath.practice.SheetService.fingerprint(q.getText()));
+            }
+            assertTrue(shapes.size() >= Math.min(6, questions.size() - 1),
+                    key + " stems too repetitive: " + shapes.size() + " unique of " + questions.size());
+            java.util.Set<String> used = com.gremath.practice.HintBank.newUsedSet();
+            java.util.Set<String> seen = new java.util.HashSet<>();
+            int uniqueHints = 0;
+            for (int i = 0; i < questions.size(); i++) {
+                String h = com.gremath.practice.HintBank.pick(key, questions.get(i), i, used);
+                if (seen.add(h)) {
+                    uniqueHints++;
+                }
+            }
+            assertTrue(uniqueHints >= Math.min(8, questions.size()),
+                    key + " hints reused too often: " + uniqueHints + " unique");
+        }
+    }
+
+    @Test
     void practiceKeysAreRegisteredAndGenerateQuestions() {
         PracticeRegistry registry = new PracticeRegistry();
         Random rng = new Random(42);
