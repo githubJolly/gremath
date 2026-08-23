@@ -301,6 +301,27 @@ class NzCurriculumCatalogTest {
         assertTrue(checked >= 10 * 8 * 6);
     }
 
+    @Test
+    void wordProblemSheetsExistOnlyForMathematics() {
+        PracticeRegistry registry = new PracticeRegistry();
+        com.gremath.practice.SheetService sheets = new com.gremath.practice.SheetService(registry);
+        for (int year : NzCurriculumCatalog.years()) {
+            for (NzSubject subject : NzSubject.values()) {
+                for (NzLessonSpec spec : NzCurriculumCatalog.lessons(year, subject)) {
+                    boolean math = subject == NzSubject.MATHEMATICS;
+                    assertEquals(math, registry.get(spec.practiceKey()).hasWordSheets(),
+                            spec.practiceKey() + " word sheets");
+                    assertEquals(math, !sheets.sheetRefs(spec.practiceKey(), SheetType.WORD).isEmpty(),
+                            spec.practiceKey() + " word sheet refs");
+                }
+            }
+        }
+        assertTrue(registry.get("percent-meaning").hasWordSheets(),
+                "GRE mathematics topics should keep word-problem sheets");
+        assertTrue(registry.get("c6nz-place-value").hasWordSheets());
+        assertTrue(registry.get("c7nz-primes-hcf").hasWordSheets());
+    }
+
     private static int count(String haystack, String needle) {
         int n = 0;
         int from = 0;

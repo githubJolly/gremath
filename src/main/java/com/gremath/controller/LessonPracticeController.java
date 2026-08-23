@@ -57,9 +57,14 @@ public class LessonPracticeController {
         model.addAttribute("lessonKey", (Object)lessonKey);
         model.addAttribute("lessonTitle", (Object)this.sheetService.lessonTitle(lessonKey));
         model.addAttribute("topicSlug", (Object)this.sheetService.topicSlug(lessonKey));
-        model.addAttribute("wordStrategy", lesson != null ? Enrich.adaptStrategy(lesson.getTitle(), lesson.getPracticeKey(), lesson.getWordStrategy()) : null);
+        boolean showWordSheets = this.sheetService.hasWordSheets(lessonKey);
+        model.addAttribute("wordStrategy", showWordSheets && lesson != null
+                ? Enrich.adaptStrategy(lesson.getTitle(), lesson.getPracticeKey(), lesson.getWordStrategy())
+                : null);
         model.addAttribute("conceptSheets", this.sheetService.sheetRefs(lessonKey, SheetType.CONCEPT));
-        model.addAttribute("wordSheets", this.sheetService.sheetRefs(lessonKey, SheetType.WORD));
+        model.addAttribute("wordSheets", showWordSheets
+                ? this.sheetService.sheetRefs(lessonKey, SheetType.WORD)
+                : java.util.Collections.emptyList());
         Map<String, SheetAttempt> progress = java.util.Collections.emptyMap();
         if (principal != null) {
             Student student = this.studentService.getByUsername(principal.getName());
@@ -72,6 +77,9 @@ public class LessonPracticeController {
     @GetMapping(value={"/sheet/{lessonKey}/{type}/{number}"})
     public String showSheet(@PathVariable String lessonKey, @PathVariable String type, @PathVariable int number, Model model) {
         SheetType sheetType = SheetType.from(type);
+        if (sheetType == SheetType.WORD && !this.sheetService.hasWordSheets(lessonKey)) {
+            return "redirect:/practice/lesson/" + lessonKey;
+        }
         List<GeneratedQuestion> questions = this.sheetService.buildSheet(lessonKey, sheetType, number);
         int timerSeconds = this.recommendedTimerSeconds(sheetType, questions.size());
         String sheetTitle = this.sheetTitle(sheetType, number);
@@ -109,6 +117,9 @@ public class LessonPracticeController {
     @PostMapping(value={"/sheet/{lessonKey}/{type}/{number}"})
     public String submitSheet(@PathVariable String lessonKey, @PathVariable String type, @PathVariable int number, @RequestParam Map<String, String> params, Principal principal) {
         SheetType sheetType = SheetType.from(type);
+        if (sheetType == SheetType.WORD && !this.sheetService.hasWordSheets(lessonKey)) {
+            return "redirect:/practice/lesson/" + lessonKey;
+        }
         Student student = this.studentService.getByUsername(principal.getName());
         HashMap<Integer, Integer> responses = new HashMap<Integer, Integer>();
         for (Map.Entry<String, String> entry : params.entrySet()) {

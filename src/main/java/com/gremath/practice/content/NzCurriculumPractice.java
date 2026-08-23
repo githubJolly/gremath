@@ -33,12 +33,15 @@ public final class NzCurriculumPractice {
 
     private static LessonPractice build(int year, NzSubject subject, String slug, NzLessonSpec spec) {
         int conceptSheets = year <= 4 ? 8 : 10;
-        int wordSheets = year <= 4 ? 5 : 6;
+        boolean math = subject == NzSubject.MATHEMATICS;
+        int wordSheets = math ? (year <= 4 ? 5 : 6) : 0;
         int perSheet = year <= 3 ? 10 : 12;
         LessonPractice lp = new LessonPractice(spec.practiceKey(), slug, spec.title().replaceFirst("^\\d+\\.\\s*", ""));
         lp.sheets(conceptSheets, wordSheets, perSheet);
         lp.concept(conceptTemplates(year, spec.practiceKind()));
-        lp.word(wordTemplates(year, spec.practiceKind()));
+        if (math) {
+            lp.word(wordTemplates(year, spec.practiceKind()));
+        }
         return lp;
     }
 

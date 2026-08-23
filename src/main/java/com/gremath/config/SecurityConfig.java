@@ -3,7 +3,6 @@ package com.gremath.config;
 import com.gremath.service.StudentDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,9 +13,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 public class SecurityConfig {
     private final StudentDetailsService studentDetailsService;
+    private final LoginFailureHandler loginFailureHandler;
 
-    public SecurityConfig(StudentDetailsService studentDetailsService) {
+    public SecurityConfig(StudentDetailsService studentDetailsService, LoginFailureHandler loginFailureHandler) {
         this.studentDetailsService = studentDetailsService;
+        this.loginFailureHandler = loginFailureHandler;
     }
 
     @Bean
@@ -54,13 +55,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/dashboard", true)
-                        .failureHandler((request, response, exception) -> {
-                            if (exception instanceof DisabledException) {
-                                response.sendRedirect(request.getContextPath() + "/login?unverified");
-                            } else {
-                                response.sendRedirect(request.getContextPath() + "/login?error");
-                            }
-                        })
+                        .failureHandler(this.loginFailureHandler)
                         .permitAll())
                 .logout(logout -> logout.logoutSuccessUrl("/login?logout").permitAll())
                 .csrf(csrf -> csrf.ignoringRequestMatchers(

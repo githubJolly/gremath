@@ -6,6 +6,7 @@ import com.gremath.model.Student;
 import com.gremath.service.ParentProgressService;
 import com.gremath.service.PracticeService;
 import com.gremath.service.SheetPracticeService;
+import com.gremath.config.LoginFailureHandler;
 import com.gremath.service.StudentDetailsService;
 import com.gremath.service.StudentService;
 import java.time.LocalDate;
@@ -42,6 +43,8 @@ class DashboardPageTest {
     private ParentProgressService parentProgressService;
     @MockBean
     private StudentDetailsService studentDetailsService;
+    @MockBean
+    private LoginFailureHandler loginFailureHandler;
 
     @Test
     @WithMockUser(username = "family")

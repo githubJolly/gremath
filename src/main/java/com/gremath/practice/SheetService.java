@@ -31,6 +31,10 @@ public class SheetService {
         return this.registry.has(key);
     }
 
+    public boolean hasWordSheets(String key) {
+        return this.registry.has(key) && this.registry.get(key).hasWordSheets();
+    }
+
     public List<SheetRef> sheetRefs(String key, SheetType type) {
         LessonPractice lp = this.registry.get(key);
         ArrayList<SheetRef> refs = new ArrayList<SheetRef>();

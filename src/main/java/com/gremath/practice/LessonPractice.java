@@ -97,5 +97,9 @@ public class LessonPractice {
     public int sheetCount(SheetType type) {
         return type == SheetType.WORD ? this.wordSheets : this.conceptSheets;
     }
+
+    public boolean hasWordSheets() {
+        return this.wordSheets > 0 && (!this.wordTemplates.isEmpty() || !this.classicWord.isEmpty());
+    }
 }
 

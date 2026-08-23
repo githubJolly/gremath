@@ -8,6 +8,7 @@
  */
 package com.gremath.dto;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -24,6 +25,8 @@ public class RegistrationForm {
     @NotBlank(message="Password is required")
     @Size(min=6, message="Password must be at least 6 characters")
     private @NotBlank(message="Password is required") @Size(min=6, message="Password must be at least 6 characters") String password;
+    @NotBlank(message="Please confirm your password")
+    private String confirmPassword;
     @Email(message="Enter a valid parent email")
     private String parentEmail;
 
@@ -57,6 +60,23 @@ public class RegistrationForm {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return this.confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    @AssertTrue(message = "Passwords do not match")
+    public boolean isPasswordsMatch() {
+        if (this.password == null || this.password.isBlank()
+                || this.confirmPassword == null || this.confirmPassword.isBlank()) {
+            return true;
+        }
+        return this.password.equals(this.confirmPassword);
     }
 
     public String getParentEmail() {

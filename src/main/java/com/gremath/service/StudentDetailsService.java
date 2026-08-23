@@ -20,8 +20,9 @@ public class StudentDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Student student = this.studentRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("No student found with username: " + username));
+        String lookup = username == null ? "" : username.trim();
+        Student student = this.studentRepository.findByUsername(lookup)
+                .orElseThrow(() -> new UsernameNotFoundException("No student found with username: " + lookup));
         // enabled=false blocks login until /verify-email succeeds
         return User.withUsername(student.getUsername())
                 .password(student.getPassword())

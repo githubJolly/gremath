@@ -33,6 +33,7 @@
         </a>
     </div>
 
+    <th:block th:if="${wordSheets != null and !wordSheets.isEmpty()}">
     <h2 style="margin-top:32px;">&#128221; Word-problem practice sheets</h2>
     <p class="muted">Real-world scenarios that test if you can translate words into the right calculation. Attempted sheets turn green and show your best score.</p>
     <div class="grid">
@@ -49,6 +50,7 @@
                th:text="'Best: ' + ${att.score} + '/' + ${att.totalQuestions} + ' (' + ${att.percentage} + '%)'">Best: 0/0</p>
         </a>
     </div>
+    </th:block>
 </div>
 <footer th:replace="~{fragments/layout :: footer}"></footer>
 </body>

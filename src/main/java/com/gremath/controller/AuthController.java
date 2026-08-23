@@ -1,7 +1,9 @@
 package com.gremath.controller;
 
+import com.gremath.config.LoginFailureHandler;
 import com.gremath.dto.RegistrationForm;
 import com.gremath.service.StudentService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +29,17 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(@RequestParam(value = "error", required = false) String error,
+                        @RequestParam(value = "unverified", required = false) String unverified,
+                        HttpSession session,
+                        Model model) {
+        Object savedUser = session.getAttribute(LoginFailureHandler.LAST_USERNAME);
+        if (savedUser != null) {
+            model.addAttribute("loginUsername", savedUser);
+            session.removeAttribute(LoginFailureHandler.LAST_USERNAME);
+        }
+        String reason = unverified != null ? "unverified" : error;
+        model.addAttribute("loginError", LoginFailureHandler.messageFor(reason));
         return "login";
     }
 
