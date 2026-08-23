@@ -22,7 +22,6 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,19 +42,17 @@ public class SheetAnswer {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="attempt_id")
     private SheetAttempt attempt;
-    @Lob
-    @Column
+    @Column(length = 1_000_000)
     private String questionText;
     @ElementCollection(fetch=FetchType.EAGER)
     @CollectionTable(name="sheet_answer_options", joinColumns={@JoinColumn(name="answer_id")})
-    @Column(name="option_text", length=4000)
+    @Column(name="option_text", length = 1_000_000)
     @OrderColumn(name="option_index")
     private List<String> options = new ArrayList<String>();
     private int correctOption;
     private int selectedOption;
     private boolean correct;
-    @Lob
-    @Column
+    @Column(length = 1_000_000)
     private String explanation;
     private String tag;
 

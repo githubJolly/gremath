@@ -13,6 +13,7 @@ import com.gremath.model.Student;
 import com.gremath.practice.GeneratedQuestion;
 import com.gremath.practice.SheetService;
 import com.gremath.practice.SheetType;
+import com.gremath.config.SchemaRepair;
 import com.gremath.repository.SheetAttemptRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +29,16 @@ public class SheetPracticeService {
     private final SheetAttemptRepository attemptRepository;
     private final RewardService rewardService;
     private final ParentNotifyService parentNotifyService;
+    private final SchemaRepair schemaRepair;
 
     public SheetPracticeService(SheetService sheetService, SheetAttemptRepository attemptRepository,
-                                RewardService rewardService, ParentNotifyService parentNotifyService) {
+                                RewardService rewardService, ParentNotifyService parentNotifyService,
+                                SchemaRepair schemaRepair) {
         this.sheetService = sheetService;
         this.attemptRepository = attemptRepository;
         this.rewardService = rewardService;
         this.parentNotifyService = parentNotifyService;
+        this.schemaRepair = schemaRepair;
     }
 
     @Transactional
@@ -73,6 +77,7 @@ public class SheetPracticeService {
         attempt.setRbxEarned(payout.rbxEarned());
         attempt.setBonusMessage(payout.message());
         attempt.setUnlockedGoodie(payout.unlockedGoodie());
+        this.schemaRepair.widenColumns();
         SheetAttempt saved = this.attemptRepository.save(attempt);
         Runnable notify = () -> {
             try {

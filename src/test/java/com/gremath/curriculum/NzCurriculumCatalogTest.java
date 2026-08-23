@@ -178,6 +178,15 @@ class NzCurriculumCatalogTest {
     }
 
     @Test
+    void year6PlaceValueConceptSheetIncludesLongIllustratedStem() {
+        com.gremath.practice.SheetService sheets = new com.gremath.practice.SheetService(new PracticeRegistry());
+        var questions = sheets.buildSheet("c6nz-place-value", SheetType.CONCEPT, 1);
+        assertFalse(questions.isEmpty());
+        int max = questions.stream().mapToInt(q -> q.getText() == null ? 0 : q.getText().length()).max().orElse(0);
+        assertTrue(max > 2000, "Y6 place-value sheet must persist stems over 2000 chars, max=" + max);
+    }
+
+    @Test
     void illustratedPracticeQuestionsRenderSvg() {
         PracticeRegistry registry = new PracticeRegistry();
         java.util.Random rng = new java.util.Random(7);
