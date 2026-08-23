@@ -291,6 +291,10 @@ public class Student {
 
     /** Address that should receive progress reports (parent inbox, or the account email). */
     public String progressEmail() {
+        return getProgressEmail();
+    }
+
+    public String getProgressEmail() {
         if (this.parentEmail != null && !this.parentEmail.isBlank()) {
             return this.parentEmail.trim();
         }

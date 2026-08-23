@@ -31,7 +31,7 @@
             <span class="nav-title" th:if="${navTitle}" th:text="${navTitle}">Rookie</span>
         </span>
         <a class="nav-loot" sec:authorize="isAuthenticated()" th:href="@{/rewards}"
-           th:title="Goodies locker">
+           title="Goodies locker">
             <span th:text="${navStars != null ? navStars : 0} + ' ★'">0 ★</span>
             <span th:text="${navRbx != null ? navRbx : 0} + ' Rbx'">0 Rbx</span>
             <span th:if="${navStreak != null and navStreak > 0}" th:text="${navStreak} + '🔥'">1🔥</span>

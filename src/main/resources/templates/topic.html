@@ -4,12 +4,12 @@
 <body>
 <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-<div class="container" th:classappend="subjectTheme != null ? 'theme-' + subjectTheme : ''">
+<div class="container" th:classappend="${subjectTheme != null ? 'theme-' + subjectTheme : ''}">
     <div class="page-header flex-between">
         <div>
             <a class="muted" th:href="${curriculumYearHref} ?: @{/dashboard}">&larr; Back to year subjects</a>
             <p class="muted" style="margin:8px 0 0;" th:if="${yearLevel}">
-                <span class="badge badge-class6" th:text="${subjectEmoji} + ' YEAR ' + ${yearLevel}">YEAR</span>
+                <span class="badge badge-class6" th:text="${subjectEmoji + ' YEAR ' + yearLevel}">YEAR</span>
                 <span th:if="${subjectName}" th:text="' · ' + ${subjectName}">Subject</span>
             </p>
             <h1 th:text="${topic.name}">Topic</h1>
