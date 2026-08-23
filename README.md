@@ -59,6 +59,16 @@ mvn spring-boot:run
 
 Without SMTP, verification and parent-progress emails are written to the application log so you can still test the flow locally.
 
+If you deploy with Docker, a container restart is not enough after `git pull`. Rebuild the image:
+
+```bash
+git pull
+docker compose build app
+docker compose up -d app
+```
+
+Confirm the new build by viewing page source on `/login` and checking `ll-build` is `20260823e`.
+
 ## Tests
 
 ```bash

@@ -28,8 +28,8 @@
     <div class="grid">
         <a class="subject-tile"
            th:each="s : ${subjects}"
-           th:classappend="'theme-' + ${s.themeClass}"
-           th:href="${hasAccess} ? ${s.href} : @{/register}">
+           th:classappend="${'theme-' + s.themeClass}"
+           th:href="${hasAccess ? s.href : '/register'}">
             <div class="emoji" th:text="${s.emoji}">🔢</div>
             <span class="badge" th:classappend="${s.featured} ? ' badge-featured' : ' badge-class6'"
                   th:text="${s.featured} ? 'Featured · ' + s.lessonCount + ' lessons' : s.lessonCount + ' detailed lessons'">Ready</span>

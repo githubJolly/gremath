@@ -6,7 +6,7 @@
 
 <div class="container">
     <div class="page-header">
-        <h1 th:text="'Hi ' + ${student.fullName} + ' 👋'">Progress</h1>
+        <h1 th:text="${'Hi ' + student.fullName}">Progress</h1>
         <p class="muted">A colourful view of practice — and a calm list of where to focus next.</p>
         <div class="track-switch" style="margin-top:10px;">
             <a class="track-tab active" th:href="@{/dashboard}">Progress</a>
@@ -32,7 +32,7 @@
         <h2 style="margin-top:0;">Unlock lessons &amp; parent insights</h2>
         <p class="muted" style="margin:0 0 10px;">
             Start with a <strong>2-day free trial</strong>, then continue for
-            <strong th:text="'$' + ${trackPrice} + '/month'">$10/month</strong>.
+            <strong th:text="${'$' + trackPrice + '/month'}">$10/month</strong>.
             You’ll see where your child needs to focus more after each practice sheet.
         </p>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
@@ -104,7 +104,7 @@
             <div class="flex-between" style="gap:12px; flex-wrap:wrap;">
                 <div>
                     <strong th:text="${area.lessonTitle}">Lesson</strong>
-                    <span class="muted" th:text="' · ' + ${area.averagePercent} + '% avg · ' + ${area.attempts} + ' sheets'"> · 0%</span>
+                    <span class="muted" th:text="${' · ' + area.averagePercent + '% avg · ' + area.attempts + ' sheets'}"> · 0%</span>
                     <p class="muted" style="margin:4px 0 0;" th:text="${area.guidance}">Guidance</p>
                 </div>
                 <a class="btn btn-outline" th:if="${hasActiveSubscription}" th:href="${area.practiceHref}">Practise again</a>
@@ -119,7 +119,7 @@
     <div class="card" th:unless="${#lists.isEmpty(parentProgress.goingWell)}">
         <div th:each="area : ${parentProgress.goingWell}" style="padding:10px 0; border-top:1px solid var(--border-soft, #e5e7eb);">
             <strong th:text="${area.lessonTitle}">Lesson</strong>
-            <span class="muted" th:text="' · ' + ${area.averagePercent} + '% avg'"> · 0%</span>
+            <span class="muted" th:text="${' · ' + area.averagePercent + '% avg'}"> · 0%</span>
         </div>
     </div>
 
@@ -142,8 +142,8 @@
     <div class="grid">
         <a class="subject-tile"
            th:each="s : ${subjects}"
-           th:classappend="'theme-' + ${s.themeClass}"
-           th:href="${hasActiveSubscription} ? ${s.href} : @{/pricing}">
+           th:classappend="${'theme-' + s.themeClass}"
+           th:href="${hasActiveSubscription ? s.href : '/pricing'}">
             <div class="emoji" th:text="${s.emoji}">🔢</div>
             <span class="badge badge-class6" th:text="${s.lessonCount} + ' lessons'">lessons</span>
             <h3 th:text="${s.subject}">Subject</h3>
@@ -172,7 +172,7 @@
             <tr th:each="a : ${sheetHistory}">
                 <td th:text="${a.lessonTitle}">Lesson</td>
                 <td th:text="${a.sheetLabel}">Sheet</td>
-                <td th:text="${a.score} + ' / ' + ${a.totalQuestions}">0/0</td>
+                <td th:text="${a.score + ' / ' + a.totalQuestions}">0/0</td>
                 <td th:text="${a.percentage} + '%'">0%</td>
                 <td th:text="${#temporals.format(a.takenAt, 'dd MMM, HH:mm')}">date</td>
                 <td><a th:href="@{/practice/result/{id}(id=${a.id})}">View</a></td>
