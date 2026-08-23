@@ -46,6 +46,14 @@ class MathFiguresTest {
     }
 
     @Test
+    void illustratedStemsCanExceedOldVarcharLimit() {
+        String stem = MathFigures.ask("Which point is marked?",
+                MathFigures.coordinatePoint(6, 8, "Along x first, then up y."));
+        assertTrue(stem.length() > 2000,
+                "Illustrated stems must be stored as CLOB, len=" + stem.length());
+    }
+
+    @Test
     void extraSubjectFiguresRender() {
         assertTrue(SubjectFigures.plantParts("Name the parts").contains("<svg"));
         assertTrue(SubjectFigures.waterCycle("Sea to cloud").contains("<svg"));

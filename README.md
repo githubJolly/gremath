@@ -67,7 +67,7 @@ docker compose build app
 docker compose up -d app
 ```
 
-Confirm the new build by viewing page source on `/login` and checking `ll-build` is `20260823e`.
+Confirm the new build by viewing page source on `/login` and checking `ll-build` is `20260823f`.
 
 ## Tests
 

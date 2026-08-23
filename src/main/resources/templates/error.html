@@ -4,16 +4,17 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>LetusLearn</title>
-    <link rel="stylesheet" th:href="@{/css/style.css(v=20260823e)}"/>
+    <link rel="stylesheet" th:href="@{/css/style.css(v=20260823f)}"/>
 </head>
 <body>
 <div class="container container-narrow">
     <div class="card auth-card" style="text-align:center; margin-top:48px;">
         <p class="muted" style="margin-top:0;" th:text="${status} ?: 'Error'">Error</p>
         <h1>That page did not load</h1>
-        <p class="muted">You can go back to the home page or log in again.</p>
+        <p class="muted">If you were already signed in, you still are. Open Progress to keep going.</p>
         <p>
-            <a class="btn" th:href="@{/}">Home</a>
+            <a class="btn" th:href="@{/dashboard}">Progress</a>
+            <a class="btn btn-outline" th:href="@{/}">Home</a>
             <a class="btn btn-outline" th:href="@{/login}">Log in</a>
         </p>
     </div>
