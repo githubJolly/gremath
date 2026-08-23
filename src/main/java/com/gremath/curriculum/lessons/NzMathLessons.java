@@ -1,5 +1,6 @@
 package com.gremath.curriculum.lessons;
 
+import com.gremath.curriculum.LessonExtras;
 import com.gremath.curriculum.LessonHtml;
 import com.gremath.curriculum.MathFigures;
 import com.gremath.curriculum.NzLessonSpec;
@@ -38,12 +39,12 @@ public final class NzMathLessons {
         int year = 7;
         List<NzLessonSpec> out = new ArrayList<>();
         out.add(spec(year, 1, "Place value, exponents and square roots", "Number | Tau", "NUMBER", number(7), stratNumber(7)));
-        out.add(spec(year, 2, "Primes, HCF, LCM and divisibility", "Number | Tau", "OPS", primesYear7(), stratNumber(7)));
-        out.add(spec(year, 3, "Integers and order of operations (GEMA)", "Number · operations", "FRACTION", operations(7), stratOps(7)));
-        out.add(spec(year, 4, "Fractions, decimals, percentages and financial maths", "Number · rational numbers", "ALGEBRA", fdp(7), stratFdp(7)));
-        out.add(spec(year, 5, "Algebra: equations, like terms and linear graphs", "Algebra | Taurangi", "MEASURE", algebra(7), stratAlg(7)));
-        out.add(spec(year, 6, "Measurement: perimeter, area, volume and duration", "Measurement | Ine", "GEOMETRY", measure(7), stratMeas(7)));
-        out.add(spec(year, 7, "Geometry: triangles, angles and transformations", "Geometry | Āhuahanga", "DATA", geometry(7), stratGeo(7)));
+        out.add(spec(year, 2, "Primes, HCF, LCM and divisibility", "Number | Tau", "PRIME", primesYear7(), stratNumber(7)));
+        out.add(spec(year, 3, "Integers and order of operations (GEMA)", "Number · operations", "OPS", operations(7), stratOps(7)));
+        out.add(spec(year, 4, "Fractions, decimals, percentages and financial maths", "Number · rational numbers", "FRACTION", fdp(7), stratFdp(7)));
+        out.add(spec(year, 5, "Algebra: equations, like terms and linear graphs", "Algebra | Taurangi", "ALGEBRA", algebra(7), stratAlg(7)));
+        out.add(spec(year, 6, "Measurement: perimeter, area, volume and duration", "Measurement | Ine", "MEASURE", measure(7), stratMeas(7)));
+        out.add(spec(year, 7, "Geometry: triangles, angles and transformations", "Geometry | Āhuahanga", "GEOMETRY", geometry(7), stratGeo(7)));
         out.add(spec(year, 8, "Statistics and probability", "Statistics & Probability", "CHANCE",
                 statistics(7) + chance(7), LessonHtml.strategy("statistics and probability",
                         new String[]{"For data: title, variable, display, conclude with a limitation.",
@@ -194,6 +195,7 @@ public final class NzMathLessons {
         if (html != null && !html.contains("<svg")) {
             html = insertFigure(html, figureFor(year, kind));
         }
+        html = LessonExtras.apply(year, kind, html);
         return new NzLessonSpec(order, order + ". " + title, strand, html,
                 practiceKey(year, order), strategy, kind);
     }
@@ -212,6 +214,7 @@ public final class NzMathLessons {
 
     private static String figureFor(int year, String kind) {
         return switch (kind) {
+            case "PRIME" -> MathFigures.factorTree(51, 3, 17, "A factor tree splits 51 until both branches are prime.");
             case "NUMBER" -> year <= 3
                     ? MathFigures.numberLine(0, year == 1 ? 20 : 20, year == 1 ? 12 : 15,
                     year == 1 ? "Numbers grow to the right. 12 sits past 8."
@@ -950,7 +953,18 @@ public final class NzMathLessons {
                             "Use ≤ and ≥ as well as &lt; and &gt;."},
                     LessonHtml.p("A linear rule has a constant difference. Term n of 3, 7, 11, 15… is 4n−1 (check: n=1 → 3). Always test at least two terms.")
                             + LessonHtml.p("Inequalities may include equality: 8×7 ≤ 8×5+4². GEMA applies inside comparisons.")
-                            + LessonHtml.p("The coordinate plane can include points on the axes, such as (0, 3) or (4, 0)."),
+                            + LessonHtml.p("The coordinate plane can include points on the axes, such as (0, 3) or (4, 0).")
+                            + LessonHtml.worked("Build the n-rule for 4, 7, 10, 13…",
+                            LessonHtml.lines(
+                                    "Constant difference d = 3.",
+                                    "Term 1 is 4, so the rule looks like 3n + something.",
+                                    "When n=1: 3(1)+□=4, so □=1. Rule: 3n+1.",
+                                    "Check n=4: 3×4+1=13. Matches."))
+                            + LessonHtml.worked("A sausage sizzle: $3 per sausage, $2 booking. Cost C for n sausages.",
+                            LessonHtml.lines(
+                                    "C = 3n + 2",
+                                    "For 5 sausages: C = 15+2 = $17",
+                                    "If the bill is $20: 3n+2=20, 3n=18, n=6 sausages.")),
                     "A fundraising graph of 'dollars versus week number' is a coordinate picture of a linear rule.",
                     new String[]{"Find the constant difference d.", "Connect term 1 to the n-rule.", "Test n=1 and n=2.", "Plot and see if the line is straight."},
                     "2, 5, 8, 11… rule for term n",
@@ -968,7 +982,8 @@ public final class NzMathLessons {
                             "Simplify like terms and write 3b for b+b+b."},
                     LessonHtml.p("Algebra notation: 3b means 3×b, not 3+b. b means 1b. Division can be a fraction bar. Substitution: if w=4, then w+12=16.")
                             + LessonHtml.p("Solve by inverse operations: 5s+3=18 → subtract 3 → 5s=15 → divide by 5 → s=3. Trial and error works but is inefficient.")
-                            + LessonHtml.p("Like terms share the same letter and power: 3x and 5x combine to 8x; 3x and 5y do not."),
+                            + LessonHtml.p("Like terms share the same letter and power: 3x and 5x combine to 8x; 3x and 5y do not.")
+                            + linearEquationsDetail(7),
                     "Formula for a rectangle A=bh is algebra in measurement — the same letters you solve for in equations.",
                     new String[]{"Name what the letter stands for.", "Do the inverse of the last operation first.", "Simplify like terms before solving if needed.", "Substitute back to check."},
                     "5s+3=18",
@@ -987,7 +1002,8 @@ public final class NzMathLessons {
                             "Plot a straight line from a table or from y=mx+c in simple cases."},
                     LessonHtml.p("Equations may have decimal or negative solutions: 5s+9=−18 → 5s=−27 → s=−5.4. Inequalities: t−3 ≥ −5 → t ≥ −2, with a closed circle on −2 and an arrow right.")
                             + LessonHtml.p("A straight line has a constant gradient m (rise/run) and intercept c where it meets the y-axis. y=2x+1 is a machine: input x, output y.")
-                            + LessonHtml.p("Forming the equation from a word problem is half the mathematics. Define the letter in a sentence first."),
+                            + LessonHtml.p("Forming the equation from a word problem is half the mathematics. Define the letter in a sentence first.")
+                            + linearEquationsDetail(8),
                     "A phone plan $12 plus $0.50 per extra gigabyte is y=0.5x+12 — a linear model of a real bill.",
                     new String[]{"Define the unknown.", "Write the equation or inequality.", "Solve with inverses (flip the inequality if you multiply/divide by a negative).", "Graph or check."},
                     "t−3 ≥ −5", "t ≥ −2. Closed circle at −2, shade right.",
@@ -1003,9 +1019,10 @@ public final class NzMathLessons {
                     new String[]{"Solve two linear equations simultaneously (elimination or substitution).",
                             "Rearrange formulae to change the subject.",
                             "Expand single brackets and factorise simple expressions."},
-                    LessonHtml.p("Two unknowns need two independent equations. Substitution: if y=2x and x+y=9, then x+2x=9, 3x=9, x=3, y=6. Elimination adds or subtracts equations to cancel a letter.")
-                            + LessonHtml.p("Changing the subject of v=u+at to t=(v−u)/a is inverse operations in a formula.")
-                            + LessonHtml.p("Expand: 3(x+4)=3x+12. Factor: 3x+12=3(x+4). These reverse each other."),
+                    LessonHtml.p("Two unknowns need two independent equations. A pair (x, y) is a solution only if it makes <em>both</em> equations true at once. Graphically that is the intersection of two straight lines.")
+                            + LessonHtml.p("You will learn two algebraic methods in full: <strong>substitution</strong> (replace a letter with an expression) and <strong>elimination</strong> (add or subtract equations so one letter cancels).")
+                            + LessonHtml.p("Changing the subject of v=u+at to t=(v−u)/a is inverse operations in a formula. Expand: 3(x+4)=3x+12. Factor: 3x+12=3(x+4).")
+                            + simultaneousDetail(),
                     "Two adults' ticket totals at a stadium kiosk can become a two-equation story (ticket + snack).",
                     new String[]{"Label both unknowns.", "Choose substitution if one letter is already isolated.", "Otherwise align coefficients and eliminate.", "Substitute back and check both originals."},
                     "x+y=10 and y=x+2", "x+(x+2)=10, 2x=8, x=4, y=6.",
@@ -1021,7 +1038,8 @@ public final class NzMathLessons {
                             "Sketch y=x² and simple translations; identify vertex and intercepts."},
                     LessonHtml.p("A quadratic involves x². Expanding (x+3)(x+2)=x²+5x+6 uses FOIL or an area model. Factorising reverses it. If (x+3)(x+2)=0 then x=−3 or x=−2 (null factor law).")
                             + LessonHtml.p("The graph of y=x² is a parabola, vertex at the origin, opening up. y=(x−1)²−4 has moved 1 right and 4 down.")
-                            + LessonHtml.p("Not every quadratic factorises nicely over the integers. Year 10 also meets the idea of a discriminant later in some programmes; here we stay with factorising and graphs."),
+                            + LessonHtml.p("Not every quadratic factorises nicely over the integers. Year 10 also meets the idea of a discriminant later in some programmes; here we stay with factorising and graphs.")
+                            + quadraticDetail(),
                     "The path of a kicked ball is approximately parabolic — a physical picture of y=ax²+bx+c, even if air resistance complicates the real world.",
                     new String[]{"Write =0.", "Factor if you can.", "Set each factor equal to 0.", "Check in the original; sketch intercepts."},
                     "Solve x²+5x+6=0", "(x+2)(x+3)=0 so x=−2 or x=−3.",
@@ -1581,6 +1599,183 @@ public final class NzMathLessons {
         return LessonHtml.strategy("fractions, decimals and percentages",
                 new String[]{"Name the whole (the 100%).", "Convert to a common form.", "Compute.", "Interpret the remainder or the money rounding."},
                 "comparing fractions of different wholes, or adding percentages of different bases");
+    }
+
+    private static String linearEquationsDetail(int year) {
+        String extra = year >= 8
+                ? LessonHtml.h4("Variables on both sides")
+                + LessonHtml.p("Collect the letter terms on one side and the numbers on the other. Do the same operation to both sides, one move at a time.")
+                + LessonHtml.worked("5x + 9 = 2x + 24",
+                LessonHtml.lines(
+                        "Subtract 2x from both sides: 5x − 2x + 9 = 24",
+                        "3x + 9 = 24",
+                        "Subtract 9 from both sides: 3x = 15",
+                        "Divide both sides by 3: <strong>x = 5</strong>",
+                        "Check: left 5(5)+9 = 34. Right 2(5)+24 = 34. Balanced."))
+                + LessonHtml.h4("Clear fractions first")
+                + LessonHtml.p("If the equation has denominators, multiply every term by the lowest common multiple so the fractions disappear.")
+                + LessonHtml.worked("x/3 + 2 = 7",
+                LessonHtml.lines(
+                        "Subtract 2 from both sides: x/3 = 5",
+                        "Multiply both sides by 3: <strong>x = 15</strong>",
+                        "Check: 15/3 + 2 = 5 + 2 = 7."))
+                + LessonHtml.worked("2x/5 − 1 = 3",
+                LessonHtml.lines(
+                        "Add 1: 2x/5 = 4",
+                        "Multiply by 5: 2x = 20",
+                        "Divide by 2: <strong>x = 10</strong>",
+                        "Check: 20/5 − 1 = 4 − 1 = 3."))
+                : "";
+        return LessonHtml.h4("The balance rule")
+                + LessonHtml.p("An equation is a balanced scale. Whatever you do to the left, do to the right. Undo operations in reverse: if the last thing done to the letter was ×5, divide by 5 last of all — after you have undone + and −.")
+                + LessonHtml.h4("One-step equations")
+                + LessonHtml.worked("n + 8 = 20",
+                LessonHtml.lines(
+                        "The 8 was added to n, so subtract 8 from both sides.",
+                        "n + 8 − 8 = 20 − 8",
+                        "<strong>n = 12</strong>",
+                        "Check by substitution: 12 + 8 = 20."))
+                + LessonHtml.worked("4k = 28",
+                LessonHtml.lines(
+                        "k was multiplied by 4, so divide both sides by 4.",
+                        "4k ÷ 4 = 28 ÷ 4",
+                        "<strong>k = 7</strong>",
+                        "Check: 4 × 7 = 28."))
+                + LessonHtml.worked("m − 11 = 9",
+                LessonHtml.lines(
+                        "11 was subtracted, so add 11 to both sides.",
+                        "m − 11 + 11 = 9 + 11",
+                        "<strong>m = 20</strong>",
+                        "Check: 20 − 11 = 9."))
+                + LessonHtml.h4("Two-step equations — undo the last operation first")
+                + LessonHtml.p("Think of the letter as a gift: multiplied first, then something added. You unwrap the add/subtract first, then the multiply/divide.")
+                + LessonHtml.worked("5s + 3 = 18",
+                LessonHtml.lines(
+                        "Subtract 3 from both sides (undo the +3): 5s = 15",
+                        "Divide both sides by 5: <strong>s = 3</strong>",
+                        "Check: 5×3 + 3 = 15 + 3 = 18."))
+                + LessonHtml.worked("2p − 7 = 11",
+                LessonHtml.lines(
+                        "Add 7 to both sides: 2p = 18",
+                        "Divide by 2: <strong>p = 9</strong>",
+                        "Check: 2×9 − 7 = 18 − 7 = 11."))
+                + LessonHtml.worked("A $4 ticket plus $2 booking fee for each of n tickets is $26. Form and solve 4n + 2 = 26.",
+                LessonHtml.lines(
+                        "4n + 2 = 26",
+                        "Subtract 2: 4n = 24",
+                        "Divide by 4: <strong>n = 6 tickets</strong>",
+                        "Check: 4×6 + 2 = 26."))
+                + extra;
+    }
+
+    private static String simultaneousDetail() {
+        return LessonHtml.h4("When to use which method")
+                + LessonHtml.table(new String[]{"If you see…", "Use", "Why"},
+                new String[][]{
+                        {"One letter already alone, e.g. y = 2x + 1", "Substitution", "You can drop that expression straight into the other equation."},
+                        {"Matching or opposite coefficients, e.g. +3y and −3y", "Elimination (add or subtract)", "A letter cancels in one line."},
+                        {"Coefficients that are multiples, e.g. 2x and 6x", "Elimination (multiply first)", "Make the coefficients equal, then cancel."}
+                })
+                + LessonHtml.h4("Method 1 — substitution")
+                + LessonHtml.p("1. Rearrange one equation so a letter is by itself. 2. Replace that letter in the <em>other</em> equation with the expression. 3. Solve the one-letter equation. 4. Substitute back to find the second letter. 5. Check both originals.")
+                + LessonHtml.worked("Substitution · y already isolated: y = 2x and x + y = 9",
+                LessonHtml.lines(
+                        "Replace y in the second equation with 2x: x + (2x) = 9",
+                        "3x = 9",
+                        "x = 3",
+                        "Now y = 2×3 = 6",
+                        "Check both: y = 2x → 6 = 6. x + y = 9 → 3 + 6 = 9. Solution <strong>(x, y) = (3, 6)</strong>."))
+                + LessonHtml.worked("Substitution · isolate first: x + y = 10 and y = x + 2",
+                LessonHtml.lines(
+                        "y is already x + 2. Put that into x + y = 10:",
+                        "x + (x + 2) = 10",
+                        "2x + 2 = 10",
+                        "2x = 8",
+                        "x = 4, then y = 4 + 2 = 6",
+                        "Check: 4 + 6 = 10 and 6 = 4 + 2. <strong>(4, 6)</strong>."))
+                + LessonHtml.worked("Substitution · isolate x from 2x + y = 11, with x − y = 1",
+                LessonHtml.lines(
+                        "From the second: x = y + 1",
+                        "Put into the first: 2(y + 1) + y = 11",
+                        "2y + 2 + y = 11",
+                        "3y + 2 = 11",
+                        "3y = 9, y = 3",
+                        "x = 3 + 1 = 4",
+                        "Check: 2(4)+3 = 11 and 4 − 3 = 1. <strong>(4, 3)</strong>."))
+                + LessonHtml.h4("Method 2 — elimination")
+                + LessonHtml.p("Line the equations up, x under x and y under y. Add or subtract so one letter disappears. If the coefficients are not ready, multiply one (or both) equations first.")
+                + LessonHtml.worked("Elimination by adding · opposite y: x + y = 7 and x − y = 3",
+                LessonHtml.lines(
+                        "Add the equations: (x + y) + (x − y) = 7 + 3",
+                        "2x = 10, so x = 5",
+                        "Put x = 5 into x + y = 7: 5 + y = 7, y = 2",
+                        "Check the second: 5 − 2 = 3. <strong>(5, 2)</strong>."))
+                + LessonHtml.worked("Elimination by subtracting · matching x: 3x + 2y = 16 and 3x + y = 13",
+                LessonHtml.lines(
+                        "Subtract the second from the first: (3x + 2y) − (3x + y) = 16 − 13",
+                        "y = 3",
+                        "Put y = 3 into 3x + y = 13: 3x + 3 = 13, 3x = 10, x = 10/3",
+                        "Check: 3(10/3) + 2(3) = 10 + 6 = 16. <strong>(10/3, 3)</strong>."))
+                + LessonHtml.worked("Elimination · multiply first: 2x + 3y = 16 and x + y = 6",
+                LessonHtml.lines(
+                        "Multiply the second by 3 so the y terms match: 3x + 3y = 18",
+                        "Now subtract the first: (3x + 3y) − (2x + 3y) = 18 − 16",
+                        "x = 2",
+                        "Put x = 2 into x + y = 6: 2 + y = 6, y = 4",
+                        "Check: 2(2) + 3(4) = 4 + 12 = 16. <strong>(2, 4)</strong>."))
+                + LessonHtml.worked("Elimination · multiply both: 2x + 3y = 7 and 3x − 2y = 4",
+                LessonHtml.lines(
+                        "Aim to cancel y. Multiply first by 2 and second by 3:",
+                        "4x + 6y = 14",
+                        "9x − 6y = 12",
+                        "Add: 13x = 26, x = 2",
+                        "From 2(2) + 3y = 7: 4 + 3y = 7, 3y = 3, y = 1",
+                        "Check: 3(2) − 2(1) = 6 − 2 = 4. <strong>(2, 1)</strong>."))
+                + LessonHtml.h4("A word problem — two adults at a kiosk")
+                + LessonHtml.worked("Adult tickets $t and snacks $s. Two adults: 2t + s = 28. One adult plus two snacks: t + 2s = 26. Find t and s.",
+                LessonHtml.lines(
+                        "Substitution: from the second, t = 26 − 2s",
+                        "Put into the first: 2(26 − 2s) + s = 28",
+                        "52 − 4s + s = 28",
+                        "52 − 3s = 28",
+                        "−3s = −24, s = 8",
+                        "t = 26 − 16 = 10",
+                        "Check: 2(10)+8 = 28 and 10+16 = 26. Ticket $10, snack $8."));
+    }
+
+    private static String quadraticDetail() {
+        return LessonHtml.h4("Expanding double brackets (FOIL / area)")
+                + LessonHtml.p("First, Outer, Inner, Last: (x + a)(x + b) = x² + (a+b)x + ab. An area model is the same four rectangles.")
+                + LessonHtml.worked("Expand (x + 3)(x + 2)",
+                LessonHtml.lines(
+                        "First: x·x = x²",
+                        "Outer: x·2 = 2x",
+                        "Inner: 3·x = 3x",
+                        "Last: 3·2 = 6",
+                        "Add: <strong>x² + 5x + 6</strong>."))
+                + LessonHtml.worked("Expand (x + 4)(x − 1)",
+                LessonHtml.lines(
+                        "x² + (−1)x + 4x + (4)(−1)",
+                        "x² + 3x − 4."))
+                + LessonHtml.h4("Factorising x² + bx + c")
+                + LessonHtml.p("Find two numbers that multiply to c and add to b. Those numbers go in the brackets.")
+                + LessonHtml.worked("Factorise x² + 5x + 6",
+                LessonHtml.lines(
+                        "Need two numbers: product 6, sum 5. That is 2 and 3.",
+                        "<strong>(x + 2)(x + 3)</strong>",
+                        "Expand to check: x² + 5x + 6."))
+                + LessonHtml.worked("Solve x² + 5x + 6 = 0",
+                LessonHtml.lines(
+                        "(x + 2)(x + 3) = 0",
+                        "Null factor law: a product is 0 only if a factor is 0.",
+                        "x + 2 = 0 or x + 3 = 0",
+                        "<strong>x = −2 or x = −3</strong>",
+                        "Check: (−2)² + 5(−2) + 6 = 4 − 10 + 6 = 0."))
+                + LessonHtml.worked("Solve x² − 5x + 6 = 0",
+                LessonHtml.lines(
+                        "Numbers: product +6, sum −5 → −2 and −3.",
+                        "(x − 2)(x − 3) = 0",
+                        "<strong>x = 2 or x = 3</strong>."));
     }
 
     private static String stratAlg(int y) {

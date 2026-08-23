@@ -156,6 +156,26 @@ public final class LessonHtml {
         return "<p>" + text + "</p>";
     }
 
+    public static String h4(String title) {
+        return "<h4>" + title + "</h4>";
+    }
+
+    public static String worked(String title, String html) {
+        return Doc.example("Worked example · " + title, html);
+    }
+
+    /** Line-by-line method so students can see every inverse step. */
+    public static String lines(String... steps) {
+        StringBuilder sb = new StringBuilder("<p>");
+        for (int i = 0; i < steps.length; i++) {
+            if (i > 0) {
+                sb.append("<br/>");
+            }
+            sb.append(steps[i]);
+        }
+        return sb.append("</p>").toString();
+    }
+
     public static String table(String[] headers, String[][] rows) {
         StringBuilder sb = new StringBuilder("<table class='lesson-table'><thead><tr>");
         for (String h : headers) {

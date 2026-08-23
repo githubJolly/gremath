@@ -202,6 +202,67 @@ public final class SubjectFigures {
         return wrap(caption, svg);
     }
 
+    public static String plantParts(String caption) {
+        String svg = svg(280, 160)
+                + "<ellipse cx='140' cy='36' rx='36' ry='16' fill='#86efac' stroke='#166534'/>"
+                + text(140, 40, "leaf", 11, "#14532d")
+                + "<rect x='132' y='50' width='16' height='54' fill='#15803d'/>"
+                + text(190, 80, "stem", 11, "#14532d")
+                + "<path d='M 140 104 Q 90 140 70 150' stroke='#a16207' stroke-width='4' fill='none'/>"
+                + "<path d='M 140 104 Q 190 140 210 150' stroke='#a16207' stroke-width='4' fill='none'/>"
+                + text(140, 156, "roots", 11, "#92400e")
+                + "</svg>";
+        return wrap(caption, svg);
+    }
+
+    public static String waterCycle(String caption) {
+        String svg = svg(400, 150)
+                + "<rect x='20' y='100' width='160' height='30' rx='8' fill='#38bdf8'/>"
+                + text(100, 120, "sea", 12, "#0c4a6e")
+                + "<path d='M 100 100 Q 140 50 200 40' fill='none' stroke='#0284c7' stroke-width='3'/>"
+                + text(168, 56, "evaporate", 11, "#0369a1")
+                + "<ellipse cx='250' cy='36' rx='50' ry='18' fill='#cbd5e1'/>"
+                + text(250, 40, "cloud", 11, "#334155")
+                + "<line x1='300' y1='56' x2='320' y2='92' stroke='#0284c7' stroke-width='3'/>"
+                + "<line x1='280' y1='56' x2='300' y2='92' stroke='#0284c7' stroke-width='3'/>"
+                + text(340, 80, "rain", 11, "#0369a1")
+                + "</svg>";
+        return wrap(caption, svg);
+    }
+
+    public static String circuit(String caption) {
+        String svg = svg(360, 120)
+                + "<rect x='30' y='40' width='40' height='40' rx='6' fill='#fde68a' stroke='#b45309'/>"
+                + text(50, 64, "cell", 11, "#92400e")
+                + "<rect x='150' y='36' width='60' height='48' rx='8' fill='#fdba74' stroke='#9a3412'/>"
+                + text(180, 64, "lamp", 11, "#7c2d12")
+                + "<rect x='280' y='48' width='50' height='24' rx='6' fill='#86efac' stroke='#166534'/>"
+                + text(305, 64, "on", 11, "#14532d")
+                + "<line x1='70' y1='60' x2='150' y2='60' stroke='#0f172a' stroke-width='3'/>"
+                + "<line x1='210' y1='60' x2='280' y2='60' stroke='#0f172a' stroke-width='3'/>"
+                + "</svg>";
+        return wrap(caption, svg);
+    }
+
+    public static String storyMountain(String caption) {
+        String svg = svg(400, 140)
+                + "<polygon points='40,110 200,24 360,110' fill='#ffedd5' stroke='#c2410c'/>"
+                + text(70, 124, "start", 11, "#9a3412")
+                + text(200, 18, "problem", 11, "#9a3412")
+                + text(330, 124, "end", 11, "#9a3412")
+                + "</svg>";
+        return wrap(caption, svg);
+    }
+
+    public static String sentenceParts(String caption) {
+        String svg = svg(400, 110)
+                + box(20, 28, 110, 50, "#dbeafe", "Who")
+                + box(145, 28, 110, 50, "#fde68a", "did what")
+                + box(270, 28, 110, 50, "#bbf7d0", "where")
+                + "</svg>";
+        return wrap(caption, svg);
+    }
+
     public static String identityPlaces(String caption) {
         String svg = svg(360, 120)
                 + "<polygon points='80,90 140,28 200,90' fill='#86efac' stroke='#166534'/>"

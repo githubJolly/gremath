@@ -25,11 +25,32 @@ class MathFiguresTest {
     }
 
     @Test
+    void tensFrameAndBalanceScaleRender() {
+        String frame = MathFigures.tensFrame(8, "Eight on a tens frame");
+        assertTrue(frame.contains("<svg"));
+        assertTrue(frame.contains("circle"));
+        assertTrue(frame.contains("Eight on a tens frame"));
+        String scale = MathFigures.balanceScale("7 + □", "12", "Both sides balance");
+        assertTrue(scale.contains("<svg"));
+        assertTrue(scale.contains("7 +"));
+        assertTrue(scale.contains("Both sides balance"));
+    }
+
+    @Test
     void subjectFiguresAreInlineSvgWithCaptions() {
         String fig = SubjectFigures.foodChain("Energy moves along the arrows.");
         assertTrue(fig.contains("<svg"));
         assertTrue(fig.contains("pīwakawaka") || fig.contains("piwakawaka") || fig.contains("harakeke"));
         assertTrue(fig.contains("Energy moves along the arrows."));
         assertFalse(fig.contains("<script"));
+    }
+
+    @Test
+    void extraSubjectFiguresRender() {
+        assertTrue(SubjectFigures.plantParts("Name the parts").contains("<svg"));
+        assertTrue(SubjectFigures.waterCycle("Sea to cloud").contains("<svg"));
+        assertTrue(SubjectFigures.circuit("Complete loop").contains("<svg"));
+        assertTrue(SubjectFigures.storyMountain("Start, problem, end").contains("<svg"));
+        assertTrue(SubjectFigures.sentenceParts("Who did what").contains("<svg"));
     }
 }

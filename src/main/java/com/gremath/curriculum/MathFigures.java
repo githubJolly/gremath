@@ -13,6 +13,36 @@ public final class MathFigures {
         return "<div class='q-stem'><p>" + prompt + "</p>" + figureHtml + "</div>";
     }
 
+    public static String tensFrame(int filled, String caption) {
+        StringBuilder cells = new StringBuilder();
+        for (int i = 0; i < 10; i++) {
+            int col = i % 5;
+            int row = i / 5;
+            int x = 24 + col * 44;
+            int y = 16 + row * 44;
+            cells.append("<rect x='").append(x).append("' y='").append(y)
+                    .append("' width='40' height='40' rx='8' fill='#fff' stroke='#0284c7'/>");
+            if (i < filled) {
+                cells.append("<circle cx='").append(x + 20).append("' cy='").append(y + 20)
+                        .append("' r='12' fill='#ea580c'/>");
+            }
+        }
+        return wrap(caption, svgOpen(248, 116) + cells + svgClose());
+    }
+
+    public static String balanceScale(String left, String right, String caption) {
+        String svg = svgOpen(360, 130)
+                + line(40, 48, 320, 48, "#0f172a", 3)
+                + line(180, 48, 180, 110, "#0f172a", 3)
+                + "<polygon points='180,110 150,124 210,124' fill='#334155'/>"
+                + "<rect x='50' y='22' width='90' height='26' rx='6' fill='#dbeafe' stroke='#1d4ed8'/>"
+                + "<rect x='220' y='22' width='90' height='26' rx='6' fill='#ffedd5' stroke='#c2410c'/>"
+                + text(95, 40, left, 12, "#0f172a")
+                + text(265, 40, right, 12, "#0f172a")
+                + svgClose();
+        return wrap(caption, svg);
+    }
+
     public static String wrap(String caption, String svg) {
         return "<figure class='math-fig'>" + svg
                 + "<figcaption class='fig-cap'>" + esc(caption) + "</figcaption></figure>";

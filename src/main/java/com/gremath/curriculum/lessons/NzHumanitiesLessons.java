@@ -1,5 +1,6 @@
 package com.gremath.curriculum.lessons;
 
+import com.gremath.curriculum.LessonExtras;
 import com.gremath.curriculum.LessonHtml;
 import com.gremath.curriculum.NzLessonSpec;
 import com.gremath.curriculum.NzSubject;
@@ -77,6 +78,7 @@ public final class NzHumanitiesLessons {
         if (html != null && !html.contains("<svg")) {
             html = insertFigure(html, figureFor(kind));
         }
+        html = LessonExtras.apply(year, kind, html);
         return new NzLessonSpec(order, order + ". " + title, strand, html,
                 "nz-" + year + "-" + subject.slug() + "-" + order,
                 LessonHtml.strategy(strand.toLowerCase(),

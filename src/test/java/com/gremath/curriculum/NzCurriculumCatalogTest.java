@@ -25,8 +25,14 @@ class NzCurriculumCatalogTest {
                                     + " len=" + spec.contentHtml().length());
                     assertTrue(spec.contentHtml().contains("You will"),
                             "Missing goals: " + spec.title());
-                    assertTrue(spec.contentHtml().contains("Worked example"),
-                            "Missing examples: " + spec.title());
+                    int examples = count(spec.contentHtml(), "Worked example");
+                    assertTrue(examples >= 3,
+                            "Need 3+ worked examples: Y" + year + " " + subject + " " + spec.title()
+                                    + " has " + examples);
+                    int diagrams = count(spec.contentHtml(), "<svg");
+                    assertTrue(diagrams >= 2,
+                            "Need 2+ illustrations: Y" + year + " " + subject + " " + spec.title()
+                                    + " has " + diagrams);
                     assertTrue(spec.practiceKey() != null && !spec.practiceKey().isBlank());
                 }
             }
@@ -39,6 +45,36 @@ class NzCurriculumCatalogTest {
         assertTrue(html.toLowerCase().contains("20"));
         assertFalse(html.contains("1,000,000"));
         assertTrue(html.contains("tahi") || html.contains("tekau"));
+    }
+
+    @Test
+    void year9AlgebraShowsSubstitutionAndEliminationInFull() {
+        String html = NzCurriculumCatalog.lessons(9, NzSubject.MATHEMATICS).stream()
+                .filter(l -> l.title().toLowerCase().contains("simultaneous")
+                        || l.contentHtml().toLowerCase().contains("elimination"))
+                .map(NzLessonSpec::contentHtml)
+                .findFirst()
+                .orElse("");
+        String lower = html.toLowerCase();
+        assertTrue(html.length() > 3500, "Y9 simultaneous lesson should be detailed, len=" + html.length());
+        assertTrue(lower.contains("substitution"), "missing substitution method");
+        assertTrue(lower.contains("elimination"), "missing elimination method");
+        assertTrue(lower.contains("multiply"), "missing multiply-first elimination");
+        assertTrue(html.contains("Check") || lower.contains("check"));
+    }
+
+    @Test
+    void year7AlgebraShowsTwoStepMethods() {
+        String html = NzCurriculumCatalog.lessons(7, NzSubject.MATHEMATICS).stream()
+                .filter(l -> l.title().toLowerCase().contains("algebra")
+                        || l.title().toLowerCase().contains("equation"))
+                .map(NzLessonSpec::contentHtml)
+                .findFirst()
+                .orElse("");
+        String lower = html.toLowerCase();
+        assertTrue(html.length() > 3000, "Y7 algebra should be elaborative, len=" + html.length());
+        assertTrue(lower.contains("two-step") || lower.contains("subtract 3"));
+        assertTrue(lower.contains("check"));
     }
 
     @Test
@@ -229,5 +265,18 @@ class NzCurriculumCatalogTest {
             }
         }
         assertTrue(checked >= 10 * 8 * 6);
+    }
+
+    private static int count(String haystack, String needle) {
+        int n = 0;
+        int from = 0;
+        while (true) {
+            int i = haystack.indexOf(needle, from);
+            if (i < 0) {
+                return n;
+            }
+            n++;
+            from = i + needle.length();
+        }
     }
 }
