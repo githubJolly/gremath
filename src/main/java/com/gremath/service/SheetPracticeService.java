@@ -61,12 +61,12 @@ public class SheetPracticeService {
                 ++score;
             }
             SheetAnswer answer = new SheetAnswer();
-            answer.setQuestionText(q.getText());
+            answer.setQuestionText(this.schemaRepair.fitText(q.getText()));
             answer.setOptions(new ArrayList<String>(q.getOptions()));
             answer.setCorrectOption(q.getCorrectOption());
             answer.setSelectedOption(selected);
             answer.setCorrect(correct);
-            answer.setExplanation(q.getExplanation());
+            answer.setExplanation(this.schemaRepair.fitText(q.getExplanation()));
             answer.setTag(q.getTag());
             attempt.addAnswer(answer);
         }
