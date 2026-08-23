@@ -31,8 +31,8 @@
            th:classappend="${'theme-' + s.themeClass}"
            th:href="${hasAccess ? s.href : '/register'}">
             <div class="emoji" th:text="${s.emoji}">🔢</div>
-            <span class="badge" th:classappend="${s.featured} ? ' badge-featured' : ' badge-class6'"
-                  th:text="${s.featured} ? 'Featured · ' + s.lessonCount + ' lessons' : s.lessonCount + ' detailed lessons'">Ready</span>
+            <span class="badge badge-class6"
+                  th:text="${s.lessonCount + ' detailed lessons'}">Ready</span>
             <h3 th:text="${s.subject}">Subject</h3>
             <p class="muted" style="font-size:0.82rem; margin:0 0 8px;" th:text="${s.phaseLabel}">Phase</p>
             <p th:text="${s.blurb}">Blurb</p>

@@ -351,27 +351,206 @@ public final class NzHumanitiesLessons {
             case 5 -> "Creating";
             default -> "Tikanga";
         };
-        String meaning = switch (n) {
-            case 1 -> "Kia ora is a friendly greeting. Tēnā koe greets one person more formally; tēnā kōrua two; tēnā koutou a group. Macrons change meaning (keke cake vs kēkē armpit — a famous classroom warning). Year " + y + " practises the greeting loop: greet, introduce, respond.";
-            case 2 -> "High-frequency kupu: numbers tahi–tekau, colours, kai, whānau words, classroom objects (pukapuka, pene). A word you can put in a sentence the same day is a word you own. Waiata recycle vocabulary.";
-            case 3 -> "You will understand more than you can say. Listen for a key word, repeat a model, swap one word. Kei te pai; kei te ngenge. Mistakes are data. Fluency grows from trying, not from waiting to be perfect.";
-            case 4 -> "Print supports oral language: signs, dual-language books, labels on the tēpu. You do not need every word to get the gist. Read aloud to hear vowel sounds — Māori vowels are more consistent than English ones.";
-            case 5 -> "Create a tiny text: a caption, a two-line mihi, a comic speech bubble, a waiata verse with known kupu. Accuracy of a few words beats a long Google-translated paragraph you cannot pronounce.";
-            default -> "Language and culture travel together. Tikanga (kawa of a marae, removing shoes, not sitting on tables, karakia as practised in your community) has purpose. Using te reo as a joke or a football chant without meaning can strip mana. Keep learning both language and tikanga.";
-        };
+        String[] ex = langExamples(y, n);
         return LessonHtml.teach(LessonHtml.phaseLabel(y), strand,
-                new String[]{"Use at least one accurate phrase in te reo Māori.", "Pronounce macron vowels carefully.", "Show respect for tikanga attached to the language."},
-                LessonHtml.p(meaning)
-                        + LessonHtml.p("Te reo Māori is an official language. Learning Languages in the NZC also includes other additional languages your school offers (French, Japanese, Samoan…). The habits — listen, repeat, respect — transfer.")
-                        + LessonHtml.p("Year " + y + " success is a short, true sentence you can say to a person, not a worksheet of isolated words only."),
-                "Use the language of this place. Even one greeting done well is citizenship.",
-                new String[]{"Listen to a model.", "Repeat.", "Swap one word to make it yours.", "Use it the same day in a real greeting."},
-                "Tēnā koe vs kia ora", "Tēnā koe for one person, slightly more formal; kia ora widely friendly. Match the situation.",
-                "Numbers 1–5", "Tahi, rua, toru, whā, rima. Say them while counting objects on the table.",
-                null, "Copying a mihi from the internet that belongs to another iwi as if it were yours.",
-                "Five words in sentences beat twenty words in a list you cannot use.",
+                langGoals(y, n),
+                langMeaning(y, n) + otherLanguageHabit(y),
+                "Use the language of this place. A greeting you can say to a real person is citizenship — not a worksheet of isolated words.",
+                new String[]{"Listen to a model (teacher, recording, or a confident classmate).",
+                        "Repeat the whole phrase, not one word at a time.",
+                        "Swap one kupu to make it yours (name, feeling, number).",
+                        "Use it the same day — at the door, at kai time, or in a message home."},
+                ex[0], ex[1], ex[2], ex[3],
+                langWordTable(y, n),
+                "Copying a mihi from the internet that belongs to another iwi as if it were yours. Also: saying kupu as a joke or a football chant without meaning.",
+                "Five words inside sentences beat twenty words in a list you cannot say.",
                 "Greet, recycle kupu, respect tikanga. Year " + y + ".",
-                "kia ora, tēnā koe, kupu, macron, tikanga, manaakitanga");
+                "kia ora, tēnā koe, kupu, tohutō (macron), tikanga, manaakitanga");
+    }
+
+    private static String[] langGoals(int y, int n) {
+        if (y <= 3) {
+            return new String[]{"Say one greeting and one reply that fit one person or a group.",
+                    "Hear and keep the tohutō (macron) on a vowel.",
+                    "Use the phrase with a person, not only on a page."};
+        }
+        if (y <= 6) {
+            return new String[]{"Greet, name yourself, and ask or answer one question.",
+                    "Put a new kupu into a full sentence the same day.",
+                    "Show tikanga: who you are greeting, and how formal it should sound."};
+        }
+        if (n == 1 || n == 6) {
+            return new String[]{"Choose a greeting or mihi that fits the audience and the occasion.",
+                    "Name people and place with care (macrons, iwi, whenua).",
+                    "Explain one tikanga reason, not only the words."};
+        }
+        return new String[]{"Build a short, accurate text you can say or write without a translator.",
+                "Reuse a sentence pattern and swap one slot (who, feeling, place, time).",
+                "Read for gist first, then lift two kupu you can recycle."};
+    }
+
+    private static String langMeaning(int y, int n) {
+        return switch (n) {
+            case 1 -> greetMeaning(y);
+            case 2 -> wordsMeaning(y);
+            case 3 -> oralMeaning(y);
+            case 4 -> readMeaning(y);
+            case 5 -> createMeaning(y);
+            default -> tikangaMeaning(y);
+        };
+    }
+
+    private static String greetMeaning(int y) {
+        String core = LessonHtml.p("Choose the greeting that fits <em>how many</em> people and <em>how formal</em> the moment is.")
+                + LessonHtml.table(new String[]{"Te reo", "Who you greet", "Feel"},
+                new String[][]{
+                        {"Kia ora", "one person or a group — friendly", "everyday, warm"},
+                        {"Tēnā koe", "one person", "a little more formal"},
+                        {"Tēnā kōrua", "two people", "formal / careful"},
+                        {"Tēnā koutou", "three or more", "formal / assembly"},
+                        {"Tēnā koutou katoa", "everyone here", "opening a gathering"}
+                })
+                + LessonHtml.p("The tohutō (macron) stretches the vowel. It can change the word: <em>keke</em> (cake) is not <em>kēkē</em> (armpit). Say <em>tēnā</em> as TEH-naah, not 'tenna'.");
+        if (y <= 3) {
+            return core + LessonHtml.p("Year " + y + " loop: greet → hear your name → reply. Example at the classroom door: kaiako says <em>Kia ora, e hoa</em>. You reply <em>Kia ora</em> and look at them.");
+        }
+        if (y <= 6) {
+            return core + LessonHtml.p("Year " + y + " adds your name: <em>Kia ora. Ko [ingoa] tōku ingoa.</em> Then ask <em>Kei te pēhea koe?</em> and answer with a feeling word.");
+        }
+        return core + LessonHtml.p("From Year 7, greetings sit inside a short mihi: greet the people, name the purpose, then sit or start the mahi. A sports-team huddle can stay with <em>kia ora</em>; a pōwhiri or prizegiving needs <em>tēnā koutou katoa</em>.");
+    }
+
+    private static String wordsMeaning(int y) {
+        return LessonHtml.p("Own a kupu only when you can drop it into a sentence. Count, colour, kai and classroom words are the first families.")
+                + LessonHtml.p("<strong>Pattern to steal:</strong> <em>Kei te hiahia au i te/ngā …</em> (I would like …) or <em>He [colour] tēnei</em> (This is [colour]).")
+                + LessonHtml.p(y <= 4
+                ? "Year " + y + ": say the number while you touch the objects. Tahi apple, rua apples — the kupu has to match what you see."
+                : "Year " + y + ": build a mini shop or timetable sentence. <em>Kei te hiahia au i te āporo, koa.</em> Then swap āporo for another kai word.")
+                + LessonHtml.p("Waiata recycle the same kupu. If you can sing <em>tahi, rua, toru</em>, you can also count books on a table.");
+    }
+
+    private static String oralMeaning(int y) {
+        return LessonHtml.p("You will understand more than you can say. That is normal. Listen for one kupu you know, then copy the shape of the whole sentence.")
+                + LessonHtml.p("<strong>Question → answer bank</strong>")
+                + LessonHtml.table(new String[]{"Ask", "Answer you can reuse"},
+                new String[][]{
+                        {"Kei te pēhea koe?", "Kei te pai / Kei te ngenge / Kei te hiakai"},
+                        {"Ko wai tō ingoa?", "Ko [ingoa] tōku ingoa"},
+                        {"Kei hea tō pukapuka?", "Kei runga i te tēpu"}
+                })
+                + LessonHtml.p(y <= 5
+                ? "Swap only the last word: Kei te ngenge; Kei te koa. Same frame, new feeling."
+                : "Year " + y + " adds a reason: <em>Kei te ngenge au, nā te mea i oma au.</em> (I’m tired because I ran.)");
+    }
+
+    private static String readMeaning(int y) {
+        return LessonHtml.p("Read for gist first. You do not need every word on a sign, waiata line or dual-language page.")
+                + LessonHtml.p("Māori vowels are steady: a as in <em>are</em>, e as in <em>peck</em>, i as in <em>see</em> (shorter), o as in <em>or</em>, u as in <em>zoo</em>. A tohutō makes that vowel longer.")
+                + LessonHtml.p(y <= 6
+                ? "Look at a lunch-box or classroom label: <em>pukapuka</em>, <em>pene</em>, <em>wai</em>. Point, say, then use it in <em>Kei hea te …?</em>"
+                : "Year " + y + ": read a short notice (sports draw, noho marae note, bilingual newsletter). Underline two kupu you can recycle in your own sentence.");
+    }
+
+    private static String createMeaning(int y) {
+        return LessonHtml.p("Make a tiny, true text — a caption, speech bubble, two-line mihi, or a message home. A short accurate sentence beats a long translation you cannot pronounce.")
+                + LessonHtml.p("<strong>A reusable frame:</strong> <em>Kia ora. Ko [ingoa] tōku ingoa. Kei te [feeling] au.</em>")
+                + LessonHtml.p(y <= 6
+                ? "Write it, then say it to a partner without looking. If you stumble, the sentence is too long — cut it."
+                : "Year " + y + " can add place or purpose: <em>Nō Ōtautahi ahau. Kei te ako au i te pāngarau.</em>");
+    }
+
+    private static String tikangaMeaning(int y) {
+        return LessonHtml.p("Language and tikanga travel together. Words have jobs: a karakia, a mihi, or removing shoes at the door are not decoration.")
+                + LessonHtml.p("Do not sit on tables. Do not walk in front of a speaker if you can go behind. Wait to be called onto a marae. Ask your kaiako what is practised <em>here</em> — schools differ, and that is ok.")
+                + LessonHtml.p(y <= 6
+                ? "Year " + y + " can name one tikanga and its reason: we wait at the gate so the tangata whenua can welcome us."
+                : "Year " + y + " should also name mana and audience: a copied pepeha from another iwi, used as if it were yours, takes mana that is not yours.");
+    }
+
+    private static String otherLanguageHabit(int y) {
+        return LessonHtml.h4("If your school also teaches another language")
+                + LessonHtml.p("The same habit works in te reo Māori, gagana Samoa, français, or 日本語: listen to a whole phrase, repeat it, swap one slot, use it the same day.")
+                + LessonHtml.table(new String[]{"Language", "Hello (1 person)", "How are you?"},
+                new String[][]{
+                        {"Te reo Māori", "Kia ora / Tēnā koe", "Kei te pēhea koe?"},
+                        {"Gagana Samoa", "Talofa", "O ā mai oe?"},
+                        {"Français", "Bonjour", "Ça va ?"},
+                        {"English", "Hello", "How are you?"}
+                })
+                + LessonHtml.p("Do not mix the languages in one sentence until you can say each phrase cleanly. Year " + y
+                + " success is one true phrase you can offer a person.");
+    }
+
+    private static String[] langExamples(int y, int n) {
+        return switch (n) {
+            case 1 -> y <= 4
+                    ? new String[]{"At the classroom door",
+                    LessonHtml.p("<em>Kaiako:</em> Kia ora, e hoa. Kei te pēhea koe?")
+                            + LessonHtml.p("<em>You:</em> Kia ora. Kei te pai.")
+                            + LessonHtml.p("Then look at them. A greeting is a relationship, not a password."),
+                    "One person or a group?",
+                    LessonHtml.p("You walk in and see one teacher → <em>Tēnā koe</em> or <em>Kia ora</em>.")
+                            + LessonHtml.p("You greet the whole class → <em>Kia ora koutou</em> or <em>Tēnā koutou</em>.")}
+                    : new String[]{"A short mihi you can actually say",
+                    LessonHtml.p("<em>Tēnā koutou katoa.</em>")
+                            + LessonHtml.p("<em>Ko [ingoa] tōku ingoa.</em>")
+                            + LessonHtml.p("<em>Nō [tāone] ahau.</em>")
+                            + LessonHtml.p("Say it slowly. Pause after each line. Do not rush to English."),
+                    "Match the occasion",
+                    LessonHtml.p("Lunchtime basketball: <em>Kia ora</em> is enough.")
+                            + LessonHtml.p("Assembly or manuhiri: start with <em>Tēnā koutou katoa</em>, then your name.")};
+            case 2 -> new String[]{"Count what you can see",
+                    LessonHtml.p("Five books on the tēpu: <em>E rima ngā pukapuka.</em>")
+                            + LessonHtml.p("Tahi, rua, toru, whā, rima — point as you say each one."),
+                    "Swap the kai word",
+                    LessonHtml.p("Frame: <em>Kei te hiahia au i te ____, koa.</em>")
+                            + LessonHtml.p("Try <em>āporo</em> (apple), <em>wai</em> (water), <em>parāoa</em> (bread). Same sentence, new kupu.")};
+            case 3 -> new String[]{"A real exchange",
+                    LessonHtml.p("<em>A:</em> Kei te pēhea koe?")
+                            + LessonHtml.p("<em>B:</em> Kei te ngenge. Kei te pēhea koe?")
+                            + LessonHtml.p("<em>A:</em> Kei te pai.")
+                            + LessonHtml.p(y >= 7 ? "Add a reason: <em>Kei te ngenge au, nā te mea i oma au.</em>" : "Swap ngenge for hiakai or koa next turn."),
+                    "Listen for the kupu you know",
+                    LessonHtml.p("If you only catch <em>pēhea</em>, you still know it is a ‘how are you’ question. Answer with a feeling word. Do not freeze because the rest was fast.")};
+            case 4 -> new String[]{"Read a sign for gist",
+                    LessonHtml.p("A door sign: <em>Kia tūpato. Kei te mākū te papa.</em>")
+                            + LessonHtml.p("Gist: be careful — the floor is wet. You do not need every grammar label to stay safe."),
+                    "Lift two kupu",
+                    LessonHtml.p("From a dual-language caption, copy <em>maunga</em> and <em>awa</em> into: <em>Kei te kite au i te maunga.</em>")};
+            case 5 -> new String[]{"Write then say, without looking",
+                    LessonHtml.p("<em>Kia ora. Ko Aria tōku ingoa. Kei te koa au.</em>")
+                            + LessonHtml.p("Cover the page. If you cannot say it, shorten it."),
+                    y >= 7 ? "Add place or purpose" : "A speech bubble",
+                    y >= 7
+                            ? LessonHtml.p("<em>Nō Kirikiriroa ahau. Kei te ako au i te pāngarau.</em> One extra line is enough.")
+                            : LessonHtml.p("Draw yourself at the door. Bubble: <em>Kia ora, e hoa.</em>")};
+            default -> new String[]{"Name a tikanga and its reason",
+                    LessonHtml.p("We wait at the waharoa (gate) so tangata whenua can welcome us. The reason is manaakitanga — looking after people in the right order."),
+                    "Words with a job",
+                    LessonHtml.p("A karakia before kai is not ‘just a poem’. Ask when your class uses one, and join in or stand quietly with respect.")};
+        };
+    }
+
+    private static String langWordTable(int y, int n) {
+        if (n == 2 || n == 3) {
+            return LessonHtml.table(new String[]{"Kupu", "Meaning", "Say it in a sentence"},
+                    new String[][]{
+                            {"tahi–rima", "1–5", "E toru ngā pene."},
+                            {"pai / ngenge / hiakai", "good / tired / hungry", "Kei te hiakai au."},
+                            {"pukapuka / pene / wai", "book / pen / water", "Kei hea te wai?"},
+                            {"ingoa", "name", "Ko [ingoa] tōku ingoa."}
+                    });
+        }
+        if (n == 1 && y >= 7) {
+            return LessonHtml.table(new String[]{"Line", "Job"},
+                    new String[][]{
+                            {"Tēnā koutou katoa", "open to everyone here"},
+                            {"Ko … tōku ingoa", "name yourself"},
+                            {"Nō … ahau", "say where you are from"},
+                            {"Tēnā koutou, tēnā koutou, tēnā tātou katoa", "close a short mihi"}
+                    });
+        }
+        return null;
     }
 
     private static String insertFigure(String html, String figure) {

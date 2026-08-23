@@ -59,26 +59,73 @@ public final class NzMathLessons {
         return LessonHtml.teach(LessonHtml.phaseLabel(7), "Number | Tau",
                 new String[]{"Know that whole numbers greater than 1 are prime or composite; 1 is neither.",
                         "Use divisibility tests for 2, 3, 4, 5, 6, 8, 9 and 10.",
-                        "Find HCF of two numbers under 100 and LCM of two numbers under 10 (and beyond with primes)."},
-                LessonHtml.p("A prime number has exactly two distinct factors: 1 and itself. 2 is the only even prime. A composite number has more than two factors. 1 is neither prime nor composite.")
-                        + LessonHtml.p("Highest common factor (HCF) is the largest whole number that divides both numbers. Least common multiple (LCM) is the smallest number that both divide. Prime factorisation makes both systematic: take lowest powers for HCF and highest powers for LCM.")
-                        + LessonHtml.p("Divisibility rules: even → 2; last digit 0 or 5 → 5; last digit 0 → 10; digit sum ÷3 → 3; digit sum ÷9 → 9; last two digits ÷4 → 4; ÷2 and ÷3 → 6; last three digits ÷8 is a useful 8-test."),
-                "Bus-route numbers, jersey numbers and school roll groups are everyday integers you can classify as prime or composite — a habit, not a party trick.",
-                new String[]{"Test small primes in order (2, 3, 5, 7…) up to the square root.",
-                        "Write each number as a product of primes with exponents.",
-                        "HCF: shared primes with the smaller exponents. LCM: all primes with the larger exponents.",
-                        "Check by multiplying the factors back."},
+                        "Find HCF and LCM by listing first, then by prime factors, and check in a story."},
+                LessonHtml.p("A <strong>prime</strong> number has exactly two distinct factors: 1 and itself. 2, 3, 5, 7, 11, 13… are prime. 2 is the only even prime. A <strong>composite</strong> number has more than two factors (9 = 1 × 9 and 3 × 3). <strong>1 is neither</strong> prime nor composite — it has only one factor.")
+                        + LessonHtml.p("Before HCF and LCM, write each number as a product of primes. A factor tree (or repeated ÷2, ÷3, ÷5…) keeps going until every branch is prime. Then collect like primes as exponents: 12 = 2 × 2 × 3 = 2² × 3.")
+                        + LessonHtml.p("Divisibility rules save the first split of the tree: even → ÷2; last digit 0 or 5 → ÷5; last digit 0 → ÷10; digit sum ÷3 → ÷3; digit sum ÷9 → ÷9; last two digits ÷4 → ÷4; ÷2 and ÷3 → ÷6.")
+                        + hcfLcmTeaching(),
+                "Jersey numbers, bus-route numbers and class sizes are everyday integers you can classify as prime or composite. HCF and LCM then answer real questions: largest groups that split two classes evenly, or the first time two looping buses meet again.",
+                new String[]{"Ask: prime, composite, HCF, or LCM? HCF is the biggest shared factor; LCM is the smallest shared multiple.",
+                        "For small numbers, list factors or multiples so you can see the idea.",
+                        "For any size, write prime factors. HCF = shared primes with the smaller exponents. LCM = every prime with the larger exponents.",
+                        "Check: HCF must divide both numbers. Both numbers must divide the LCM. HCF × LCM = a × b when you used two numbers."},
                 "Is 51 prime?",
                 MathFigures.factorTree(51, 3, 17, "A factor tree splits 51 until both branches are prime.")
-                        + "<p>Digit sum 6 is divisible by 3, so 51 = 3 × 17. Composite — not prime.</p>",
-                "HCF and LCM of 12 and 18",
-                "12 = 2²×3, 18 = 2×3². HCF = 2×3 = 6. LCM = 2²×3² = 36. Check: 6 divides both; 36 is a multiple of both.",
-                LessonHtml.table(new String[]{"Rule", "Test"},
-                        new String[][]{{"÷2", "last digit even"}, {"÷3", "digit sum ÷3"}, {"÷4", "last two digits ÷4"}, {"÷5", "ends in 0 or 5"}, {"÷9", "digit sum ÷9"}}),
-                "Listing 9 or 15 as prime because they are odd. Odd does not mean prime.",
-                "Keep a tidy factor tree (or repeated division table) so exponents are not lost.",
-                "Primes, divisibility, HCF and LCM — the engine room for fractions next.",
-                "prime, composite, HCF, LCM, divisible, factor tree");
+                        + LessonHtml.p("Digit sum 5 + 1 = 6, and 6 ÷ 3 = 2, so 51 is divisible by 3. 51 = 3 × 17. Both 3 and 17 are prime. Composite — not prime. Odd does not mean prime.")
+                        + LessonHtml.p("Check: 3 × 17 = 51. Factors of 51 are 1, 3, 17, 51 — four factors, so composite."),
+                "HCF and LCM of 12 and 18 — both methods",
+                listThenPrimesHcfLcm(12, 18, "2² × 3", "2 × 3²", 6, 36),
+                LessonHtml.table(new String[]{"Rule", "How to test", "Example"},
+                        new String[][]{
+                                {"÷2", "last digit even", "84 ends in 4 → yes"},
+                                {"÷3", "digit sum ÷3", "51 → 5+1=6, 6÷3=2 → yes"},
+                                {"÷4", "last two digits ÷4", "316 → 16÷4=4 → yes"},
+                                {"÷5", "ends in 0 or 5", "75 → yes"},
+                                {"÷6", "÷2 and ÷3", "42 is even and 4+2=6 → yes"},
+                                {"÷9", "digit sum ÷9", "81 → 8+1=9 → yes"}
+                        }),
+                "Listing 9 or 15 as prime because they are odd. Odd does not mean prime. Also: HCF is not the first factor you notice, and LCM is not a × b unless the numbers share no common factor other than 1.",
+                "If the numbers are small, list. If they get messy, switch to primes. Always finish with a check sentence.",
+                "Primes, divisibility, HCF and LCM — the engine room for simplifying fractions and finding a common denominator next.",
+                "prime, composite, factor, multiple, HCF, LCM, exponent, divisible");
+    }
+
+    /**
+     * Slow HCF/LCM teaching used from Year 7. Listing first, then primes, then a story check.
+     */
+    static String hcfLcmTeaching() {
+        return LessonHtml.h4("HCF and LCM — two different questions")
+                + LessonHtml.p("People mix these up because both use the same two numbers. The question is different.")
+                + LessonHtml.p("<strong>HCF (highest common factor)</strong> — also called GCD — is the <em>largest</em> whole number that divides <em>both</em> numbers. Picture the biggest square tile that can cover a 12-unit strip and an 18-unit strip with no leftover.")
+                + LessonHtml.p("<strong>LCM (least common multiple)</strong> is the <em>smallest</em> whole number that <em>both</em> numbers divide. Picture two looping buses: one every 12 minutes, one every 18 minutes, starting together. LCM is the first time they leave together again.")
+                + LessonHtml.h4("Method 1 — list (see the idea)")
+                + LessonHtml.p("Factors of 12: 1, 2, 3, 4, 6, 12. Factors of 18: 1, 2, 3, 6, 9, 18. Shared factors: 1, 2, 3, 6. The highest is <strong>6</strong>. That is the HCF.")
+                + LessonHtml.p("Multiples of 12: 12, 24, 36, 48… Multiples of 18: 18, 36, 54… First shared multiple: <strong>36</strong>. That is the LCM.")
+                + LessonHtml.p("Listing is honest and easy for small numbers. When numbers grow, the lists get long — then use primes.")
+                + LessonHtml.h4("Method 2 — prime factors (the method you keep)")
+                + LessonHtml.p("Write each number as primes, lined up so matching primes sit in columns.")
+                + LessonHtml.p("12 = 2 × 2 × 3 = <strong>2² × 3</strong>")
+                + LessonHtml.p("18 = 2 × 3 × 3 = <strong>2 × 3²</strong>")
+                + LessonHtml.p("<strong>HCF:</strong> take only the primes that appear in <em>both</em>, and use the <em>smaller</em> exponent. Both have a 2 (smallest power is 2¹) and a 3 (smallest power is 3¹). HCF = 2 × 3 = <strong>6</strong>.")
+                + LessonHtml.p("<strong>LCM:</strong> take every prime that appears in <em>either</em>, and use the <em>larger</em> exponent. We need 2² (from 12) and 3² (from 18). LCM = 2² × 3² = 4 × 9 = <strong>36</strong>.")
+                + LessonHtml.h4("A check that catches mistakes")
+                + LessonHtml.p("For two numbers a and b: <strong>HCF × LCM = a × b</strong>. Check: 6 × 36 = 216 and 12 × 18 = 216. Same, so the pair is consistent.")
+                + LessonHtml.p("If they are not equal, you dropped an exponent or took the wrong power.")
+                + LessonHtml.h4("A story so the words stick")
+                + LessonHtml.p("Two classes, 12 and 18 students, walk in equal rows to assembly. HCF 6 means the largest equal row you can make for <em>both</em> classes is 6 (class of 12 makes 2 rows; class of 18 makes 3 rows).")
+                + LessonHtml.p("A 12-minute kapa haka loop and an 18-minute poi loop start together. LCM 36 means they start together again after 36 minutes — not after 12 × 18 = 216 minutes. Multiplying the two numbers often overshoots when they share a factor.");
+    }
+
+    private static String listThenPrimesHcfLcm(int a, int b, String aPrimes, String bPrimes, int hcf, int lcm) {
+        return LessonHtml.p("<strong>List first.</strong> Factors of " + a + " and of " + b + " share " + hcf
+                + " as the largest common factor. Multiples meet first at " + lcm + ".")
+                + LessonHtml.p("<strong>Then primes.</strong> " + a + " = " + aPrimes + ". " + b + " = " + bPrimes + ".")
+                + LessonHtml.p("HCF uses the shared primes with the smaller exponents → <strong>" + hcf + "</strong>.")
+                + LessonHtml.p("LCM uses every prime with the larger exponents → <strong>" + lcm + "</strong>.")
+                + LessonHtml.p("Check: " + hcf + " × " + lcm + " = " + (hcf * lcm) + " and " + a + " × " + b + " = "
+                + (a * b) + ". Same, so the pair is consistent.")
+                + LessonHtml.p("Check in words: " + hcf + " divides both " + a + " and " + b + ". Both "
+                + a + " and " + b + " divide " + lcm + ".");
     }
 
     private static final String[] NUMBER_T = {
@@ -439,6 +486,10 @@ public final class NzMathLessons {
                             "Evaluate square and cube roots of perfect powers, and approximate others."},
                     LessonHtml.p("Place value continues infinitely left and right. Negative exponents write repeated division by 10: 10⁻² = 1/100 = 0.01. Then 3.61 = 3×10⁰ + 6×10⁻¹ + 1×10⁻².")
                             + LessonHtml.p("Every composite number has a unique prime factorisation (fundamental theorem of arithmetic). 36 = 2² × 3². Cube roots join square roots: ∛125 = 5.")
+                            + LessonHtml.h4("HCF and LCM with unique primes")
+                            + LessonHtml.p("Year 7 listing still works. Year 8 should prefer primes, because each composite has one fingerprint. HCF = shared primes with the smaller exponents. LCM = every prime with the larger exponents. Check: HCF × LCM = a × b.")
+                            + LessonHtml.worked("HCF and LCM of 24 and 36",
+                            listThenPrimesHcfLcm(24, 36, "2³ × 3", "2² × 3²", 12, 72))
                             + LessonHtml.p("Integers include negatives, positives and zero. Every number has an additive inverse: −5 + 5 = 0. You add and subtract integers on a number line and in finance or temperature problems."),
                     "A tide gauge or a bank overdraft uses negative numbers; millimetres as 10⁻³ m shows why negative powers appear in science and technology.",
                     new String[]{"Convert between 0.01, 1/100 and 10⁻² until they feel like the same object.",

@@ -12,7 +12,7 @@ public final class LessonExtras {
         if (html == null || html.isBlank()) {
             return html;
         }
-        String extras = extraFigure(year, kind) + extraExamples(year, kind);
+        String extras = extraFigure(year, kind) + extraExamples(year, kind) + seniorWalkthrough(year, kind);
         int i = html.indexOf("<div class='callout c-warn'>");
         if (i < 0) {
             i = html.indexOf("<div class='callout c-exam'>");
@@ -94,6 +94,48 @@ public final class LessonExtras {
         };
     }
 
+    /** From Year 7, add a slower contextual walk-through so methods are not just a formula. */
+    private static String seniorWalkthrough(int year, String kind) {
+        if (year < 7) {
+            return "";
+        }
+        String k = kind == null ? "" : kind;
+        String title;
+        String body;
+        switch (k) {
+            case "PRIME", "NUMBER" -> {
+                title = "Slow walk-through · HCF and LCM in a story";
+                body = LessonHtml.p("Two sports teams, 16 and 24 players, must walk in equal rows.")
+                        + LessonHtml.p("HCF question: what is the largest row that works for both? 16 = 2⁴, 24 = 2³ × 3. Shared primes with the smaller power: 2³ = 8. So 16 makes 2 rows of 8; 24 makes 3 rows of 8.")
+                        + LessonHtml.p("LCM question: a 16-minute drill and a 24-minute drill start together. When do they start together again? LCM uses 2⁴ and 3: 16 × 3 = 48 minutes. Check: 8 × 48 = 384 and 16 × 24 = 384.");
+            }
+            case "OPS" -> {
+                title = "Slow walk-through · GEMA in context";
+                body = LessonHtml.p("A shop: 3 drink bottles at $2 and a $5 wrap. Total = 3 × 2 + 5.")
+                        + LessonHtml.p("Multiply first: 6 + 5 = $11. If you add 3 + 2 first you invent a $5 drink that was never there. Write the story as a number sentence, then GEMA, then check against the story.");
+            }
+            case "FRACTION" -> {
+                title = "Slow walk-through · a shop percentage";
+                body = LessonHtml.p("A $40 hoodie is 25% off. 25% = 1/4, so discount = 40 ÷ 4 = $10. Pay $30.")
+                        + LessonHtml.p("Check with a decimal: 0.25 × 40 = 10. GST later is 15% of the price you are told — read exclusive vs inclusive.");
+            }
+            case "ALGEBRA" -> {
+                title = "Slow walk-through · undo, then check";
+                body = LessonHtml.p("3x − 4 = 11. Undo −4 by adding 4: 3x = 15. Undo ×3 by dividing by 3: x = 5.")
+                        + LessonHtml.p("Check in the original: 3×5 − 4 = 15 − 4 = 11. If the check fails, you undid operations in the wrong order.");
+            }
+            case "GREETINGS", "WORDS", "LISTEN", "READLANG", "TIKANGA" -> {
+                title = "Slow walk-through · say it, then swap one word";
+                body = LessonHtml.p("Model: <em>Kei te pēhea koe? / Kei te pai.</em> Repeat the whole pair.")
+                        + LessonHtml.p("Swap the answer only: Kei te ngenge; Kei te hiakai. Same question, new feeling. Then use it at the door today.");
+            }
+            default -> {
+                return "";
+            }
+        }
+        return LessonHtml.h4(title) + LessonHtml.worked("Year " + year + " context", body);
+    }
+
     private static String extraExamples(int year, String kind) {
         String k = kind == null ? "" : kind;
         String[] pair = examplesFor(year, k);
@@ -115,10 +157,12 @@ public final class LessonExtras {
                     "Write 45,000 in scientific notation (Y9–10 idea)", year >= 9
                     ? "45,000 = 4.5 × 10⁴. The digit part is at least 1 and less than 10."
                     : "45,000 = 45 × 1,000. Each jump of ×10 is a place-value house."};
-            case "PRIME" -> new String[]{"Is 51 prime?",
-                    "Digit sum 6 is divisible by 3, so 51 = 3 × 17. Composite — not prime.",
-                    "HCF and LCM of 8 and 12",
-                    "8 = 2³, 12 = 2²×3. HCF = 2² = 4. LCM = 2³×3 = 24."};
+            case "PRIME" -> new String[]{"List, then primes: HCF and LCM of 8 and 12",
+                    "Factors of 8: 1, 2, 4, 8. Factors of 12: 1, 2, 3, 4, 6, 12. Shared: 1, 2, 4 → HCF = 4. "
+                            + "8 = 2³, 12 = 2²×3. HCF uses the smaller 2-power: 2² = 4. LCM uses 2³ and 3: 8 × 3 = 24. "
+                            + "Check: 4 × 24 = 96 and 8 × 12 = 96.",
+                    "Two looping buses",
+                    "A 8-minute loop and a 12-minute loop start together. LCM 24 is the first time they leave together again — not 8 × 12 = 96."};
             case "OPS" -> b <= 2
                     ? new String[]{"6 rows of 4", "6 × 4 = 24. An array of 6 by 4 has 24 dots.",
                     "28 shared among 4", "28 ÷ 4 = 7. Each person gets 7 with none left."}
@@ -235,11 +279,15 @@ public final class LessonExtras {
                     "Swim between the flags, with a buddy. If you cannot see the flags, stay out.",
                     "Online safety, Year " + year,
                     "Do not share a password. Tell a trusted adult about a message that feels wrong."};
-            case "GREETINGS", "WORDS", "LISTEN", "READLANG", "TIKANGA" -> new String[]{
-                    "Choose the greeting",
-                    "One person: tēnā koe. Two or more: tēnā koutou or kia ora koutou.",
-                    "Use a kupu in a sentence",
-                    "‘Kia ora, e hoa’ is better than a list of words with no sentence."};
+            case "GREETINGS", "WORDS", "LISTEN", "READLANG", "TIKANGA" -> year <= 4
+                    ? new String[]{"A door greeting you can copy",
+                    "Kaiako: Kia ora, e hoa. Kei te pēhea koe? You: Kia ora. Kei te pai. Look at them when you say it.",
+                    "Count five objects",
+                    "Point: tahi, rua, toru, whā, rima. Then a sentence: E rima ngā pene."}
+                    : new String[]{"A three-line mihi",
+                    "Tēnā koutou katoa. Ko [ingoa] tōku ingoa. Nō [tāone] ahau. Pause after each line.",
+                    "Same habit in another language",
+                    "Te reo: Kei te pēhea koe? Samoa: O ā mai oe? French: Ça va ? Learn one phrase cleanly before you mix languages."};
             default -> new String[]{"Say the idea in your own words",
                     "If you cannot explain it to a Year " + Math.max(1, year - 1) + " learner, read the lesson again.",
                     "Give a second example",

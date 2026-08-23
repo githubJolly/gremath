@@ -66,7 +66,9 @@ class DashboardPageTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Progress by subject")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Hi Aria")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("year-pill")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("year-pill")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(
+                        org.hamcrest.Matchers.containsString("Year 6 maths standards"))));
 
         org.junit.jupiter.api.Assertions.assertFalse(NzCurriculumMap.cardsForYear(6).isEmpty());
     }

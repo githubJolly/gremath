@@ -78,6 +78,31 @@ class NzCurriculumCatalogTest {
     }
 
     @Test
+    void year7PrimesTeachesHcfAndLcmInFull() {
+        String html = NzCurriculumCatalog.lessons(7, NzSubject.MATHEMATICS).stream()
+                .filter(l -> l.title().toLowerCase().contains("hcf") || l.title().toLowerCase().contains("prime"))
+                .map(NzLessonSpec::contentHtml)
+                .findFirst()
+                .orElse("");
+        String lower = html.toLowerCase();
+        assertTrue(html.length() > 4000, "Y7 HCF/LCM should be elaborative, len=" + html.length());
+        assertTrue(lower.contains("list"), "missing listing method");
+        assertTrue(lower.contains("prime"), "missing prime-factor method");
+        assertTrue(lower.contains("hcf") && lower.contains("lcm"));
+        assertTrue(lower.contains("12") && lower.contains("18"));
+        assertTrue(lower.contains("check"));
+    }
+
+    @Test
+    void languageLessonsTeachPhrasesNotWordLists() {
+        String y2 = NzCurriculumCatalog.lessons(2, NzSubject.LEARNING_LANGUAGES).get(0).contentHtml();
+        String y8 = NzCurriculumCatalog.lessons(8, NzSubject.LEARNING_LANGUAGES).get(0).contentHtml();
+        assertTrue(y2.contains("Kia ora") && y2.contains("Kei te pēhea"), "Y2 greeting dialogue");
+        assertTrue(y8.contains("Tēnā koutou") || y8.contains("tōku ingoa"), "Y8 mihi frame");
+        assertTrue(y2.contains("Talofa") || y8.contains("Talofa"), "other-language transfer");
+    }
+
+    @Test
     void year8NumberIncludesIntegersAndPrimeFactors() {
         String html = NzCurriculumCatalog.lessons(8, NzSubject.MATHEMATICS).get(0).contentHtml();
         String lower = html.toLowerCase();
